@@ -7,7 +7,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
+    context = context;
     return Drawer(
       child: ListView(
         children: <Widget>[
