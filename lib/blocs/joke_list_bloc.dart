@@ -23,6 +23,7 @@ class JokeListBloc extends BlocBase{
   Movie _movie;
 
   final _jokesController =  BehaviorSubject<UnmodifiableListView<Joke>>();
+  final _currentJokeController =BehaviorSubject<Joke>();
   final _favoritesController = StreamController<bool>();
   final _sortOrderController = StreamController<SortOrder>();
   final _sortPropertyController = StreamController<JokeSortProperty>();
@@ -33,6 +34,7 @@ class JokeListBloc extends BlocBase{
 
   //streams
   Stream<UnmodifiableListView<Joke>> get jokes => _jokesController.stream;
+  Stream<Joke> get currentJoke => _currentJokeController.stream.asBroadcastStream();
   Stream<LoadState> get loadState => _loadStateController.stream;
 
   Stream<bool> get favorites => _favoritesController.stream;
@@ -42,6 +44,7 @@ class JokeListBloc extends BlocBase{
 
   //sinks
   void Function() get getJokes => () => _getJokesController.sink.add(null);
+  void Function(Joke joke) get changeCurrentJoke => (joke) => _currentJokeController.sink.add(joke);
   void changeFavorites(favorites){ _favorites = favorites; _favoritesController.sink.add(favorites); _restoreConf(); }
   void changeSortOrder(sortOrder){ _sortOrder = sortOrder; _sortOrderController.sink.add(sortOrder); _restoreConf();}
   void changeSortProperty(sortProperty){ _sortProperty = sortProperty;  _sortPropertyController.sink.add(sortProperty); _restoreConf(); }
@@ -122,6 +125,7 @@ class JokeListBloc extends BlocBase{
    _movieController.close();
    _loadStateController.close();
    _getJokesController.close();
+   _currentJokeController.close();
   }
 
   @override

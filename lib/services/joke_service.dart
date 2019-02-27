@@ -17,11 +17,18 @@ class JokeService {
 
       await Future.delayed(Duration(seconds: 4));
 
+      String content;
+      if(jokeType ==JokeType.image){
+        content = 'https://images.pexels.com/photos/1151262/pexels-photo-1151262.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+      }else{
+        content = 'this is the stupid joke that i just added';
+      }
+
     return [
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = 'title1'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -31,8 +38,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = 'title2'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -41,7 +48,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -52,7 +59,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -61,7 +68,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -72,7 +79,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -81,7 +88,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -92,7 +99,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -101,7 +108,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -112,7 +119,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -121,7 +128,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -132,7 +139,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -141,7 +148,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -152,7 +159,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -161,7 +168,7 @@ class JokeService {
       Joke((b) => b
         ..id = 'id'
         ..title = 'title'
-        ..content = 'content'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -171,8 +178,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-6title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -180,8 +187,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-5title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -191,8 +198,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-4title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -200,8 +207,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-3title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -211,8 +218,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-2title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -220,8 +227,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = '-1title'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
@@ -231,8 +238,8 @@ class JokeService {
       ),
       Joke((b) => b
         ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
+        ..title = 'title_last'
+        ..content = content
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
