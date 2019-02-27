@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -88,7 +87,7 @@ class _JokeListState extends State<JokeList> {
           bottom: 0,
           left: 0,
           right: 0,
-          child: ListTile(title: Text((error as LoadError).message), trailing: RaisedButton(child:  Text('RETRY'), onPressed: (){
+          child: ListTile(title: Text((error as LoadMoreError).message), trailing: RaisedButton(child:  Text('RETRY'), onPressed: (){
                   print('reload more pressed');
                   onRetry();
                 })));
@@ -97,23 +96,28 @@ class _JokeListState extends State<JokeList> {
     }
   }
 
-  _showEmpty(){
-      return Center(
-        child: Text('No content to load'),
-      );
+  _showEmpty(LoadState loadState, {bool visible}){
+     
+     if(visible){
+        return Center(
+          child: Text((loadState as LoadEmpty).message),
+        );
+     }else{
+        return _dumbPlaceHolder();
+     }
+     
   }
 
-  _contentList(LoadState loadState, {bool visible}){
+  _contentList({bool visible}){
 
-    return StreamBuilder<UnmodifiableListView<Joke>>(
+    if(visible){
+      return StreamBuilder<UnmodifiableListView<Joke>>(
             initialData: UnmodifiableListView([]),
             stream: jokeListBloc.jokes,
             builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Joke>> jokesSnapshot){
               print(jokesSnapshot.error);
-                UnmodifiableListView<Joke> jokes = jokesSnapshot.data;
-                return (loadState is LoadEnd && jokes.isEmpty)? 
-                    _showEmpty()
-                :  ListView.builder(
+              UnmodifiableListView<Joke> jokes = jokesSnapshot.data;
+               return ListView.builder(
                     controller: _scrollController,
                     itemCount: jokes.length,
                     itemBuilder: (BuildContext context, int index){
@@ -121,14 +125,16 @@ class _JokeListState extends State<JokeList> {
                     },
                 );
             },
-
-    );
+      );
+    }else{
+      return _dumbPlaceHolder();
+    }
+    
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     jokeListBloc = BlocProvider.of<JokeListBloc>(context);
   }
 
@@ -151,8 +157,8 @@ class _JokeListState extends State<JokeList> {
          
           children: <Widget>[
 
-              _contentList(loadState , visible: true),
               //(loadState is Loaded)? Text('loadsate loaded'): Container(),
+
               _initialProgress(visible: loadState is Loading),
               _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
                 jokeListBloc.getJokes(); 
@@ -160,32 +166,12 @@ class _JokeListState extends State<JokeList> {
               _moreError(loadState, visible: loadState is LoadMoreError,  onRetry: (){ 
                 jokeListBloc.getJokes(); 
                 }),
+              _showEmpty(loadState, visible: loadState is LoadEmpty),
+              _contentList(visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
           ],
         );
       },
       
     );
-    // return Column(
-    //   children: <Widget>[
-    //           StreamBuilder(
-    //           initialData: '------',
-    //           stream: appBloc.apptitle,
-    //           builder: (context , snapshot){
-    //             return Text(snapshot.data);
-    //           },
-    //         ),
-    //           StreamBuilder(
-    //           initialData: '------',
-    //           stream: jokeListBloc.jokeTitle,
-    //           builder: (context , snapshot){
-    //             return Text(snapshot.data);
-    //           },
-    //         ),
-
-            
-
-            
-    //   ],
-    // );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:built_value/serializer.dart';
 import 'package:sitcom_joke/models/movie.dart';
 import 'package:built_value/built_value.dart';
-import 'package:sitcom_joke/utils/enum_string_util.dart';
 import 'dart:convert' as json;
 
 import 'serializers.dart';

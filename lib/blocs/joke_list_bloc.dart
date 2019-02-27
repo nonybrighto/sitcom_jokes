@@ -23,7 +23,6 @@ class JokeListBloc extends BlocBase{
   Movie _movie;
 
   final _jokesController =  BehaviorSubject<UnmodifiableListView<Joke>>();
-  //final _jokesController =  StreamController<UnmodifiableListView<Joke>>.broadcast();
   final _favoritesController = StreamController<bool>();
   final _sortOrderController = StreamController<SortOrder>();
   final _sortPropertyController = StreamController<JokeSortProperty>();
@@ -38,14 +37,17 @@ class JokeListBloc extends BlocBase{
 
   Stream<bool> get favorites => _favoritesController.stream;
   Stream<SortOrder> get sortOrder => _sortOrderController.stream;
-  Stream<JokeSortProperty> get sortProperty => _sortPropertyController.stream;
+  Stream<JokeSortProperty> get sortProperty => _sortPropertyController.stream; 
   Stream<Movie> get movie => _movieController.stream;
 
   //sinks
   void Function() get getJokes => () => _getJokesController.sink.add(null);
+  void changeFavorites(favorites){ _favorites = favorites; _favoritesController.sink.add(favorites); _restoreConf(); }
+  void changeSortOrder(sortOrder){ _sortOrder = sortOrder; _sortOrderController.sink.add(sortOrder); _restoreConf();}
+  void changeSortProperty(sortProperty){ _sortProperty = sortProperty;  _sortPropertyController.sink.add(sortProperty); _restoreConf(); }
+  void changeMovie(movie){ _movie = movie;  _movieController.sink.add(movie);  _restoreConf(); }
 
 
- 
   JokeListBloc(this.jokeType, {this.jokeService}){
 
     _favoritesController.sink.add(false);
@@ -53,7 +55,7 @@ class JokeListBloc extends BlocBase{
     _sortPropertyController.sink.add(JokeSortProperty.dataAdded);
     _movieController.sink.add(null);
 
-     getJokes();
+    getJokes();
 
     _getJokesController.stream.listen((_){
         _retrieveJokesFromSource();
@@ -108,14 +110,22 @@ class JokeListBloc extends BlocBase{
           _jokesController.sink.add(UnmodifiableListView(_jokes));
   }
 
+  _restoreConf(){
+    _currentPage = 1;
+  }
+
+  close(){
+   _jokesController.close();
+   _favoritesController.close();
+   _sortOrderController.close();
+   _sortPropertyController.close();
+   _movieController.close();
+   _loadStateController.close();
+   _getJokesController.close();
+  }
+
   @override
   void dispose() {
-//    _jokesController.close();
-//    _favoritesController.close();
-//    _sortOrderController.close();
-//    _sortPropertyController.close();
-//    _movieController.close();
-//    _loadStateController.close();
-//    _getJokesController.close();
+  
   }
 }

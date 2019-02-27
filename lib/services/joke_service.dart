@@ -15,6 +15,8 @@ class JokeService {
       int page}) async {
 
 
+      await Future.delayed(Duration(seconds: 4));
+
     return [
       Joke((b) => b
         ..id = 'id'

@@ -4,6 +4,7 @@ import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
+import 'package:sitcom_joke/ui/widgets/app_drawer.dart';
 import 'package:sitcom_joke/ui/widgets/joke/joke_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,15 +16,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  JokeListBloc imageJokeBloc =JokeListBloc(JokeType.image, jokeService: JokeService());
-  JokeListBloc textJokeBloc =JokeListBloc(JokeType.text, jokeService: JokeService());
+  JokeListBloc imageJokeListBloc =JokeListBloc(JokeType.image, jokeService: JokeService());
+  JokeListBloc textJokeListBloc =JokeListBloc(JokeType.text, jokeService: JokeService());
 
   @override
   Widget build(BuildContext context) {
     ApplicationBloc appBloc =BlocProvider.of<ApplicationBloc>(context);
+    final imageListWidget =  BlocProvider<JokeListBloc>(
+                    bloc: imageJokeListBloc,
+                    child: JokeList(JokeType.image),
+              );
+    final textListWidget = BlocProvider<JokeListBloc>(
+                    bloc: textJokeListBloc,
+                    child: JokeList(JokeType.text),
+              );
     return DefaultTabController(
         length: 3,
         child: Scaffold(
+          drawer: AppDrawer(imageJokeListBloc: imageJokeListBloc, textJokeListBloc: textJokeListBloc,),
           appBar: AppBar(
             bottom: TabBar(
               tabs: [
@@ -42,17 +52,8 @@ class _HomePageState extends State<HomePage> {
           ),
           body: TabBarView(
             children: [
-              BlocProvider<JokeListBloc>(
-                    bloc: imageJokeBloc,
-                    child: JokeList(JokeType.image),
-              ),
-              BlocProvider<JokeListBloc>(
-                    bloc: textJokeBloc,
-                    child: JokeList(JokeType.text),
-              ),
-              // JokeList(JokeType.text),
-              // Text('-----------}}}')
-              
+                imageListWidget,
+                textListWidget,
             ],
           ),
         ),
