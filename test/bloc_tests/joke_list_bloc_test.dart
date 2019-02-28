@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
@@ -21,6 +21,7 @@ void main() {
         ..id = 'id'
         ..title = 'title'
         ..content = 'content'
+        ..totalComments = 21
         ..jokeType = JokeType.image
         ..movie.update((b) => b
           ..id = 'id'

@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:sitcom_joke/models/joke.dart';
 
 main() {
@@ -7,18 +7,21 @@ main() {
       ..id = '1'
       ..title = 'title'
       ..content = 'content'
+      ..totalComments = 22
       ..jokeType = JokeType.image
     );
     Joke secondJoke = Joke((d) => d
       ..id = '1'
       ..title = 'title'
       ..content = 'content'
+      ..totalComments = 22
       ..jokeType = JokeType.image
     );
     Joke thirdJoke = Joke((d) => d
       ..id = '1z'
       ..title = 'titlez'
       ..content = 'contentz'
+      ..totalComments = 25
       ..jokeType = JokeType.image
 
     );
@@ -29,12 +32,13 @@ main() {
 
   test('Convert json to joke object', () {
     String jokeJson =
-        '{ "id" : "id", "title" : "title", "content":"content", "jokeType":"image", "movie" : ' +
+        '{ "id" : "id", "title" : "title", "content":"content","totalComments":22, "jokeType":"image", "movie" : ' +
             '{ "id": "id", "name":"name", "description":"desc" } }';
     Joke jokeObject = Joke((b) => b
       ..id = 'id'
       ..title = 'title'
       ..content = 'content'
+      ..totalComments = 22
       ..jokeType = JokeType.image
       ..movie.update((b) => b
         ..id = 'id'
@@ -43,12 +47,13 @@ main() {
 
     //timestamp is in milliseconds
     String jokeJson2 =
-        '{ "id" : "id", "title" : "title", "content":"content", "jokeType":"image", "dateAdded": "2019-09-27","movie" : ' +
+        '{ "id" : "id", "title" : "title", "content":"content", "totalComments":22, "jokeType":"image", "dateAdded": "2019-09-27","movie" : ' +
             '{ "id": "id", "name":"name", "description":"desc" } }';
     Joke jokeObject2 = Joke((b) => b
       ..id = 'id'
       ..title = 'title'
       ..content = 'content'
+      ..totalComments = 22
       ..jokeType = JokeType.image
       ..dateAdded = DateTime(2019, 09, 27)
       ..movie.update((b) => b
@@ -63,12 +68,13 @@ main() {
   test('can deserialize jokeType', (){
 
     String jokeJson =
-        '{ "id" : "id", "title" : "title", "content":"content", "jokeType":"image","movie" : ' +
+        '{ "id" : "id", "title" : "title", "content":"content", "totalComments":22, "jokeType":"image","movie" : ' +
             '{ "id": "id", "name":"name", "description":"desc" } }';
     Joke jokeObject = Joke((b) => b
       ..id = 'id'
       ..title = 'title'
       ..content = 'content'
+      ..totalComments = 22
       ..jokeType = JokeType.image
       ..movie.update((b) => b
         ..id = 'id'

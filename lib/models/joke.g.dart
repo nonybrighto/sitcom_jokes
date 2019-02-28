@@ -26,6 +26,9 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
       'content',
       serializers.serialize(object.content,
           specifiedType: const FullType(String)),
+      'totalComments',
+      serializers.serialize(object.totalComments,
+          specifiedType: const FullType(int)),
       'jokeType',
       serializers.serialize(object.jokeType,
           specifiedType: const FullType(JokeType)),
@@ -75,6 +78,10 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.content = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'totalComments':
+          result.totalComments = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
         case 'jokeType':
           result.jokeType = serializers.deserialize(value,
               specifiedType: const FullType(JokeType)) as JokeType;
@@ -106,6 +113,8 @@ class _$Joke extends Joke {
   @override
   final String content;
   @override
+  final int totalComments;
+  @override
   final JokeType jokeType;
   @override
   final DateTime dateAdded;
@@ -121,6 +130,7 @@ class _$Joke extends Joke {
       {this.id,
       this.title,
       this.content,
+      this.totalComments,
       this.jokeType,
       this.dateAdded,
       this.likes,
@@ -134,6 +144,9 @@ class _$Joke extends Joke {
     }
     if (content == null) {
       throw new BuiltValueNullFieldError('Joke', 'content');
+    }
+    if (totalComments == null) {
+      throw new BuiltValueNullFieldError('Joke', 'totalComments');
     }
     if (jokeType == null) {
       throw new BuiltValueNullFieldError('Joke', 'jokeType');
@@ -154,6 +167,7 @@ class _$Joke extends Joke {
         id == other.id &&
         title == other.title &&
         content == other.content &&
+        totalComments == other.totalComments &&
         jokeType == other.jokeType &&
         dateAdded == other.dateAdded &&
         likes == other.likes &&
@@ -166,8 +180,10 @@ class _$Joke extends Joke {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, id.hashCode), title.hashCode),
-                        content.hashCode),
+                    $jc(
+                        $jc($jc($jc(0, id.hashCode), title.hashCode),
+                            content.hashCode),
+                        totalComments.hashCode),
                     jokeType.hashCode),
                 dateAdded.hashCode),
             likes.hashCode),
@@ -180,6 +196,7 @@ class _$Joke extends Joke {
           ..add('id', id)
           ..add('title', title)
           ..add('content', content)
+          ..add('totalComments', totalComments)
           ..add('jokeType', jokeType)
           ..add('dateAdded', dateAdded)
           ..add('likes', likes)
@@ -202,6 +219,10 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   String _content;
   String get content => _$this._content;
   set content(String content) => _$this._content = content;
+
+  int _totalComments;
+  int get totalComments => _$this._totalComments;
+  set totalComments(int totalComments) => _$this._totalComments = totalComments;
 
   JokeType _jokeType;
   JokeType get jokeType => _$this._jokeType;
@@ -226,6 +247,7 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
       _id = _$v.id;
       _title = _$v.title;
       _content = _$v.content;
+      _totalComments = _$v.totalComments;
       _jokeType = _$v.jokeType;
       _dateAdded = _$v.dateAdded;
       _likes = _$v.likes;
@@ -257,6 +279,7 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
               id: id,
               title: title,
               content: content,
+              totalComments: totalComments,
               jokeType: jokeType,
               dateAdded: dateAdded,
               likes: likes,

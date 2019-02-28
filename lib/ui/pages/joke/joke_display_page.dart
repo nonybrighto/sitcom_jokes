@@ -4,13 +4,13 @@ import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/load_state.dart';
+import 'package:sitcom_joke/navigation/router.dart';
 import 'package:zoomable_image/zoomable_image.dart';
 
 class JokeDisplayPage extends StatefulWidget {
   final int initialPage;
   final JokeType jokeType;
-  final JokeListBloc jokeListBloc;
-  JokeDisplayPage({Key key, this.initialPage, this.jokeType, this.jokeListBloc})
+  JokeDisplayPage({Key key, this.initialPage, this.jokeType})
       : super(key: key);
 
   @override
@@ -26,10 +26,10 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   @override
   void initState() {
     super.initState();
-    jokeListBloc = widget.jokeListBloc;
     _pageController = PageController(initialPage: widget.initialPage);
     _pageController.addListener(_scrollListener);
   }
+
 
   void _scrollListener() {
     print(_pageController.position.extentAfter);
@@ -91,6 +91,8 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
+    jokeListBloc = BlocProvider.of<JokeListBloc>(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: StreamBuilder<Joke>(
@@ -156,8 +158,8 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              GestureDetector(child: Text('500 comments'), onTap: (){
-                //goto comments page
+              GestureDetector(child: Text('${joke.totalComments} comments'), onTap: (){
+                Router.gotoJokeCommentsPage(context, joke: joke);
               },),
               Text('2000 likes')
           ],),

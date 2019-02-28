@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:sitcom_joke/blocs/application_bloc.dart';
 
 void main(){

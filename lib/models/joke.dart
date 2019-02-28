@@ -23,6 +23,7 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   String get id;
   String get title;
   String get content;
+  int get totalComments;
   //@BuiltValueField(wireName: 'joke_type')
   JokeType get jokeType;
   @nullable

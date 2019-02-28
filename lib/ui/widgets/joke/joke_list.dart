@@ -19,18 +19,20 @@ class _JokeListState extends State<JokeList> {
 
  JokeListBloc jokeListBloc;
 
+ 
+
   @override
   Widget build(BuildContext context) {
     jokeListBloc = BlocProvider.of<JokeListBloc>(context);
 
-    return  ScrollList(
+    return  ScrollList<Joke>(
       scrollListType: ScrollListType.list,
       listContentStream: jokeListBloc.jokes,
       loadStateStream: jokeListBloc.loadState,
       loadMoreAction: (){
         jokeListBloc.getJokes();
       },
-      listItemWidget: (joke, index){
+      listItemWidget: (joke, int index){
         return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Text('dd'), onTap: (){
 
             jokeListBloc.changeCurrentJoke(joke);

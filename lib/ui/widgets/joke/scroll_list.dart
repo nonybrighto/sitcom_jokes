@@ -8,11 +8,11 @@ enum ScrollListType{
   list
 }
 
-class ScrollList extends StatefulWidget {
+class ScrollList<T> extends StatefulWidget {
   final Stream<LoadState> loadStateStream;
-  final Stream<UnmodifiableListView<dynamic>> listContentStream;
+  final Stream<UnmodifiableListView<T>> listContentStream;
   final Function loadMoreAction;
-  final Function(dynamic, int) listItemWidget;
+  final Widget Function(T, int) listItemWidget;
   final ScrollListType scrollListType;
   final int gridCrossAxisCount;
 
@@ -26,11 +26,13 @@ class ScrollList extends StatefulWidget {
 
   }
 
+
   @override
-  _ScrollListState createState() => new _ScrollListState();
+  _ScrollListState<T> createState() => new _ScrollListState<T>();
+
 }
 
-class _ScrollListState extends State<ScrollList> {
+class _ScrollListState<T> extends State<ScrollList<T>> {
 
   ScrollController _scrollController = new ScrollController();
   bool canLoadMore = true;
@@ -38,7 +40,6 @@ class _ScrollListState extends State<ScrollList> {
   @override
   void initState() {
     super.initState();
-
     _scrollController.addListener(_scrollListener);
   }
 
@@ -126,17 +127,19 @@ class _ScrollListState extends State<ScrollList> {
   _contentList({bool visible}){
 
     if(visible){
-      return StreamBuilder<UnmodifiableListView<dynamic>>(
+      return StreamBuilder<UnmodifiableListView<T>>(
             initialData: UnmodifiableListView([]),
             stream: widget.listContentStream,
-            builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<dynamic>> listItemSnapshot){
+            builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<T>> listItemSnapshot){
               print(listItemSnapshot.error);
-              UnmodifiableListView<dynamic> listItems = listItemSnapshot.data;
+              UnmodifiableListView<T> listItems = listItemSnapshot.data;
                return ListView.builder(
                     controller: _scrollController,
                     itemCount: listItems.length,
                     itemBuilder: (BuildContext context, int index){
-                       return widget.listItemWidget(listItems[index], index);
+                      return widget.listItemWidget(listItems[index], index);
+                     // return widget.listItemWidget(widget.item, index);
+                      //return Text('ssss');
                     },
                 );
             },
