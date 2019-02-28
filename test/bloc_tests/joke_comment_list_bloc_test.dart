@@ -65,17 +65,17 @@ void main() {
   test('Expected order when joke loading joke for first time', () {
      JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
     expect(commentListBloc.loadState, emitsInOrder([loading, loaded]));
-    expect(commentListBloc.comments, emits([sampleComments[0]]));
+    expect(commentListBloc.items, emits([sampleComments[0]]));
   });
 
   test('when loading the second time, expect state to be loading more and list should contain two items',() async{
 
     JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
 
-    commentListBloc.getComments();
+    commentListBloc.getItems();
 
     expect(commentListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loaded]));
-    expect(commentListBloc.comments, emits([sampleComments[0], sampleComments[0] ]));
+    expect(commentListBloc.items, emits([sampleComments[0], sampleComments[0] ]));
   });
 
   test('When no item to load and first trial, send load empty', (){
@@ -110,9 +110,9 @@ void main() {
         .thenAnswer((_) async => []);
 
     JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
-    commentListBloc.getComments();
+    commentListBloc.getItems();
 
     expect(commentListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loadEnd]));
-    expect(commentListBloc.comments, emits([sampleComments[0]]));
+    expect(commentListBloc.items, emits([sampleComments[0]]));
   });
 }

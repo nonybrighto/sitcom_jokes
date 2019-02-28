@@ -50,7 +50,7 @@ void main() {
     JokeListBloc imageJokeListBloc =
         JokeListBloc(JokeType.image, jokeService: jokeService);
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded]));
-    expect(imageJokeListBloc.jokes, emits([sampleJokes[0]]));
+    expect(imageJokeListBloc.items, emits([sampleJokes[0]]));
   });
 
   test('when loading the second time, expect state to be loading more and list should contain two items',() async{
@@ -58,10 +58,10 @@ void main() {
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
 
-    imageJokeListBloc.getJokes();
+    imageJokeListBloc.getItems();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loaded]));
-    expect(imageJokeListBloc.jokes, emits([sampleJokes[0], sampleJokes[0] ]));
+    expect(imageJokeListBloc.items, emits([sampleJokes[0], sampleJokes[0] ]));
   });
 
   test('When no item to load and first trial, send load empty', (){
@@ -126,9 +126,9 @@ void main() {
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
 
-    imageJokeListBloc.getJokes();
+    imageJokeListBloc.getItems();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loadEnd]));
-    expect(imageJokeListBloc.jokes, emits([sampleJokes[0]]));
+    expect(imageJokeListBloc.items, emits([sampleJokes[0]]));
   });
 }

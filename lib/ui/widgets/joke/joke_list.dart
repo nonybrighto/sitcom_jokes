@@ -27,10 +27,10 @@ class _JokeListState extends State<JokeList> {
 
     return  ScrollList<Joke>(
       scrollListType: ScrollListType.list,
-      listContentStream: jokeListBloc.jokes,
+      listContentStream: jokeListBloc.items,
       loadStateStream: jokeListBloc.loadState,
       loadMoreAction: (){
-        jokeListBloc.getJokes();
+        jokeListBloc.getItems();
       },
       listItemWidget: (joke, int index){
         return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Text('dd'), onTap: (){

@@ -25,10 +25,10 @@ class _JokeCommentPageState extends State<JokeCommentPage> {
       appBar: AppBar(title: Text('Joke title'),),
       body: ScrollList<Comment>(
       scrollListType: ScrollListType.list,
-      listContentStream: _commentListBloc.comments,
+      listContentStream: _commentListBloc.items,
       loadStateStream: _commentListBloc.loadState,
       loadMoreAction: (){
-        _commentListBloc.getComments();
+        _commentListBloc.getItems();
       },
       listItemWidget: (comment, index){
         return ListTile(title: Container(height: 30.0, child: Text(comment.content)), trailing: Text('dd'),);

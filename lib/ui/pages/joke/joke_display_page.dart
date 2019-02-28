@@ -35,7 +35,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
     print(_pageController.position.extentAfter);
     if (_pageController.position.extentAfter < 2000 && canLoadMore) {
       print("Load more stuffs");
-      jokeListBloc.getJokes();
+      jokeListBloc.getItems();
       canLoadMore = false;
     }
   }
@@ -118,7 +118,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
             return StreamBuilder<UnmodifiableListView<Joke>>(
               initialData: UnmodifiableListView([]),
-              stream: jokeListBloc.jokes,
+              stream: jokeListBloc.items,
               builder: (BuildContext context,
                   AsyncSnapshot<UnmodifiableListView<Joke>> jokesSnapshot) {
                 UnmodifiableListView<Joke> jokes = jokesSnapshot.data;
