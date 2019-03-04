@@ -28,6 +28,7 @@ void main() {
       ..movie.update((b) => b
         ..id = 'id'
         ..name = 'name'
+        ..tmdbMovieId = 1
         ..description = 'desc'));
 
     sampleComments = [

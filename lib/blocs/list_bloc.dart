@@ -7,11 +7,12 @@ import 'package:sitcom_joke/models/load_state.dart';
 abstract class ListBloc<T> extends BlocBase{
  
   int currentPage  = 1;
-  List<T> _items = [];
+  List<T> itemsCache = [];
   final String emptyMessage;
   final _itemsController =  BehaviorSubject<UnmodifiableListView<T>>();
   final _loadStateController = BehaviorSubject<LoadState>();
   final _getItemsController = StreamController<Null>();
+  final _updateItemController =StreamController<T>();
   
   //streams
   Stream<UnmodifiableListView<T>> get items => _itemsController.stream;
@@ -19,6 +20,8 @@ abstract class ListBloc<T> extends BlocBase{
  
   //sink
   void Function() get getItems => () => _getItemsController.sink.add(null);
+  void Function(T) get updateItem => (item) => _updateItemController.sink.add(item);
+
 
   ListBloc({this.emptyMessage}){
 
@@ -26,6 +29,19 @@ abstract class ListBloc<T> extends BlocBase{
         _retrieveItemsFromSource();
     });
 
+
+    _updateItemController.stream.listen((T item){
+
+        _updateItem(item);
+
+    });
+
+  }
+
+  _updateItem(T updatedItem){
+        int indexToUpdate = itemsCache.indexWhere((currentItem) => itemUpdateCondition(currentItem, updatedItem));
+        itemsCache[indexToUpdate] = updatedItem;
+        _itemsController.sink.add(UnmodifiableListView<T>(itemsCache));
   }
   
   _retrieveItemsFromSource() async{
@@ -57,6 +73,7 @@ abstract class ListBloc<T> extends BlocBase{
 
       currentPage++;
     }catch(err){
+      print(err);
       if (currentPage == 1){
         _loadStateController.sink.add(LoadError('Error during the loading of item'));
       }else{
@@ -66,22 +83,25 @@ abstract class ListBloc<T> extends BlocBase{
   }
 
   _appendItems(List<T> gottenItems){
-          _items.addAll(gottenItems);
-          _itemsController.sink.add(UnmodifiableListView<T>(_items));
+          itemsCache.addAll(gottenItems);
+          _itemsController.sink.add(UnmodifiableListView<T>(itemsCache));
   }
 
   _changeItems(List<T> gottenItems){
-          _items = gottenItems;
-          _itemsController.sink.add(UnmodifiableListView(_items));
+          itemsCache = gottenItems;
+          _itemsController.sink.add(UnmodifiableListView(itemsCache));
   }
 
 
   Future<List<T>> retrieveFromServer();
 
+  bool itemUpdateCondition(T currentItem , T updatedItem);
+
   close(){
    _loadStateController.close();
    _itemsController.close();
    _getItemsController.close();
+   _updateItemController.close();
   }
 
   @override

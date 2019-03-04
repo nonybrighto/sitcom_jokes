@@ -31,4 +31,9 @@ class JokeCommentListBloc extends ListBloc<Comment>{
   Future<List<Comment>> retrieveFromServer() async{
     return  await jokeService.getComments(joke:commentJoke.id, page: super.currentPage);
   }
+
+  @override
+  bool itemUpdateCondition(Comment currentComment , Comment updatedComment) {
+    return currentComment.id ==updatedComment.id;
+  }
 }

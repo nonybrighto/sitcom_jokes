@@ -7,9 +7,10 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(BasicMovieDetails.serializer)
       ..add(Comment.serializer)
       ..add(Joke.serializer)
-      ..add(Movie.serializer)
+      ..add(TmdbMovieDetails.serializer)
       ..add(User.serializer))
     .build();
 

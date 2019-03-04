@@ -78,9 +78,7 @@ class AppDrawer extends StatelessWidget {
     };
   }
 
-  _handleShareTap(){
-     //TODO: share
-  }
+  _handleShareTap(){ }
 
 
   _drawerItem(BuildContext context, IconData icon, String title, {CountDetails countDetails, @required onTap}){

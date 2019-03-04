@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sitcom_joke/blocs/list_bloc.dart';
-import 'package:sitcom_joke/models/movie.dart';
+import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
@@ -71,5 +71,10 @@ class JokeListBloc extends ListBloc<Joke>{
    _sortPropertyController.close();
    _movieController.close();
    _currentJokeController.close();
+  }
+
+  @override
+  bool itemUpdateCondition(Joke currentJoke, Joke updatedJoke) {
+    return currentJoke.id == updatedJoke.id;
   }
 }

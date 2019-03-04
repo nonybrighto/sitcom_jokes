@@ -131,11 +131,10 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
                         left: 0.0,
                         right: 0.0,
                         child: StreamBuilder<Joke>(
-                          initialData: null,
                           stream: jokeListBloc.currentJoke,
                           builder: (BuildContext context,
                               AsyncSnapshot<Joke> jokeSnapshot) {
-                            return (jokesSnapshot.data != null)
+                            return (jokesSnapshot.hasData)
                                 ? _jokeOptions(jokeSnapshot.data, context)
                                 : Container();
                           },

@@ -49,7 +49,7 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
       result
         ..add('movie')
         ..add(serializers.serialize(object.movie,
-            specifiedType: const FullType(Movie)));
+            specifiedType: const FullType(BasicMovieDetails)));
     }
 
     return result;
@@ -96,7 +96,8 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           break;
         case 'movie':
           result.movie.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Movie)) as Movie);
+                  specifiedType: const FullType(BasicMovieDetails))
+              as BasicMovieDetails);
           break;
       }
     }
@@ -121,7 +122,7 @@ class _$Joke extends Joke {
   @override
   final int likes;
   @override
-  final Movie movie;
+  final BasicMovieDetails movie;
 
   factory _$Joke([void updates(JokeBuilder b)]) =>
       (new JokeBuilder()..update(updates)).build();
@@ -236,9 +237,10 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   int get likes => _$this._likes;
   set likes(int likes) => _$this._likes = likes;
 
-  MovieBuilder _movie;
-  MovieBuilder get movie => _$this._movie ??= new MovieBuilder();
-  set movie(MovieBuilder movie) => _$this._movie = movie;
+  BasicMovieDetailsBuilder _movie;
+  BasicMovieDetailsBuilder get movie =>
+      _$this._movie ??= new BasicMovieDetailsBuilder();
+  set movie(BasicMovieDetailsBuilder movie) => _$this._movie = movie;
 
   JokeBuilder();
 
