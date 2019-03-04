@@ -26,7 +26,11 @@ void main(){
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter'
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
       )
       ];
 

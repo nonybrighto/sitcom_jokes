@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
@@ -5,7 +6,9 @@ import 'package:sitcom_joke/models/comment.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/movie/basic_movie_details.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie_cast.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie_credit.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/utils/serializer/joke_type_serializer.dart';
 
@@ -18,6 +21,8 @@ part 'serializers.g.dart';
   Comment,
   BasicMovieDetails,
   TmdbMovieDetails,
+  TmdbMovieCredit,
+  TmdbMovieCast
 ])
 
 final Serializers serializers = _$serializers;

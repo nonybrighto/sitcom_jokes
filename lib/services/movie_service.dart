@@ -19,7 +19,7 @@ class MovieService{
 
   Future<Movie>  getMovie(Movie movie) async{
 
-    TmdbMovieDetails tmdbDetails = TmdbMovieDetails((b) => b..id=1..name='name');
+    TmdbMovieDetails tmdbDetails = TmdbMovieDetails((b) => b..id=1..title='name');
 
     final tmbsmovieBuilder = tmdbDetails.toBuilder();
     return movie.rebuild((b) => b.tmdbDetails = tmbsmovieBuilder);

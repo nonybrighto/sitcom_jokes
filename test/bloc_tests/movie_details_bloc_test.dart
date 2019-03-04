@@ -22,7 +22,12 @@ void main() {
         ..basicDetails.followed = true
         ..basicDetails.description = 'desc'
         ..tmdbDetails.id = 1
-        ..tmdbDetails.name = 'peter')
+        ..tmdbDetails.title = 'peter'
+        ..tmdbDetails.backdropPath = ''
+        ..tmdbDetails.overview = 'ddd'
+        ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+        ..tmdbDetails.voteAverage = 8.9
+        )
     ];
 
     when(movieService.getMovies(page: anyNamed('page')))
@@ -46,7 +51,12 @@ void main() {
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      );
 
     when(movieService.getMovie(movieToGet))
         .thenAnswer((_) async => fullMovieDetails);
@@ -68,7 +78,12 @@ void main() {
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      );
 
     when(movieService.getMovie(movieToGet)).thenAnswer((_) async => movieToGet);
 
@@ -96,7 +111,12 @@ void main() {
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
       ..basicDetails.id = 'id1'
       ..basicDetails.name = 'name ssnum'
@@ -104,7 +124,13 @@ void main() {
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      
+      );
 
     when(movieService.getMovie(movieToGet))
         .thenAnswer((_) async => fullMovieDetails);
@@ -150,7 +176,12 @@ void main() {
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
       ..basicDetails.id = 'id1'
       ..basicDetails.name = 'name ssnum'
@@ -158,7 +189,12 @@ void main() {
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'
       ..tmdbDetails.id = 1
-      ..tmdbDetails.name = 'peter');
+      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.backdropPath = ''
+      ..tmdbDetails.overview = 'ddd'
+      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.voteAverage = 8.9
+      );
 
     when(movieService.getMovie(movieToGet))
         .thenAnswer((_) async => fullMovieDetails);
