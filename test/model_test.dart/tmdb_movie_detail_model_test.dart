@@ -1,5 +1,5 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:sitcom_joke/models/movie/tmdb_movie_credit.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie_cast.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
 import 'package:test/test.dart';
 
@@ -21,20 +21,31 @@ test('can deserialize tmdb movie details', (){
       } 
     } ''';
 
-
-
     TmdbMovieDetails movieDetailsFromJson =TmdbMovieDetails.fromJson(tmdbJson);
+   
+    TmdbMovieDetails movieDetails =TmdbMovieDetails((b) => b
+      ..id=550
+      ..title='Fight Club'
+      ..backdropPath='/52AfXWuXCHn3UjD17rBruA9f5qb.jpg'
+      ..overview='overview'
+      ..releaseDate=DateTime(1999,10,15)
+      ..voteAverage=8.4
+      ..credits.cast = BuiltList<TmdbMovieCast>([
+          TmdbMovieCast((b) => b
+          ..castId=4
+          ..character='The narrator'
+          ..id=819
+          ..name='name'
+          ..profilePath ='/5XBzD5WuTyVQZeS4VI25z2moMeY.jpg'
+          )
+      ]).toBuilder()
+    );
+
     expect(movieDetailsFromJson.id, 550);
     expect(movieDetailsFromJson.credits.cast.first.castId, 4);
 
-    // TmdbMovieDetails movieDetails =TmdbMovieDetails((b) => b
-    //   ..id=550
-    //   ..title='Fight Club'
-    //   ..backdropPath='/52AfXWuXCHn3UjD17rBruA9f5qb.jpg'
-    //   ..overview='overview'
-    //   ..releaseDate=DateTime(1999,10,15)
-    //   ..voteAverage=8.4
-    // );
+    expect(movieDetailsFromJson.id, movieDetails.id);
+
 
    // expect(Joke.fromJson(jokeJson).jokeType, jokeObject.jokeType);
 
