@@ -9,6 +9,7 @@ import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/services/movie_service.dart';
 import 'package:sitcom_joke/ui/pages/about_page.dart';
+import 'package:sitcom_joke/ui/pages/auth_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/add_joke_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_comments_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_display_page.dart';
@@ -29,6 +30,9 @@ class Router{
           bloc: MovieDetialsBloc(movieToget: movie, movieService:  MovieService()),
           child: MovieDetailsPage(movie: movie, movieListBloc: movieListBloc,),
         )));
+  }
+  static gotoAuthPage(BuildContext context, AuthType authType){
+     Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthPage(authType)));
   }
   static gotoAddJokePage(BuildContext context){
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddJokePage()));

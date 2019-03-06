@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sitcom_joke/blocs/application_bloc.dart';
+import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/general.dart';
+import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/navigation/router.dart';
+import 'package:sitcom_joke/ui/pages/auth_page.dart';
 
 class AppDrawer extends StatelessWidget {
 
@@ -12,10 +16,12 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  ApplicationBloc applicationBloc = BlocProvider.of<ApplicationBloc>(context);
     context = context;
     return Drawer(
       child: ListView(
         children: <Widget>[
+            _drawerHeader(applicationBloc),
             _drawerItem(context, Icons.cloud, 'Latest Posts' , countDetails: CountDetails(5, Colors.red), onTap: _handleLatestPostTap),
             _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
             _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap),
@@ -28,6 +34,46 @@ class AppDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _drawerHeader(ApplicationBloc appBloc){
+
+      return Row(children: <Widget>[
+
+          StreamBuilder<User>(
+            stream: appBloc.currentUser,
+            builder: (BuildContext context, AsyncSnapshot<User> currentUserSnapshot ){
+
+                if(currentUserSnapshot.hasData && currentUserSnapshot.data != null){
+
+                   return _buildUserProfile(currentUserSnapshot.data);
+                }else{
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                        _buildAuthNavButton(context, authType: AuthType.login, buttonText: 'Login'),
+                        _buildAuthNavButton(context, authType: AuthType.signup, buttonText: 'Sign Up'),
+                    ],
+                  );
+                }
+            
+            }
+          )
+
+      ],);
+
+  }
+
+  _buildUserProfile(User user){
+
+      return Text(user.name);
+  }
+
+  _buildAuthNavButton(BuildContext context, {String buttonText, AuthType authType }){
+
+    return FlatButton(child: Text(buttonText), onPressed: (){
+        Router.gotoAuthPage(context, authType);
+    });
   }
 
   _handleLatestPostTap(){
