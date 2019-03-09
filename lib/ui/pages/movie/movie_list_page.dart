@@ -3,7 +3,7 @@ import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/movie_list_bloc.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/navigation/router.dart';
-import 'package:sitcom_joke/ui/widgets/joke/scroll_list.dart';
+import 'package:sitcom_joke/ui/widgets/general/scroll_list.dart';
 
 class MovieListPage extends StatefulWidget {
   MovieListPage({Key key}) : super(key: key);

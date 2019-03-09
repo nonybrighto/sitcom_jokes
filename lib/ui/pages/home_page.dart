@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>{
 
   JokeListBloc imageJokeListBloc =JokeListBloc(JokeType.image, jokeService: JokeService());
   JokeListBloc textJokeListBloc =JokeListBloc(JokeType.text, jokeService: JokeService());
@@ -22,14 +22,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     ApplicationBloc appBloc =BlocProvider.of<ApplicationBloc>(context);
-    final imageListWidget =  BlocProvider<JokeListBloc>(
-                    bloc: imageJokeListBloc,
-                    child: JokeList(JokeType.image),
-              );
-    final textListWidget = BlocProvider<JokeListBloc>(
-                    bloc: textJokeListBloc,
-                    child: JokeList(JokeType.text),
-              );
     return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -52,11 +44,26 @@ class _HomePageState extends State<HomePage> {
           ),
           body: TabBarView(
             children: [
-                imageListWidget,
-                textListWidget,
+                 BlocProvider<JokeListBloc>(
+                    bloc: imageJokeListBloc,
+                    child: JokeList(JokeType.image),
+              ),
+                BlocProvider<JokeListBloc>(
+                    bloc: textJokeListBloc,
+                    child: JokeList(JokeType.text),
+              ),
             ],
           ),
         ),
       );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    print('homepage disposed');
+    super.dispose();
   }
 }

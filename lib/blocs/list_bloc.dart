@@ -73,7 +73,6 @@ abstract class ListBloc<T> extends BlocBase{
 
       currentPage++;
     }catch(err){
-      print(err);
       if (currentPage == 1){
         _loadStateController.sink.add(LoadError('Error during the loading of item'));
       }else{

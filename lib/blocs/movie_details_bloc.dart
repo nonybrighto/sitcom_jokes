@@ -8,7 +8,7 @@ import 'package:sitcom_joke/services/movie_service.dart';
 
 class MovieDetialsBloc extends BlocBase{
  
-  Movie movieToget;
+  Movie currentMovie;
   final MovieService movieService;
   Function(String) _followErrorCallBack;
 
@@ -25,10 +25,10 @@ class MovieDetialsBloc extends BlocBase{
   void Function() get getMovieDetails => () => _getMovieDetailsController.sink.add(null);
   void changeMovieFollow(Function(String) errorCallBack){  _followErrorCallBack = errorCallBack; _changeMovieFollowController.sink.add(null); }
 
-  MovieDetialsBloc({this.movieToget, this.movieService}){
+  MovieDetialsBloc({this.currentMovie, this.movieService}){
       
-        _movieController.sink.add(movieToget);
-        if(!movieToget.hasFullDetails()){
+        _movieController.sink.add(currentMovie);
+        if(!currentMovie.hasFullDetails()){
            getMovieDetails();
         }else{
            _loadStateController.sink.add(Loaded());
@@ -46,29 +46,29 @@ class MovieDetialsBloc extends BlocBase{
 
 
   _changeMovieFollow() async{
-     bool shouldFollow = movieToget.basicDetails.followed;
+     bool shouldFollow = currentMovie.basicDetails.followed;
          
          try{
           _swapFollowState();
-          await movieService.changeMovieFollow(movieId:  movieToget.basicDetails.id, userId: null, follow: shouldFollow);
+          await movieService.changeMovieFollow(movieId:  currentMovie.basicDetails.id, userId: null, follow: shouldFollow);
          }catch(err){
           _swapFollowState();
-          _followErrorCallBack('Error while following movie '+movieToget.basicDetails.name);
+          _followErrorCallBack('Error while following movie '+currentMovie.basicDetails.name);
          }
 
   }
 
   _swapFollowState(){
 
-     movieToget = movieToget.rebuild((b) => b.basicDetails.followed =  !movieToget.basicDetails.followed);
-    _movieController.sink.add(movieToget);
+     currentMovie = currentMovie.rebuild((b) => b.basicDetails.followed =  !currentMovie.basicDetails.followed);
+    _movieController.sink.add(currentMovie);
   }
 
   _getMovieFromSource() async{
     _loadStateController.sink.add(Loading());
         try{
-            Movie movieGotten = await movieService.getMovie(movieToget);
-             movieToget  = movieGotten;
+            Movie movieGotten = await movieService.getMovie(currentMovie);
+             currentMovie  = movieGotten;
             _movieController.sink.add(movieGotten);
             _loadStateController.sink.add(Loaded());
         }catch(err){

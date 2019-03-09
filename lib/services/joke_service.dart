@@ -33,8 +33,8 @@ class JokeService {
         ..likes = 1
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
-        ..movie.id = 'movid'
-        ..movie.name = 'movie name'
+        ..movie.id = 'movid $num'
+        ..movie.name = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'));
 
@@ -48,8 +48,8 @@ class JokeService {
         ..content = 'content $num'
         ..dateAdded = DateTime(2000)
         ..owner.update((u) => u
-          ..id = '1'
-          ..name = 'John'
+          ..id = '1 $num'
+          ..name = 'John $num'
           ..profileIconUrl = 'the_url')));
    
   }

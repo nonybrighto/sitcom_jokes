@@ -132,4 +132,16 @@ return User((b) => b
       ..profileIconUrl='url'
     );
 }
+
+
+Future<User> getUser(User user) async{
+
+
+    return User((b) => b
+      ..id='id $num'
+      ..name='peter $num'
+      ..profileIconUrl='url $num'
+    );
+
+}
 }

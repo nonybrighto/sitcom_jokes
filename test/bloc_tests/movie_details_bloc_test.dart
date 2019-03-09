@@ -62,7 +62,7 @@ void main() {
         .thenAnswer((_) async => fullMovieDetails);
 
     MovieDetialsBloc movieDetialsBloc =
-        MovieDetialsBloc(movieService: movieService, movieToget: movieToGet);
+        MovieDetialsBloc(movieService: movieService, currentMovie: movieToGet);
     expect(movieDetialsBloc.loadState, emitsInOrder([loading, loaded]));
     expect(
         movieDetialsBloc.movie, emitsInOrder([movieToGet, fullMovieDetails]));
@@ -88,7 +88,7 @@ void main() {
     when(movieService.getMovie(movieToGet)).thenAnswer((_) async => movieToGet);
 
     MovieDetialsBloc movieDetialsBloc =
-        MovieDetialsBloc(movieService: movieService, movieToget: movieToGet);
+        MovieDetialsBloc(movieService: movieService, currentMovie: movieToGet);
     expect(movieDetialsBloc.loadState, emits(loaded));
     expect(movieDetialsBloc.movie, emits(movieToGet));
 
@@ -141,7 +141,7 @@ void main() {
         .thenAnswer((_) async => null);
 
     MovieDetialsBloc movieDetialsBloc =
-        MovieDetialsBloc(movieService: movieService, movieToget: movieToGet);
+        MovieDetialsBloc(movieService: movieService, currentMovie: movieToGet);
 
     await Future.delayed(Duration(seconds: 2));
     movieDetialsBloc.changeMovieFollow((_) {});
@@ -205,7 +205,7 @@ void main() {
         .thenAnswer((_) => Future.error(Error()));
 
     MovieDetialsBloc movieDetialsBloc =
-        MovieDetialsBloc(movieService: movieService, movieToget: movieToGet);
+        MovieDetialsBloc(movieService: movieService, currentMovie: movieToGet);
 
     await Future.delayed(Duration(seconds: 2));
 

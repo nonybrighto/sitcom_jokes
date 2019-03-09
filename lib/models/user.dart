@@ -27,4 +27,8 @@ abstract class User implements Built<User, UserBuilder> {
     return user;
   }
 
+  bool hasFullDetails(){
+    return true;
+  }
+
 }

@@ -3,7 +3,7 @@ import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/navigation/router.dart';
-import 'package:sitcom_joke/ui/widgets/joke/scroll_list.dart';
+import 'package:sitcom_joke/ui/widgets/general/scroll_list.dart';
 
 
 

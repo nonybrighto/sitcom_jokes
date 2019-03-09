@@ -44,10 +44,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
   }
 
   void _scrollListener() {
-    print(_scrollController.position.extentAfter);
     if (_scrollController.position.extentAfter < 2000 && canLoadMore) {
-        // this.widget.movieBloc.nextPage.add(this.widget.tabKey);
-        print("Load more stuffs");
         widget.loadMoreAction();
       canLoadMore = false;
     }
@@ -78,14 +75,12 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
         return Center(
             child: InkWell(
               onTap: (){
-                    print('The inkwell tapped');
               },
-                          child: Column(
+                child: Column(
                 children: <Widget>[
                   Text((error as LoadError).message),
                   
                   RaisedButton(child:  Text('RETRY'), onPressed: (){
-                    print('reload pressed');
                     onRetry();
                   },)
                 ],
@@ -131,7 +126,6 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
             initialData: UnmodifiableListView([]),
             stream: widget.listContentStream,
             builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<T>> listItemSnapshot){
-              print(listItemSnapshot.error);
               UnmodifiableListView<T> listItems = listItemSnapshot.data;
                return ListView.builder(
                     controller: _scrollController,
@@ -152,7 +146,6 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    print('Build Called ---------------');
 
     return StreamBuilder<LoadState>(
       stream: widget.loadStateStream,
