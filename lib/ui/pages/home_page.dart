@@ -14,14 +14,21 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>{
+class _HomePageState extends State<HomePage>{
 
   JokeListBloc imageJokeListBloc =JokeListBloc(JokeType.image, jokeService: JokeService());
   JokeListBloc textJokeListBloc =JokeListBloc(JokeType.text, jokeService: JokeService());
+  ApplicationBloc appBloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    appBloc =BlocProvider.of<ApplicationBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    ApplicationBloc appBloc =BlocProvider.of<ApplicationBloc>(context);
+    
     return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -57,9 +64,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
         ),
       );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void dispose() {

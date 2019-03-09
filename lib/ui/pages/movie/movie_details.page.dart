@@ -20,9 +20,17 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
 
   MovieDetialsBloc movieDetialsBloc;
+
+
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+       movieDetialsBloc = BlocProvider.of<MovieDetialsBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    movieDetialsBloc = BlocProvider.of<MovieDetialsBloc>(context);
+
 
     return Scaffold(
 

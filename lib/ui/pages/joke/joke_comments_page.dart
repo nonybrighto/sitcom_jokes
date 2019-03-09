@@ -17,9 +17,15 @@ class _JokeCommentPageState extends State<JokeCommentPage> {
   JokeCommentListBloc _commentListBloc;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _commentListBloc = BlocProvider.of<JokeCommentListBloc>(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
 
-    _commentListBloc = BlocProvider.of<JokeCommentListBloc>(context);
+    
 
     return Scaffold(
 

@@ -35,8 +35,14 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+     userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
+   
 
     return StreamBuilder(
       stream: userDetailsBloc.user,

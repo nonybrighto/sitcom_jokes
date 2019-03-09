@@ -16,11 +16,16 @@ class _MovieListPageState extends State<MovieListPage> {
 
   MovieListBloc _movieListBloc;
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+      _movieListBloc = BlocProvider.of<MovieListBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
 
-      _movieListBloc = BlocProvider.of<MovieListBloc>(context);
-    
     return Scaffold(
 
       appBar: AppBar(title: Text('All Sitcoms'),),

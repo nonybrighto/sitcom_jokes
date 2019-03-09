@@ -20,11 +20,14 @@ class _JokeListState extends State<JokeList> {
  JokeListBloc jokeListBloc;
 
  
+ @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+     jokeListBloc = BlocProvider.of<JokeListBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    jokeListBloc = BlocProvider.of<JokeListBloc>(context);
-
     return  ScrollList<Joke>(
       scrollListType: ScrollListType.list,
       listContentStream: jokeListBloc.items,
@@ -34,7 +37,6 @@ class _JokeListState extends State<JokeList> {
       },
       listItemWidget: (joke, int index){
         return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Text('dd'), onTap: (){
-
             jokeListBloc.changeCurrentJoke(joke);
             Router.gotoJokeDisplayPage(context, initialPage: index, jokeType: widget.jokeType, jokeListBloc: jokeListBloc);
         },);
