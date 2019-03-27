@@ -127,13 +127,8 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
             stream: widget.listContentStream,
             builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<T>> listItemSnapshot){
               UnmodifiableListView<T> listItems = listItemSnapshot.data;
-               return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: (loadState is LoadingMore) ? listItems.length + 1 : listItems.length,
-                    itemBuilder: (BuildContext context, int index){
-                      return (index < listItems.length ) ? widget.listItemWidget(listItems[index], index) : _buildBottomProgress();
-                    },
-                );
+               return (widget.scrollListType == ScrollListType.list)?_buildListView(loadState, listItems)
+                :_buildGridView(loadState, listItems);
             },
       );
     }else{
@@ -156,7 +151,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
 
         return Stack(
           children: <Widget>[
-            
+
               _initialProgress(visible: loadState is Loading),
               _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
                 widget.loadMoreAction();
@@ -173,9 +168,46 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
     );
   }
 
+
+  _buildListView(LoadState loadState, UnmodifiableListView<T> listItems){
+    return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: (loadState is LoadingMore) ? listItems.length + 1 : listItems.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return (index < listItems.length ) ? widget.listItemWidget(listItems[index], index) : _buildBottomProgress();
+                    },
+                );
+  }
+
+  _buildGridView(LoadState loadState, UnmodifiableListView<T> listItems){
+
+        return new CustomScrollView(
+          controller: _scrollController,
+          slivers: <Widget>[
+       SliverGrid(
+
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: widget.gridCrossAxisCount,
+          ),
+
+          delegate: SliverChildBuilderDelegate(
+
+            (BuildContext context, int index) {
+              return widget.listItemWidget(listItems[index], index);
+            },
+            childCount: listItems.length,
+        )),
+        SliverToBoxAdapter(
+          child: (loadState is LoadingMore)?_buildBottomProgress():Container(),
+        ),
+      ]);
+  }
+
   _buildBottomProgress(){
     return Center(
       child: CircularProgressIndicator(),
     );
   }
+
+  
 }
