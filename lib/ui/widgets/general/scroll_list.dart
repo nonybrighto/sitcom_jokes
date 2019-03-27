@@ -119,7 +119,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
      
   }
 
-  _contentList({bool visible}){
+  _contentList(LoadState loadState, {bool visible}){
 
     if(visible){
       return StreamBuilder<UnmodifiableListView<T>>(
@@ -129,11 +129,9 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
               UnmodifiableListView<T> listItems = listItemSnapshot.data;
                return ListView.builder(
                     controller: _scrollController,
-                    itemCount: listItems.length,
+                    itemCount: (loadState is LoadingMore) ? listItems.length + 1 : listItems.length,
                     itemBuilder: (BuildContext context, int index){
-                      return widget.listItemWidget(listItems[index], index);
-                     // return widget.listItemWidget(widget.item, index);
-                      //return Text('ssss');
+                      return (index < listItems.length ) ? widget.listItemWidget(listItems[index], index) : _buildBottomProgress();
                     },
                 );
             },
@@ -158,6 +156,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
 
         return Stack(
           children: <Widget>[
+            
               _initialProgress(visible: loadState is Loading),
               _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
                 widget.loadMoreAction();
@@ -166,11 +165,17 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
                   widget.loadMoreAction(); 
                 }),
               _showEmpty(loadState, visible: loadState is LoadEmpty),
-              _contentList(visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
+              _contentList(loadState, visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
           ],
         );
       },
       
+    );
+  }
+
+  _buildBottomProgress(){
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
