@@ -29,7 +29,7 @@ class Router{
   static gotoUserDetailsPage(BuildContext context, User user){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserDetailsBloc>(
           bloc: UserDetailsBloc(userService: UserService(), currentUser: user),
-          child: UserDetailsPage(),
+          child: UserDetailsPage(user: user,),
         )));
 
   }

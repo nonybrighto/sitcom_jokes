@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:sitcom_joke/models/movie/movie.dart';
+import 'package:sitcom_joke/models/user.dart';
 import 'package:test/test.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -41,6 +42,14 @@ void main() {
     when(jokeService.fetchMovieJokes(
         jokeType: anyNamed('jokeType'),
         movie: anyNamed('movie'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    )) .thenAnswer((_) async => [sampleJokes[0]]);
+
+    when(jokeService.fetchUserJokes(
+        jokeType: anyNamed('jokeType'),
+        user: anyNamed('user'),
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')
@@ -195,6 +204,27 @@ void main() {
 
     verify(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    ));
+  });
+  test('expect to fetch user jokes', ()async{
+
+    JokeListBloc imageJokeListBloc =
+    JokeListBloc(JokeType.image, jokeService: jokeService);
+
+    imageJokeListBloc.fetchUserJokes(User((b) => b
+      ..id='id'
+      ..name='peter'
+      ..profileIconUrl='url'
+    ));
+
+     await Future.delayed(Duration(seconds: 2));
+
+    verify(jokeService.fetchUserJokes(
+        jokeType: anyNamed('jokeType'),
+        user: anyNamed('user'),
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')

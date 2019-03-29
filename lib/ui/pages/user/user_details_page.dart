@@ -8,7 +8,8 @@ import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/ui/widgets/joke/joke_list.dart';
 
 class UserDetailsPage extends StatefulWidget {
-  UserDetailsPage({Key key}) : super(key: key);
+  final User user;
+  UserDetailsPage({Key key, this.user}) : super(key: key);
 
   @override
   _UserDetailsPageState createState() => new _UserDetailsPageState();
@@ -38,6 +39,8 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
      userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
+     imageJokeListBloc.fetchUserJokes(widget.user);
+     textJokeListBloc.fetchUserJokes(widget.user);
   }
 
   @override

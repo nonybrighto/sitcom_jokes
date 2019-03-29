@@ -3,6 +3,7 @@ import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/constants/constants.dart';
+import 'package:sitcom_joke/models/user.dart';
 
 class JokeService {
   final String jokeUrl = kAppApihost + '/jokes/';
@@ -12,7 +13,7 @@ class JokeService {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       int page}) async {
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(Duration(seconds: 2));
 
     String content;
     if (jokeType == JokeType.image) {
@@ -74,6 +75,30 @@ class JokeService {
         ..id = 'id'
         ..title = 'movie joke $num'
         ..content = 'movie Joke'
+        ..totalComments = 21
+        ..likes = 1
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.name = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'));
+
+  }
+  Future<List<Joke>> fetchUserJokes({
+      JokeType jokeType,
+      SortOrder sortOrder,
+      JokeSortProperty jokeSortProperty,
+      User user,
+      int page
+  }) async{
+
+      await Future.delayed(Duration(seconds: 2));
+      return List.generate(20, (num) => 
+      Joke((b) => b
+        ..id = 'id'
+        ..title = 'user joke $num'
+        ..content = 'user Joke'
         ..totalComments = 21
         ..likes = 1
         ..dateAdded = DateTime(2003)

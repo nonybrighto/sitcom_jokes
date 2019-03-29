@@ -5,6 +5,7 @@ import 'package:sitcom_joke/blocs/list_bloc.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
+import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 
 
@@ -17,6 +18,7 @@ class JokeListBloc extends ListBloc<Joke>{
   SortOrder _sortOrder = SortOrder.desc;
   JokeSortProperty _sortProperty = JokeSortProperty.dataAdded;
   Movie _movie;
+  User _user;
 
   final _currentJokeController =BehaviorSubject<Joke>();
   final _sortOrderController = StreamController<SortOrder>();
@@ -25,6 +27,7 @@ class JokeListBloc extends ListBloc<Joke>{
   final _fetchAllJokesController =StreamController<Null>();
   final _fetchUserFavoriteJokesController =StreamController<Null>();
   final _fetchMovieJokesController =StreamController<Movie>();
+  final _fetchUserJokesController =StreamController<User>();
 
 
   //stream
@@ -38,6 +41,7 @@ class JokeListBloc extends ListBloc<Joke>{
   void Function() get fetchAllJokes => () => _fetchAllJokesController.sink.add(null);
   void Function() get fetchUserFavoriteJokes => () => _fetchUserFavoriteJokesController.sink.add(null);
   void Function(Movie) get fetchMovieJokes => (movie) => _fetchMovieJokesController.sink.add(movie);
+  void Function(User) get fetchUserJokes => (user) => _fetchUserJokesController.sink.add(user);
   
   void changeSortOrder(sortOrder){ _sortOrder = sortOrder; _sortOrderController.sink.add(sortOrder); _restoreConf();}
   void changeSortProperty(sortProperty){ _sortProperty = sortProperty;  _sortPropertyController.sink.add(sortProperty); _restoreConf(); }
@@ -63,7 +67,13 @@ class JokeListBloc extends ListBloc<Joke>{
 
     _fetchMovieJokesController.stream.listen((movie){
         _movie = movie;
-        fetchType = JokeListFetchType.movieJoke;
+        fetchType = JokeListFetchType.movieJokes;
+        _getFirstPageJokes();
+    });
+
+    _fetchUserJokesController.stream.listen((user){
+        _user = user;
+        fetchType = JokeListFetchType.userJokes;
         _getFirstPageJokes();
     });
  }
@@ -80,8 +90,11 @@ class JokeListBloc extends ListBloc<Joke>{
       case JokeListFetchType.userFavJokes:
        return await jokeService.fetchUserFavJokes(jokeType: jokeType, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
       break;
-      case JokeListFetchType.movieJoke:
+      case JokeListFetchType.movieJokes:
        return await jokeService.fetchMovieJokes(jokeType: jokeType, movie: _movie, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+      break;
+      case JokeListFetchType.userJokes:
+       return await jokeService.fetchUserJokes(jokeType: jokeType, user: _user, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
       break;
       case JokeListFetchType.allJokes:
        return await jokeService.fetchAllJokes(jokeType: jokeType, sortOrder: _sortOrder, jokeSortProperty: _sortProperty, page: super.currentPage );
@@ -109,6 +122,7 @@ class JokeListBloc extends ListBloc<Joke>{
    _fetchAllJokesController.close();
    _fetchMovieJokesController.close();
    _fetchUserFavoriteJokesController.close();
+   _fetchUserJokesController.close();
   }
 
   @override
@@ -117,4 +131,4 @@ class JokeListBloc extends ListBloc<Joke>{
   }
 }
 
-enum JokeListFetchType{ userFavJokes, movieJoke, allJokes }
+enum JokeListFetchType{ userFavJokes, movieJokes, allJokes, userJokes }
