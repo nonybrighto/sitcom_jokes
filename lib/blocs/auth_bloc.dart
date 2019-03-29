@@ -6,11 +6,11 @@ import 'package:sitcom_joke/models/auth.dart';
 import 'package:sitcom_joke/models/bloc_delegate.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/user.dart';
-import 'package:sitcom_joke/services/user_service.dart';
+import 'package:sitcom_joke/services/auth_service.dart';
 
 class AuthBloc extends BlocBase {
   BlocDelegate<User> delegate;
-  UserService userService;
+  AuthService authService;
 
   final _currentUserController = BehaviorSubject<User>();
   final _loadStateController = BehaviorSubject<LoadState>();
@@ -29,7 +29,7 @@ class AuthBloc extends BlocBase {
   Stream<LoadState> get loadState => _loadStateController.stream;
 
 
-  AuthBloc({this.userService, this.delegate}) {
+  AuthBloc({this.authService, this.delegate}) {
       _loadStateController.sink.add(Loaded());
       
       _socialLoginController.stream.listen(_handleSocialLogin);
@@ -39,7 +39,7 @@ class AuthBloc extends BlocBase {
 
   _handleSignUp(Map signUpCredential) async {
     _startAuthProcess(() {
-      return userService.signUpWithEmailAndPassword(
+      return authService.signUpWithEmailAndPassword(
           signUpCredential['username'],
           signUpCredential['email'],
           signUpCredential['password']);
@@ -48,7 +48,7 @@ class AuthBloc extends BlocBase {
 
   _handleLogin(Map loginCredential) async {
     _startAuthProcess(() {
-      return userService.signInWithEmailAndPasword(
+      return authService.signInWithEmailAndPasword(
           loginCredential['email'], loginCredential['password']);
     });
   }
@@ -56,11 +56,11 @@ class AuthBloc extends BlocBase {
   _handleSocialLogin(SocialLoginType socialLoginType) async {
     if (socialLoginType == SocialLoginType.facebook) {
       _startAuthProcess(() {
-        return userService.authenticateWithFaceBook();
+        return authService.authenticateWithFaceBook();
       });
     } else if (socialLoginType == SocialLoginType.google) {
       _startAuthProcess(() {
-        return userService.authenticateWithGoogle();
+        return authService.authenticateWithGoogle();
       });
     }
   }
@@ -74,7 +74,6 @@ class AuthBloc extends BlocBase {
     } catch (appError) {
       String errorMessage = appError.toString();
       _loadStateController.sink.add(LoadError(errorMessage));
-      //TODO: better error handling
       delegate.error(errorMessage);
     }
   }

@@ -7,7 +7,7 @@ import 'package:sitcom_joke/models/auth.dart';
 import 'package:sitcom_joke/models/bloc_delegate.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/user.dart';
-import 'package:sitcom_joke/services/user_service.dart';
+import 'package:sitcom_joke/services/auth_service.dart';
 import 'package:sitcom_joke/ui/pages/home_page.dart';
 import 'package:sitcom_joke/utils/validator.dart';
 
@@ -44,7 +44,7 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
 
   @override
   Widget build(BuildContext context) {
-    authBloc = AuthBloc(userService: UserService(), delegate: this);
+    authBloc = AuthBloc(authService: AuthService(), delegate: this);
     return Scaffold(
         backgroundColor: const Color(0Xffe6e6e6),
         appBar: AppBar(
