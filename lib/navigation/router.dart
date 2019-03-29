@@ -5,6 +5,7 @@ import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/blocs/movie_details_bloc.dart';
 import 'package:sitcom_joke/blocs/movie_list_bloc.dart';
 import 'package:sitcom_joke/blocs/user_details_bloc.dart';
+import 'package:sitcom_joke/blocs/user_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/user.dart';
@@ -20,6 +21,7 @@ import 'package:sitcom_joke/ui/pages/movie/movie_details.page.dart';
 import 'package:sitcom_joke/ui/pages/movie/movie_list_page.dart';
 import 'package:sitcom_joke/ui/pages/settings_page.dart';
 import 'package:sitcom_joke/ui/pages/user/user_details_page.dart';
+import 'package:sitcom_joke/ui/pages/user/user_list_page.dart';
 
 class Router{
 
@@ -68,6 +70,15 @@ class Router{
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<JokeCommentListBloc>(
           bloc: JokeCommentListBloc(joke, jokeService: JokeService()),
           child: JokeCommentPage(),
+        )));
+  }
+  static gotoJokeLikersPage(BuildContext context, {Joke joke}){
+
+        UserListBloc userListBloc = UserListBloc(userService: UserService());
+        userListBloc.fetchJokeLikers(joke);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserListBloc>(
+          bloc: userListBloc,
+          child: UserListPage(),
         )));
   }
 

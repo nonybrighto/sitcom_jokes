@@ -6,6 +6,7 @@ import 'dart:async';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:http/http.dart';
+import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
 //import 'package:http/http.dart' as http;
 import '../constants/constants.dart';
@@ -143,5 +144,15 @@ Future<User> getUser(User user) async{
       ..profileIconUrl='url $num'
     );
 
+}
+
+
+Future<List<User>> fetchJokeLikers({Joke jokeLiked}) async{
+
+    return List.generate(20, (num) => User((b) => b
+      ..id='id liked $num'
+      ..name='peter liked $num'
+      ..profileIconUrl='url $num'
+    )).toList();
 }
 }
