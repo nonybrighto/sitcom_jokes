@@ -84,9 +84,8 @@ class AppDrawer extends StatelessWidget {
 
   _handleLatestPostForBloc(JokeListBloc bloc){
 
-    bloc.changeMovie(null);
     bloc.changeSortOrder(SortOrder.desc);
-    bloc.getItems();
+    bloc.fetchAllJokes();
   }
 
   _handleAllSitcomsTap(context){
@@ -101,9 +100,8 @@ class AppDrawer extends StatelessWidget {
   }
 
   _handleFavoriteForBloc(JokeListBloc bloc){
-    bloc.changeMovie(null);
-    bloc.changeFavorites(true);
-    bloc.getItems();
+   
+    bloc.fetchUserFavoriteJokes();
   }
 
   _handleAddJokeTap(context){

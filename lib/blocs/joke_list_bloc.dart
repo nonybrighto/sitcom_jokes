@@ -13,42 +13,59 @@ class JokeListBloc extends ListBloc<Joke>{
  final JokeService jokeService;
  final JokeType jokeType;
 
-  bool _favorites = false;
+  JokeListFetchType fetchType =JokeListFetchType.allJokes;
   SortOrder _sortOrder = SortOrder.desc;
   JokeSortProperty _sortProperty = JokeSortProperty.dataAdded;
   Movie _movie;
 
   final _currentJokeController =BehaviorSubject<Joke>();
-  final _favoritesController = StreamController<bool>();
   final _sortOrderController = StreamController<SortOrder>();
   final _sortPropertyController = StreamController<JokeSortProperty>();
   final _movieController = StreamController<Movie>();
+  final _fetchAllJokesController =StreamController<Null>();
+  final _fetchUserFavoriteJokesController =StreamController<Null>();
+  final _fetchMovieJokesController =StreamController<Movie>();
 
 
   //stream
   Stream<Joke> get currentJoke => _currentJokeController.stream;
-  Stream<bool> get favorites => _favoritesController.stream;
   Stream<SortOrder> get sortOrder => _sortOrderController.stream;
   Stream<JokeSortProperty> get sortProperty => _sortPropertyController.stream; 
   Stream<Movie> get movie => _movieController.stream;
 
   //sinks
   void Function(Joke joke) get changeCurrentJoke => (joke) => _currentJokeController.sink.add(joke);
-  void changeFavorites(favorites){ _favorites = favorites; _favoritesController.sink.add(favorites); _restoreConf(); }
+  void Function() get fetchAllJokes => () => _fetchAllJokesController.sink.add(null);
+  void Function() get fetchUserFavoriteJokes => () => _fetchUserFavoriteJokesController.sink.add(null);
+  void Function(Movie) get fetchMovieJokes => (movie) => _fetchMovieJokesController.sink.add(movie);
+  
   void changeSortOrder(sortOrder){ _sortOrder = sortOrder; _sortOrderController.sink.add(sortOrder); _restoreConf();}
   void changeSortProperty(sortProperty){ _sortProperty = sortProperty;  _sortPropertyController.sink.add(sortProperty); _restoreConf(); }
-  void changeMovie(movie){ _movie = movie;  _movieController.sink.add(movie);  _restoreConf(); }
 
 
  
  JokeListBloc(this.jokeType, {this.jokeService}){
 
-    _favoritesController.sink.add(false);
     _sortOrderController.sink.add(SortOrder.desc);
     _sortPropertyController.sink.add(JokeSortProperty.dataAdded);
     _movieController.sink.add(null);
 
-    super.getItems();
+
+    _fetchAllJokesController.stream.listen((_){
+        fetchType = JokeListFetchType.allJokes;
+       _getFirstPageJokes();
+    });
+
+    _fetchUserFavoriteJokesController.stream.listen((_){
+        fetchType = JokeListFetchType.userFavJokes;
+        _getFirstPageJokes();
+    });
+
+    _fetchMovieJokesController.stream.listen((movie){
+        _movie = movie;
+        fetchType = JokeListFetchType.movieJoke;
+        _getFirstPageJokes();
+    });
  }
  
   @override
@@ -58,10 +75,26 @@ class JokeListBloc extends ListBloc<Joke>{
 
   @override
   Future<List<Joke>> fetchFromServer() async{
-    
 
+    switch (fetchType) {
+      case JokeListFetchType.userFavJokes:
+       return await jokeService.fetchUserFavJokes(jokeType: jokeType, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+      break;
+      case JokeListFetchType.movieJoke:
+       return await jokeService.fetchMovieJokes(jokeType: jokeType, movie: _movie, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+      break;
+      case JokeListFetchType.allJokes:
+       return await jokeService.fetchAllJokes(jokeType: jokeType, sortOrder: _sortOrder, jokeSortProperty: _sortProperty, page: super.currentPage );
+      break;
+      default:
+        return null;
 
-    return  await jokeService.getJokes(jokeType: jokeType, favorite: _favorites, sortOrder: _sortOrder, jokeSortProperty: _sortProperty, movie: _movie, page: super.currentPage );
+    }
+  }
+
+  _getFirstPageJokes(){
+     currentPage = 1;
+     getItems();
   }
 
   _restoreConf(){
@@ -69,11 +102,13 @@ class JokeListBloc extends ListBloc<Joke>{
   }
 
   close(){
-   _favoritesController.close();
    _sortOrderController.close();
    _sortPropertyController.close();
    _movieController.close();
    _currentJokeController.close();
+   _fetchAllJokesController.close();
+   _fetchMovieJokesController.close();
+   _fetchUserFavoriteJokesController.close();
   }
 
   @override
@@ -81,3 +116,5 @@ class JokeListBloc extends ListBloc<Joke>{
     return currentJoke.id == updatedJoke.id;
   }
 }
+
+enum JokeListFetchType{ userFavJokes, movieJoke, allJokes }

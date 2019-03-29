@@ -7,12 +7,10 @@ import 'package:sitcom_joke/constants/constants.dart';
 class JokeService {
   final String jokeUrl = kAppApihost + '/jokes/';
 
-  Future<List<Joke>> getJokes(
-      {bool favorite,
+  Future<List<Joke>> fetchAllJokes({
       JokeType jokeType,
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
-      Movie movie,
       int page}) async {
     await Future.delayed(Duration(seconds: 4));
 
@@ -29,6 +27,53 @@ class JokeService {
         ..id = 'id'
         ..title = 'title1'
         ..content = content
+        ..totalComments = 21
+        ..likes = 1
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.name = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'));
+
+  }
+
+  Future<List<Joke>> fetchUserFavJokes({
+      JokeType jokeType,
+      SortOrder sortOrder,
+      JokeSortProperty jokeSortProperty,
+      int page
+  }) async{
+
+        return List.generate(20, (num) => 
+      Joke((b) => b
+        ..id = 'id'
+        ..title = 'fav Joke $num'
+        ..content = 'fav Joke'
+        ..totalComments = 21
+        ..likes = 1
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.name = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'));
+
+  }
+
+  Future<List<Joke>> fetchMovieJokes({
+      JokeType jokeType,
+      SortOrder sortOrder,
+      JokeSortProperty jokeSortProperty,
+      Movie movie,
+      int page
+  }) async{
+
+      return List.generate(20, (num) => 
+      Joke((b) => b
+        ..id = 'id'
+        ..title = 'movie joke $num'
+        ..content = 'movie Joke'
         ..totalComments = 21
         ..likes = 1
         ..dateAdded = DateTime(2003)

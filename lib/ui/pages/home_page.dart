@@ -24,6 +24,8 @@ class _HomePageState extends State<HomePage>{
   void didChangeDependencies() {
     super.didChangeDependencies();
     appBloc =BlocProvider.of<ApplicationBloc>(context);
+    imageJokeListBloc.fetchAllJokes();
+    textJokeListBloc.fetchAllJokes();
   }
 
   @override

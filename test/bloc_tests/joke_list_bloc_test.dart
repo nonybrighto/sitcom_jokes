@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:test/test.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -30,26 +31,40 @@ void main() {
           ..description = 'desc')),
 
     ];
-    when(jokeService.getJokes(
-        favorite: anyNamed('favorite'),
+    when(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
-        movie: anyNamed('movie'),
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
         .thenAnswer((_) async => [sampleJokes[0]]);
+
+    when(jokeService.fetchMovieJokes(
+        jokeType: anyNamed('jokeType'),
+        movie: anyNamed('movie'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    )) .thenAnswer((_) async => [sampleJokes[0]]);
+
+    when(jokeService.fetchUserFavJokes(
+       jokeType: anyNamed('jokeType'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    )).thenAnswer((_) async => [sampleJokes[0]]);
   });
 
-  test('Expect jokes to be gotten once started', () {
-    JokeListBloc imageJokeListBloc =
-  JokeListBloc(JokeType.image, jokeService: jokeService);
+  // test('Expect jokes to be gotten once started', () {
+  //   JokeListBloc imageJokeListBloc =
+  // JokeListBloc(JokeType.image, jokeService: jokeService);
 
-    expect(imageJokeListBloc.loadState, emitsAnyOf([loading, loadingMore]));
-  });
+  //   expect(imageJokeListBloc.loadState, emitsAnyOf([loading, loadingMore]));
+  // });
 
   test('Expected order when joke loading joke for first time', () {
     JokeListBloc imageJokeListBloc =
         JokeListBloc(JokeType.image, jokeService: jokeService);
+        imageJokeListBloc.fetchAllJokes();
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded]));
     expect(imageJokeListBloc.items, emits([sampleJokes[0]]));
   });
@@ -59,7 +74,8 @@ void main() {
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
 
-    imageJokeListBloc.getItems();
+    imageJokeListBloc.fetchAllJokes();
+    imageJokeListBloc.fetchAllJokes();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loaded]));
     expect(imageJokeListBloc.items, emits([sampleJokes[0], sampleJokes[0] ]));
@@ -67,10 +83,8 @@ void main() {
 
   test('When no item to load and first trial, send load empty', (){
     JokeService jokeService = MockJokeService();
-    when(jokeService.getJokes(
-        favorite: anyNamed('favorite'),
+    when(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
-        movie: anyNamed('movie'),
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
@@ -78,6 +92,7 @@ void main() {
 
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
+    imageJokeListBloc.fetchAllJokes();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loadEmpty]));
 
@@ -86,10 +101,8 @@ void main() {
   test('Expect to load error when issue from server', (){
 
     JokeService jokeService = MockJokeService();
-    when(jokeService.getJokes(
-        favorite: anyNamed('favorite'),
+    when(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
-        movie: anyNamed('movie'),
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
@@ -97,6 +110,7 @@ void main() {
 
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
+    imageJokeListBloc.fetchAllJokes();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loadError]));
   });
@@ -104,19 +118,15 @@ void main() {
   test('when loading second or more page and no content, send load end', (){
 
     JokeService jokeService = MockJokeService();
-    when(jokeService.getJokes(
-        favorite: anyNamed('favorite'),
+    when(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
-        movie: anyNamed('movie'),
         page: 1,
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
         .thenAnswer((_) async => [sampleJokes[0]]);
 
-    when(jokeService.getJokes(
-        favorite: anyNamed('favorite'),
+    when(jokeService.fetchAllJokes(
         jokeType: anyNamed('jokeType'),
-        movie: anyNamed('movie'),
         page: 2,
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
@@ -127,9 +137,67 @@ void main() {
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
 
-    imageJokeListBloc.getItems();
+    imageJokeListBloc.fetchAllJokes();
+    imageJokeListBloc.fetchAllJokes();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loadEnd]));
     expect(imageJokeListBloc.items, emits([sampleJokes[0]]));
+  });
+
+  test('expect to fetch user favorite jokes', ()async{
+
+        JokeListBloc imageJokeListBloc =
+    JokeListBloc(JokeType.image, jokeService: jokeService);
+
+    imageJokeListBloc.fetchUserFavoriteJokes();
+
+     await Future.delayed(Duration(seconds: 2));
+
+    verify(jokeService.fetchUserFavJokes(
+      jokeType: anyNamed('jokeType'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    ));
+  });
+
+  test('expect to fetch movie jokes', ()async{
+
+        JokeListBloc imageJokeListBloc =
+    JokeListBloc(JokeType.image, jokeService: jokeService);
+
+    imageJokeListBloc.fetchMovieJokes( Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'name $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'));
+
+     await Future.delayed(Duration(seconds: 2));
+
+    verify(jokeService.fetchMovieJokes(
+        jokeType: anyNamed('jokeType'),
+        movie: anyNamed('movie'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    ));
+  });
+
+  test('expect to fetch all jokes', ()async{
+
+    JokeListBloc imageJokeListBloc =
+    JokeListBloc(JokeType.image, jokeService: jokeService);
+
+    imageJokeListBloc.fetchAllJokes();
+
+     await Future.delayed(Duration(seconds: 2));
+
+    verify(jokeService.fetchAllJokes(
+        jokeType: anyNamed('jokeType'),
+        page: anyNamed('page'),
+        sortOrder: anyNamed('sortOrder'),
+        jokeSortProperty: anyNamed('jokeSortProperty')
+    ));
   });
 }
