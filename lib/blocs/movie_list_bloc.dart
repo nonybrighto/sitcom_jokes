@@ -27,7 +27,7 @@ class MovieListBloc extends ListBloc<Movie>{
   }
 
   @override
-  Future<List<Movie>> retrieveFromServer() async{
+  Future<List<Movie>> fetchFromServer() async{
     return  await movieService.getMovies(page: super.currentPage);
   }
 

@@ -57,7 +57,10 @@ class JokeListBloc extends ListBloc<Joke>{
   }
 
   @override
-  Future<List<Joke>> retrieveFromServer() async{
+  Future<List<Joke>> fetchFromServer() async{
+    
+
+
     return  await jokeService.getJokes(jokeType: jokeType, favorite: _favorites, sortOrder: _sortOrder, jokeSortProperty: _sortProperty, movie: _movie, page: super.currentPage );
   }
 

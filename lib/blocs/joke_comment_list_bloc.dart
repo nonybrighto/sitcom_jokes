@@ -28,7 +28,7 @@ class JokeCommentListBloc extends ListBloc<Comment>{
   }
 
   @override
-  Future<List<Comment>> retrieveFromServer() async{
+  Future<List<Comment>> fetchFromServer() async{
     return  await jokeService.getComments(joke:commentJoke.id, page: super.currentPage);
   }
 

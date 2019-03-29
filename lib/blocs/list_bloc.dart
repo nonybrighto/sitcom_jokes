@@ -26,7 +26,7 @@ abstract class ListBloc<T> extends BlocBase{
   ListBloc({this.emptyMessage}){
 
     _getItemsController.stream.listen((_){
-        _retrieveItemsFromSource();
+        _fetchItemsFromSource();
     });
 
 
@@ -44,7 +44,7 @@ abstract class ListBloc<T> extends BlocBase{
         _itemsController.sink.add(UnmodifiableListView<T>(itemsCache));
   }
   
-  _retrieveItemsFromSource() async{
+  _fetchItemsFromSource() async{
 
     if(currentPage == 1){
       _loadStateController.sink.add(Loading());
@@ -53,7 +53,7 @@ abstract class ListBloc<T> extends BlocBase{
     }
 
     try{
-      List<T> gottenItems = await retrieveFromServer();
+      List<T> gottenItems = await fetchFromServer();
       if(currentPage == 1){
         if(gottenItems.isEmpty){
           _loadStateController.sink.add(LoadEmpty(emptyMessage));
@@ -92,7 +92,7 @@ abstract class ListBloc<T> extends BlocBase{
   }
 
 
-  Future<List<T>> retrieveFromServer();
+  Future<List<T>> fetchFromServer();
 
   bool itemUpdateCondition(T currentItem , T updatedItem);
 
