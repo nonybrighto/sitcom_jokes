@@ -14,7 +14,7 @@ import 'package:sitcom_joke/services/movie_service.dart';
 import 'package:sitcom_joke/services/user_service.dart';
 import 'package:sitcom_joke/ui/pages/about_page.dart';
 import 'package:sitcom_joke/ui/pages/auth_page.dart';
-import 'package:sitcom_joke/ui/pages/joke/add_joke_page.dart';
+import 'package:sitcom_joke/ui/pages/joke/joke_add_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_comments_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_display_page.dart';
 import 'package:sitcom_joke/ui/pages/movie/movie_details.page.dart';
@@ -49,8 +49,8 @@ class Router{
   static gotoAuthPage(BuildContext context, AuthType authType){
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthPage(authType)));
   }
-  static gotoAddJokePage(BuildContext context){
-     Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddJokePage()));
+  static gotoAddJokePage(BuildContext context, {JokeType jokeType, Movie selectedMovie}){
+     Navigator.of(context).push(MaterialPageRoute(builder: (context) => JokeAddPage(jokeType: jokeType, selectedMovie: selectedMovie,)));
   }
   static gotoSettingsPage(BuildContext context){
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));

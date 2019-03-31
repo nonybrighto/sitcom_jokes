@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sitcom_joke/models/comment.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -122,5 +124,10 @@ class JokeService {
           ..name = 'John $num'
           ..profileIconUrl = 'the_url')));
    
+  }
+
+  Future<Joke> addJoke({Joke joke, File imageToUpload}) async{
+
+     return null;
   }
 }

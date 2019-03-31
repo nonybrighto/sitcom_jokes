@@ -32,4 +32,45 @@ class MovieService{
 
         return null;
   }
+
+  Future<List<Movie>> searchMovies(String searchText) async{
+
+      List<Movie> movies = [
+        Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'name $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'),
+      Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'namew $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'),
+      Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'namew $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'),
+      Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'a $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'),
+      Movie((b) => b
+      ..basicDetails.id = 'id $num'
+      ..basicDetails.name = 'b $num'
+      ..basicDetails.tmdbMovieId = 1
+      ..basicDetails.followed = false
+      ..basicDetails.description = 'desc'),
+      ];
+
+
+      List<Movie> gotten = movies.where((movie) => movie.basicDetails.name.startsWith(searchText)).toList();
+
+        return gotten;
+  }
 }
