@@ -1,4 +1,4 @@
-package com.example.sitcomjoke;
+package com.nonybrighto.sitcomjokes;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
