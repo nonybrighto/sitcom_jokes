@@ -45,6 +45,18 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
         ..add(serializers.serialize(object.likes,
             specifiedType: const FullType(int)));
     }
+    if (object.isLiked != null) {
+      result
+        ..add('isLiked')
+        ..add(serializers.serialize(object.isLiked,
+            specifiedType: const FullType(bool)));
+    }
+    if (object.isFavorited != null) {
+      result
+        ..add('isFavorited')
+        ..add(serializers.serialize(object.isFavorited,
+            specifiedType: const FullType(bool)));
+    }
     if (object.movie != null) {
       result
         ..add('movie')
@@ -94,6 +106,14 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.likes = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
+        case 'isLiked':
+          result.isLiked = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'isFavorited':
+          result.isFavorited = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
         case 'movie':
           result.movie.replace(serializers.deserialize(value,
                   specifiedType: const FullType(BasicMovieDetails))
@@ -122,6 +142,10 @@ class _$Joke extends Joke {
   @override
   final int likes;
   @override
+  final bool isLiked;
+  @override
+  final bool isFavorited;
+  @override
   final BasicMovieDetails movie;
 
   factory _$Joke([void updates(JokeBuilder b)]) =>
@@ -135,6 +159,8 @@ class _$Joke extends Joke {
       this.jokeType,
       this.dateAdded,
       this.likes,
+      this.isLiked,
+      this.isFavorited,
       this.movie})
       : super._() {
     if (id == null) {
@@ -172,6 +198,8 @@ class _$Joke extends Joke {
         jokeType == other.jokeType &&
         dateAdded == other.dateAdded &&
         likes == other.likes &&
+        isLiked == other.isLiked &&
+        isFavorited == other.isFavorited &&
         movie == other.movie;
   }
 
@@ -182,12 +210,16 @@ class _$Joke extends Joke {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, id.hashCode), title.hashCode),
-                            content.hashCode),
-                        totalComments.hashCode),
-                    jokeType.hashCode),
-                dateAdded.hashCode),
-            likes.hashCode),
+                        $jc(
+                            $jc(
+                                $jc($jc($jc(0, id.hashCode), title.hashCode),
+                                    content.hashCode),
+                                totalComments.hashCode),
+                            jokeType.hashCode),
+                        dateAdded.hashCode),
+                    likes.hashCode),
+                isLiked.hashCode),
+            isFavorited.hashCode),
         movie.hashCode));
   }
 
@@ -201,6 +233,8 @@ class _$Joke extends Joke {
           ..add('jokeType', jokeType)
           ..add('dateAdded', dateAdded)
           ..add('likes', likes)
+          ..add('isLiked', isLiked)
+          ..add('isFavorited', isFavorited)
           ..add('movie', movie))
         .toString();
   }
@@ -237,6 +271,14 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   int get likes => _$this._likes;
   set likes(int likes) => _$this._likes = likes;
 
+  bool _isLiked;
+  bool get isLiked => _$this._isLiked;
+  set isLiked(bool isLiked) => _$this._isLiked = isLiked;
+
+  bool _isFavorited;
+  bool get isFavorited => _$this._isFavorited;
+  set isFavorited(bool isFavorited) => _$this._isFavorited = isFavorited;
+
   BasicMovieDetailsBuilder _movie;
   BasicMovieDetailsBuilder get movie =>
       _$this._movie ??= new BasicMovieDetailsBuilder();
@@ -253,6 +295,8 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
       _jokeType = _$v.jokeType;
       _dateAdded = _$v.dateAdded;
       _likes = _$v.likes;
+      _isLiked = _$v.isLiked;
+      _isFavorited = _$v.isFavorited;
       _movie = _$v.movie?.toBuilder();
       _$v = null;
     }
@@ -285,6 +329,8 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
               jokeType: jokeType,
               dateAdded: dateAdded,
               likes: likes,
+              isLiked: isLiked,
+              isFavorited: isFavorited,
               movie: _movie?.build());
     } catch (_) {
       String _$failedField;

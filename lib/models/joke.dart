@@ -31,6 +31,10 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   DateTime get dateAdded;
   @nullable
   int get likes;
+  @nullable 
+  bool get isLiked;
+  @nullable
+  bool get isFavorited;
   @nullable
   BasicMovieDetails get movie;
 
@@ -46,34 +50,8 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   }
 
   Movie getMovie(){
-
-
     BasicMovieDetailsBuilder builder = movie.toBuilder();
     return Movie((b) => b.basicDetails = builder );
   }
 
 }
-
-// class Joke{
-
-//     final String id;
-//     final JokeType jokeType;
-//     final String title;
-//     final String content;
-//     final DateTime dateAdded;
-//     final int likes;
-//     final Movie movie;
-
-//     Joke({this.id, this.jokeType, this.title, this.content, this.dateAdded, this.likes, this.movie});
-
-
-//     factory Joke.fromJson(String jsonString){
-
-//         return Joke();
-//     }
-
-//     String  toJSon(){
-      
-//           return 'dddddd';
-//     }
-// }

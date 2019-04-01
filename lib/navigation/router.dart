@@ -59,10 +59,10 @@ class Router{
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AboutPage()));
   }
 
-  static gotoJokeDisplayPage(BuildContext context, {int initialPage, JokeType jokeType, JokeListBloc jokeListBloc}){
+  static gotoJokeDisplayPage(BuildContext context, {int initialPage, JokeType jokeType, JokeListBloc jokeListBloc, Joke joke}){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<JokeListBloc>(
       bloc: jokeListBloc,
-      child: JokeDisplayPage(initialPage: initialPage, jokeType: jokeType),)));
+      child: JokeDisplayPage(initialPage: initialPage, jokeType: jokeType, currentJoke: joke,),)));
   }
 
   static gotoJokeCommentsPage(BuildContext context, {Joke joke}){

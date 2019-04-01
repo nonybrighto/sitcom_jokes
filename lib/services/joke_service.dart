@@ -27,11 +27,13 @@ class JokeService {
 
     return List.generate(20, (num) => 
       Joke((b) => b
-        ..id = 'id'
-        ..title = 'title1'
+        ..id = 'id$num'
+        ..title = 'title$num'
         ..content = content
         ..totalComments = 21
         ..likes = 1
+        ..isLiked = false
+        ..isFavorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
@@ -50,11 +52,13 @@ class JokeService {
 
         return List.generate(20, (num) => 
       Joke((b) => b
-        ..id = 'id'
+        ..id = 'id$num'
         ..title = 'fav Joke $num'
         ..content = 'fav Joke'
         ..totalComments = 21
         ..likes = 1
+        ..isLiked = false
+        ..isFavorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
@@ -74,11 +78,13 @@ class JokeService {
 
       return List.generate(20, (num) => 
       Joke((b) => b
-        ..id = 'id'
+        ..id = 'id$num'
         ..title = 'movie joke $num'
         ..content = 'movie Joke'
         ..totalComments = 21
         ..likes = 1
+        ..isLiked = false
+        ..isFavorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
@@ -98,11 +104,13 @@ class JokeService {
       await Future.delayed(Duration(seconds: 2));
       return List.generate(20, (num) => 
       Joke((b) => b
-        ..id = 'id'
+        ..id = 'id$num'
         ..title = 'user joke $num'
         ..content = 'user Joke'
         ..totalComments = 21
         ..likes = 1
+        ..isLiked = false
+        ..isFavorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
@@ -129,5 +137,18 @@ class JokeService {
   Future<Joke> addJoke({Joke joke, File imageToUpload}) async{
 
      return null;
+  }
+
+  Future<bool> likeJoke({Joke joke}) async{
+        return true;
+  }
+  Future<bool> dislikeJoke({Joke joke}) async{
+      return true;
+  }
+  Future<bool>  favoriteJoke({Joke joke}) async{
+      return true;
+  }
+  Future<bool> unfavoriteJoke({Joke joke}) async{
+      return true;
   }
 }

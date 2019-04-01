@@ -1,16 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
+import 'package:sitcom_joke/blocs/joke_control_bloc.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/navigation/router.dart';
+import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:zoomable_image/zoomable_image.dart';
 
 class JokeDisplayPage extends StatefulWidget {
   final int initialPage;
   final JokeType jokeType;
-  JokeDisplayPage({Key key, this.initialPage, this.jokeType})
+  final Joke currentJoke;
+  JokeDisplayPage({Key key, this.initialPage, this.jokeType, this.currentJoke})
       : super(key: key);
 
   @override
@@ -19,6 +22,7 @@ class JokeDisplayPage extends StatefulWidget {
 
 class _JokeDisplayPageState extends State<JokeDisplayPage> {
   JokeListBloc jokeListBloc;
+  JokeControlBloc jokeControlBloc;
   PageController _pageController;
 
   bool canLoadMore = true;
@@ -28,6 +32,14 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
     super.initState();
     _pageController = PageController(initialPage: widget.initialPage);
     _pageController.addListener(_scrollListener);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    jokeListBloc = BlocProvider.of<JokeListBloc>(context);
+    jokeControlBloc =JokeControlBloc(jokeControlled: widget.currentJoke, jokeListBloc: jokeListBloc, jokeService: JokeService());
+    
   }
 
 
@@ -43,6 +55,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   _handlePageChanged(index, Joke joke) {
     // _currentPageIndex = index;
     jokeListBloc.changeCurrentJoke(joke);
+    jokeControlBloc =JokeControlBloc( jokeControlled: joke, jokeListBloc: jokeListBloc, jokeService: JokeService());
   }
 
   _displayImageJoke(Joke joke) {
@@ -91,7 +104,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
-    jokeListBloc = BlocProvider.of<JokeListBloc>(context);
+    
     
     return Scaffold(
       appBar: AppBar(
@@ -160,7 +173,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
               GestureDetector(child: Text('${joke.totalComments} comments'), onTap: (){
                 Router.gotoJokeCommentsPage(context, joke: joke);
               },),
-              GestureDetector(child: Text('${joke.likes} comments'), onTap: (){
+              GestureDetector(child: Text('${joke.likes} likes'), onTap: (){
                 Router.gotoJokeLikersPage(context, joke: joke);
               },),
           ],),
@@ -168,10 +181,13 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
         Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _jokeActionBox('Likes', Icons.thumb_up, false, () {}),
+          _jokeActionBox('Likes', Icons.thumb_up, (joke.isLiked)?true:false, () {
+            jokeControlBloc.toggleJokeLike();
+          }),
           _jokeActionBox('Save', Icons.arrow_downward, false, () {}),
-          _jokeActionBox('Favorite', Icons.favorite,
-              (joke != null) ? /*joke.isFaved*/ true : false, () {}),
+          _jokeActionBox('Favorite', Icons.favorite,(joke.isFavorited) ?true : false, () {
+            jokeControlBloc.toggleJokeFavorite();
+          }),
           _jokeActionBox('Share', Icons.share, false, () {}),
         ],
          )
