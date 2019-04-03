@@ -43,7 +43,7 @@ class _JokeCommentPageState extends State<JokeCommentPage> {
             onTap: (){
               Router.gotoUserDetailsPage(context, comment.owner);
             },
-            child: CircleAvatar(child: Text(comment.owner.name.substring(0, 1)), )),
+            child: CircleAvatar(child: Text(comment.owner.username.substring(0, 1)), )),
           title: Container(height: 30.0, child: Text(comment.content)), trailing: Text('dd'),);
       },
 

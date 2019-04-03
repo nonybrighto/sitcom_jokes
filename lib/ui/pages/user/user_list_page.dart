@@ -42,8 +42,8 @@ class _UserListPageState extends State<UserListPage> {
             onTap: (){
               Router.gotoUserDetailsPage(context, user);
             },
-            child: CircleAvatar(child: Text(user.name.substring(0, 1)), )),
-          title: Container(height: 30.0, child: Text(user.name)),);
+            child: CircleAvatar(child: Text(user.username.substring(0, 1)), )),
+          title: Container(height: 30.0, child: Text(user.username)),);
       },
 
     ),

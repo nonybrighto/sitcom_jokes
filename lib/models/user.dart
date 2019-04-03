@@ -13,17 +13,20 @@ abstract class User implements Built<User, UserBuilder> {
   static Serializer<User> get serializer => _$userSerializer;
 
   String get id;
-  String get name;
+  String get username;
+  @nullable
   String get profileIconUrl;
+  @nullable
+  String get email;
 
   factory User([updates(UserBuilder b)]) = _$User;
   User._();
 
 
-  factory User.fromJson(String jsonString){
+  factory User.fromJson( Map<String, dynamic> json){
 
-    final parsed = json.jsonDecode(jsonString);
-    User user = standardSerializers.deserializeWith(User.serializer, parsed);
+    //final parsed = json.jsonDecode(jsonString);
+    User user = standardSerializers.deserializeWith(User.serializer, json);
     return user;
   }
 

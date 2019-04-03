@@ -29,11 +29,11 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
   AuthBloc authBloc;
 
   TextEditingController _usernameController =
-      TextEditingController(text: 'nony');
+      TextEditingController(text: 'larry');
   TextEditingController _emailController =
-      TextEditingController(text: 'example@gmail.com');
+      TextEditingController(text: 'larry@gmail.com');
   TextEditingController _passwordController =
-      TextEditingController(text: 'password');
+      TextEditingController(text: 'tested69#');
 
   @override
   void initState() {
@@ -284,5 +284,5 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
 }
 
 _canClickAuthButton(LoadState loadState) {
-  return loadState is Loaded;
+  return !(loadState is Loading);
 }

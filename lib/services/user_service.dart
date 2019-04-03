@@ -13,8 +13,8 @@ import '../constants/constants.dart';
 
 class UserService {
 
-  static const userUrl = kAppApihost+'/users';
-  static const authUrl = kAppApihost+'/auth';
+  static const userUrl = kAppApiUrl+'/users';
+  static const authUrl = kAppApiUrl+'/auth';
 
   Map<String , String> headers = {'contentType':'application/json'};
 
@@ -25,7 +25,7 @@ Future<User> getUser(User user) async{
 
     return User((b) => b
       ..id='id $num'
-      ..name='peter $num'
+      ..username='peter $num'
       ..profileIconUrl='url $num'
     );
 
@@ -36,7 +36,7 @@ Future<List<User>> fetchJokeLikers({Joke jokeLiked}) async{
 
     return List.generate(20, (num) => User((b) => b
       ..id='id liked $num'
-      ..name='peter liked $num'
+      ..username='peter liked $num'
       ..profileIconUrl='url $num'
     )).toList();
 }

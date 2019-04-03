@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "209805367154",
+    "firebase_url": "https://sitcom-jokes.firebaseio.com",
+    "project_id": "sitcom-jokes",
+    "storage_bucket": "sitcom-jokes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209805367154:android:6b682edb3d82f839",
+        "android_client_info": {
+          "package_name": "com.nonybrighto.sitcomjokes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209805367154-976q0ahlsp720th3ivkq4civsslmu0os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nonybrighto.sitcomjokes",
+            "certificate_hash": "cccee93a21464bb31b2d2780cda1c30870e32520"
+          }
+        },
+        {
+          "client_id": "209805367154-3nsk4as236encpd7fag3t4nvrgdl2mm4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqhGA1bLgmj_KWZx57s-l3cDPBIxCwtOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209805367154-3nsk4as236encpd7fag3t4nvrgdl2mm4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

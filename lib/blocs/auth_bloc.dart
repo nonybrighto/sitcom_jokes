@@ -48,7 +48,7 @@ class AuthBloc extends BlocBase {
 
   _handleLogin(Map loginCredential) async {
     _startAuthProcess(() {
-      return authService.signInWithEmailAndPasword(
+      return authService.signInWithEmailAndPassword(
           loginCredential['email'], loginCredential['password']);
     });
   }

@@ -8,7 +8,7 @@ import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/models/user.dart';
 
 class JokeService {
-  final String jokeUrl = kAppApihost + '/jokes/';
+  final String jokeUrl = kAppApiUrl + '/jokes/';
 
   Future<List<Joke>> fetchAllJokes({
       JokeType jokeType,
@@ -129,7 +129,7 @@ class JokeService {
         ..dateAdded = DateTime(2000)
         ..owner.update((u) => u
           ..id = '1 $num'
-          ..name = 'John $num'
+          ..username = 'John $num'
           ..profileIconUrl = 'the_url')));
    
   }

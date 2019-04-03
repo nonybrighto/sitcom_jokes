@@ -66,7 +66,7 @@ class AppDrawer extends StatelessWidget {
 
   _buildUserProfile(User user){
 
-      return Text(user.name);
+      return Text(user.username);
   }
 
   _buildAuthNavButton(BuildContext context, {String buttonText, AuthType authType }){

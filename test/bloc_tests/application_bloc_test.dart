@@ -18,7 +18,7 @@ void main(){
     ApplicationBloc appBloc = ApplicationBloc();
     User user = User((b) => b
       ..id='id'
-      ..name='peter'
+      ..username='peter'
       ..profileIconUrl='url'
     );
     appBloc.changeCurrentUser(user);

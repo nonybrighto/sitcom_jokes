@@ -19,7 +19,7 @@ void main(){
     sampleUsers = [
       User((b) => b
       ..id='id $num'
-      ..name='peter $num'
+      ..username='peter $num'
       ..profileIconUrl='url $num'
     )
     ];

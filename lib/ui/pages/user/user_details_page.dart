@@ -64,7 +64,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                     floating: false,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
-                        title: Text(user.name),
+                        title: Text(user.username),
                         background: Stack(
                           children: <Widget>[
                                    Container(

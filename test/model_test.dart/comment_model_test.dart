@@ -9,7 +9,7 @@ void main() {
       ..dateAdded =DateTime(2000, 11, 22)
       ..owner.update((u) => u
           ..id = '1'
-          ..name = 'John'
+          ..username = 'John'
           ..profileIconUrl = 'the_url')
       );
     
@@ -19,7 +19,7 @@ void main() {
       ..dateAdded =DateTime(2000, 11, 22)
       ..owner.update((u) => u
           ..id = '1'
-          ..name = 'John'
+          ..username = 'John'
           ..profileIconUrl = 'the_url')
       );
     
@@ -39,7 +39,7 @@ void main() {
             ..dateAdded =DateTime(2000, 11, 22).toUtc()
             ..owner.update((u) => u
                 ..id = '1'
-                ..name = 'John'
+                ..username = 'John'
                 ..profileIconUrl = 'the_url')
             );
     

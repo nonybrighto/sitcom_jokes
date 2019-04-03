@@ -33,11 +33,11 @@ void main(){
 
     User user = User((b) => b
       ..id='123a'
-      ..name='john'
+      ..username='john'
       ..profileIconUrl='theurl'
     );
 
-    when(authService.signInWithEmailAndPasword('john@email.com', 'password123')).thenAnswer((_) async =>  user);
+    when(authService.signInWithEmailAndPassword('john@email.com', 'password123')).thenAnswer((_) async =>  user);
 
     DelegateMock delegateMock = new DelegateMock();
     AuthBloc authBloc = AuthBloc(authService: authService, delegate: delegateMock);
@@ -47,12 +47,12 @@ void main(){
 
     await Future.delayed(Duration(seconds: 3));
     expect(successUser, user);
-    verify(authService.signInWithEmailAndPasword('john@email.com', 'password123'));
+    verify(authService.signInWithEmailAndPassword('john@email.com', 'password123'));
   });
 
   test('call error delegate when error in login process', () async{
 
-    when(authService.signInWithEmailAndPasword('john@email.com', 'password123')).thenAnswer((_)  =>  Future.error('error occured'));
+    when(authService.signInWithEmailAndPassword('john@email.com', 'password123')).thenAnswer((_)  =>  Future.error('error occured'));
 
     DelegateMock delegateMock = new DelegateMock();
     AuthBloc authBloc = AuthBloc(authService: authService, delegate: delegateMock);
@@ -61,7 +61,7 @@ void main(){
     expect(authBloc.loadState, emitsInOrder([loaded, loading, loadError]));
     await Future.delayed(Duration(seconds: 3));
     expect(errorMessage, 'error occured');
-    verify(authService.signInWithEmailAndPasword('john@email.com', 'password123'));
+    verify(authService.signInWithEmailAndPassword('john@email.com', 'password123'));
 
   });
 }

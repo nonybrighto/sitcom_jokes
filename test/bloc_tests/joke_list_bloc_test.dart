@@ -216,7 +216,7 @@ void main() {
 
     imageJokeListBloc.fetchUserJokes(User((b) => b
       ..id='id'
-      ..name='peter'
+      ..username='peter'
       ..profileIconUrl='url'
     ));
 

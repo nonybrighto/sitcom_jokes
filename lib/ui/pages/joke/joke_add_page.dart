@@ -170,7 +170,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                             },
                             itemBuilder: (context, movieSuggestion) {
                               return ListTile(
-                                title: Text(movieSuggestion.basicDetails.name),
+                                title: Text(movieSuggestion.basicDetails.username),
                               );
                             },
                             transitionBuilder:
@@ -178,7 +178,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                               return suggestionsBox;
                             },
                             onSuggestionSelected: (movieSuggestion) {
-                              this._movieController.text = movieSuggestion.basicDetails.name;
+                              this._movieController.text = movieSuggestion.basicDetails.username;
                               _selectedMovie =  movieSuggestion;
                             },
                             validator: (value) {
