@@ -20,6 +20,10 @@ abstract class JokeListResponse  implements Built<JokeListResponse, JokeListResp
   int get totalPages;
   int get perPage;
   int get currentPage;
+  @nullable
+  int get nextPage;
+  @nullable
+  int get previousPage;
   BuiltList<Joke> get results;
 
   factory JokeListResponse([updates(JokeListResponseBuilder b)]) = _$JokeListResponse;

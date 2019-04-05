@@ -20,6 +20,10 @@ abstract class UserListResponse  implements Built<UserListResponse, UserListResp
   int get totalPages;
   int get perPage;
   int get currentPage;
+  @nullable
+  int get nextPage;
+  @nullable
+  int get previousPage;
   BuiltList<User> get results;
 
   factory UserListResponse([updates(UserListResponseBuilder b)]) = _$UserListResponse;

@@ -38,6 +38,18 @@ class _$BasicMovieDetailsListResponseSerializer
           specifiedType: const FullType(
               BuiltList, const [const FullType(BasicMovieDetails)])),
     ];
+    if (object.nextPage != null) {
+      result
+        ..add('nextPage')
+        ..add(serializers.serialize(object.nextPage,
+            specifiedType: const FullType(int)));
+    }
+    if (object.previousPage != null) {
+      result
+        ..add('previousPage')
+        ..add(serializers.serialize(object.previousPage,
+            specifiedType: const FullType(int)));
+    }
 
     return result;
   }
@@ -66,6 +78,14 @@ class _$BasicMovieDetailsListResponseSerializer
           result.currentPage = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
+        case 'nextPage':
+          result.nextPage = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'previousPage':
+          result.previousPage = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
         case 'results':
           result.results.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -87,6 +107,10 @@ class _$BasicMovieDetailsListResponse extends BasicMovieDetailsListResponse {
   @override
   final int currentPage;
   @override
+  final int nextPage;
+  @override
+  final int previousPage;
+  @override
   final BuiltList<BasicMovieDetails> results;
 
   factory _$BasicMovieDetailsListResponse(
@@ -94,7 +118,12 @@ class _$BasicMovieDetailsListResponse extends BasicMovieDetailsListResponse {
       (new BasicMovieDetailsListResponseBuilder()..update(updates)).build();
 
   _$BasicMovieDetailsListResponse._(
-      {this.totalPages, this.perPage, this.currentPage, this.results})
+      {this.totalPages,
+      this.perPage,
+      this.currentPage,
+      this.nextPage,
+      this.previousPage,
+      this.results})
       : super._() {
     if (totalPages == null) {
       throw new BuiltValueNullFieldError(
@@ -130,14 +159,20 @@ class _$BasicMovieDetailsListResponse extends BasicMovieDetailsListResponse {
         totalPages == other.totalPages &&
         perPage == other.perPage &&
         currentPage == other.currentPage &&
+        nextPage == other.nextPage &&
+        previousPage == other.previousPage &&
         results == other.results;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, totalPages.hashCode), perPage.hashCode),
-            currentPage.hashCode),
+        $jc(
+            $jc(
+                $jc($jc($jc(0, totalPages.hashCode), perPage.hashCode),
+                    currentPage.hashCode),
+                nextPage.hashCode),
+            previousPage.hashCode),
         results.hashCode));
   }
 
@@ -147,6 +182,8 @@ class _$BasicMovieDetailsListResponse extends BasicMovieDetailsListResponse {
           ..add('totalPages', totalPages)
           ..add('perPage', perPage)
           ..add('currentPage', currentPage)
+          ..add('nextPage', nextPage)
+          ..add('previousPage', previousPage)
           ..add('results', results))
         .toString();
   }
@@ -170,6 +207,14 @@ class BasicMovieDetailsListResponseBuilder
   int get currentPage => _$this._currentPage;
   set currentPage(int currentPage) => _$this._currentPage = currentPage;
 
+  int _nextPage;
+  int get nextPage => _$this._nextPage;
+  set nextPage(int nextPage) => _$this._nextPage = nextPage;
+
+  int _previousPage;
+  int get previousPage => _$this._previousPage;
+  set previousPage(int previousPage) => _$this._previousPage = previousPage;
+
   ListBuilder<BasicMovieDetails> _results;
   ListBuilder<BasicMovieDetails> get results =>
       _$this._results ??= new ListBuilder<BasicMovieDetails>();
@@ -183,6 +228,8 @@ class BasicMovieDetailsListResponseBuilder
       _totalPages = _$v.totalPages;
       _perPage = _$v.perPage;
       _currentPage = _$v.currentPage;
+      _nextPage = _$v.nextPage;
+      _previousPage = _$v.previousPage;
       _results = _$v.results?.toBuilder();
       _$v = null;
     }
@@ -211,6 +258,8 @@ class BasicMovieDetailsListResponseBuilder
               totalPages: totalPages,
               perPage: perPage,
               currentPage: currentPage,
+              nextPage: nextPage,
+              previousPage: previousPage,
               results: results.build());
     } catch (_) {
       String _$failedField;

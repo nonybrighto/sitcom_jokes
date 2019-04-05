@@ -20,6 +20,10 @@ abstract class MovieListResponse  implements Built<MovieListResponse, MovieListR
   int get totalPages;
   int get perPage;
   int get currentPage;
+  @nullable
+  int get nextPage;
+  @nullable
+  int get previousPage;
   BuiltList<Movie> get results;
 
   factory MovieListResponse([updates(MovieListResponseBuilder b)]) = _$MovieListResponse;

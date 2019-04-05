@@ -20,6 +20,10 @@ abstract class CommentListResponse  implements Built<CommentListResponse, Commen
   int get totalPages;
   int get perPage;
   int get currentPage;
+  @nullable
+  int get nextPage;
+  @nullable
+  int get previousPage;
   BuiltList<Comment> get results;
 
   factory CommentListResponse([updates(CommentListResponseBuilder b)]) = _$CommentListResponse;

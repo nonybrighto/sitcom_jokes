@@ -20,6 +20,10 @@ abstract class BasicMovieDetailsListResponse  implements Built<BasicMovieDetails
   int get totalPages;
   int get perPage;
   int get currentPage;
+  @nullable
+  int get nextPage;
+  @nullable
+  int get previousPage;
   BuiltList<BasicMovieDetails> get results;
 
   factory BasicMovieDetailsListResponse([updates(BasicMovieDetailsListResponseBuilder b)]) = _$BasicMovieDetailsListResponse;
