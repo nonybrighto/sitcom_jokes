@@ -62,6 +62,12 @@ class UserListBloc extends ListBloc<User>{
   bool itemUpdateCondition(User currentUser, User updatedUser) {
     return currentUser.id == updatedUser.id;
   }
+
+  @override
+  String getEmptyResultMessage() {
+    
+    return 'No Users to display';
+  }
 }
 
 enum UserListFetchType{jokeLikers }

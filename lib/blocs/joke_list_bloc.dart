@@ -130,6 +130,12 @@ class JokeListBloc extends ListBloc<Joke>{
   bool itemUpdateCondition(Joke currentJoke, Joke updatedJoke) {
     return currentJoke.id == updatedJoke.id;
   }
+
+  @override
+  String getEmptyResultMessage() {
+    
+    return 'No Jokes to display';
+  }
 }
 
 enum JokeListFetchType{ userFavJokes, movieJokes, allJokes, userJokes }

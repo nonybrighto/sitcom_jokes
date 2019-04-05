@@ -8,7 +8,6 @@ import 'package:sitcom_joke/models/load_state.dart';
 abstract class ListBloc<T> extends BlocBase {
   int currentPage = 1;
   List<T> itemsCache = [];
-  final String emptyMessage;
   final _itemsController = BehaviorSubject<UnmodifiableListView<T>>();
   final _loadStateController = BehaviorSubject<LoadState>();
   final _getItemsController = StreamController<Null>();
@@ -23,7 +22,7 @@ abstract class ListBloc<T> extends BlocBase {
   void Function(T) get updateItem =>
       (item) => _updateItemController.sink.add(item);
 
-  ListBloc({this.emptyMessage}) {
+  ListBloc() {
     _getItemsController.stream.listen((_) {
       _fetchItemsFromSource();
     });
@@ -50,7 +49,7 @@ abstract class ListBloc<T> extends BlocBase {
 
       if (currentPage == 1) {
         if (gottenItems.isEmpty) {
-          _loadStateController.sink.add(LoadEmpty(emptyMessage));
+          _loadStateController.sink.add(LoadEmpty(getEmptyResultMessage()));
         } else {
           _changeItems(gottenItems);
           _loadStateController.sink.add((_isPageEnd(gottenResponse))?LoadEnd():Loaded());
@@ -89,6 +88,7 @@ abstract class ListBloc<T> extends BlocBase {
   Future<ListResponse> fetchFromServer();
 
   bool itemUpdateCondition(T currentItem, T updatedItem);
+  String getEmptyResultMessage();
 
   close() {
     _loadStateController.close();

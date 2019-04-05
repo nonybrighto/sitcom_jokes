@@ -36,4 +36,10 @@ class MovieListBloc extends ListBloc<Movie>{
   bool itemUpdateCondition(Movie currentMovie, Movie updatedMovie) {
     return currentMovie.basicDetails.id == updatedMovie.basicDetails.id;
   }
+
+  @override
+  String getEmptyResultMessage() {
+    
+    return 'No Movies to display';
+  }
 }

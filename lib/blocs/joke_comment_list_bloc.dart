@@ -37,4 +37,10 @@ class JokeCommentListBloc extends ListBloc<Comment>{
   bool itemUpdateCondition(Comment currentComment , Comment updatedComment) {
     return currentComment.id ==updatedComment.id;
   }
+
+  @override
+  String getEmptyResultMessage() {
+    
+    return 'No Comments to display';
+  }
 }
