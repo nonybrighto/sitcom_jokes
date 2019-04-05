@@ -1,126 +1,79 @@
-import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:test/test.dart';
+import 'dart:convert';
+
 import 'package:sitcom_joke/models/joke.dart';
+import 'package:test/test.dart';
 
 main() {
   test('Check if two objects with same values are equal', () {
-    Joke firstJoke = Joke((d) => d
-      ..id = '1'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-    );
-    Joke secondJoke = Joke((d) => d
-      ..id = '1'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-    );
-    Joke thirdJoke = Joke((d) => d
-      ..id = '1z'
-      ..title = 'titlez'
-      ..content = 'contentz'
-      ..totalComments = 25
-      ..jokeType = JokeType.image
+    Joke firstJoke = Joke((b) => b
+        ..id = 'id$num'
+        ..title = 'user joke $num'
+        ..content = 'user Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.title = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'
+        ..owner.update((u) => u
+          ..id = '1 $num'
+          ..username = 'John $num'
+          ..profileIconUrl = 'the_url'));
 
-    );
+    Joke secondJoke = Joke((b) => b
+        ..id = 'id$num'
+        ..title = 'user joke $num'
+        ..content = 'user Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.title = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'
+        ..owner.update((u) => u
+          ..id = '1 $num'
+          ..username = 'John $num'
+          ..profileIconUrl = 'the_url'));
+    
     expect(firstJoke, secondJoke);
     expect(true, firstJoke == secondJoke);
-    expect(true, firstJoke != thirdJoke);
   });
 
   test('Convert json to joke object', () {
-    String jokeJson =
-        '{ "id" : "id", "title" : "title", "content":"content","totalComments":22, "jokeType":"image", "movie" : ' +
-            '{ "id": "id", "name":"name", "description":"desc", "tmdbMovieId":1 } }';
-    Joke jokeObject = Joke((b) => b
-      ..id = 'id'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-      ..movie.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
+   
+   String jokeJson = '''{
+    "likeCount": 0,
+    "commentCount": 0,
+    "id": "55fb43e1-9b5d-5f47-ae5e-99d034437ae1",
+    "title": "This is a fresh joke sssa ddd this s",
+    "dateAdded": "2019-04-04 15:39:58",
+    "content": "anoxxx xxther joke is the text ss  s sdddddd eeess rrrrresdd",
+    "liked": false,
+    "favorited": false,
+    "jokeType": "text",
+    "owner": {
+        "photoUrl": "https://lh3.googleusercontent.com/-7pX2KjlP-14/AAAAAAAAAAI/AAAAAAAAABQ/oylyelUx3Nw/s96-c/photo.jpg",
+        "id": "bd19684f-6e1d-57c2-b612-1d03fd1d8227",
+        "username": "nony"
+    },
+    "movie": {
+        "description": "the movie description",
+        "tmdbMovieId": 1,
+        "id": "abcde",
+        "title": "movie title",
+        "followed": false
+    }
+}''';
 
-    //timestamp is in milliseconds
-    String jokeJson2 =
-        '{ "id" : "id", "title" : "title", "content":"content", "totalComments":22, "jokeType":"image", "dateAdded": "2019-09-27","movie" : ' +
-            '{ "id": "id", "name":"name", "description":"desc" , "tmdbMovieId":1 } }';
-    Joke jokeObject2 = Joke((b) => b
-      ..id = 'id'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-      ..dateAdded = DateTime(2019, 09, 27)
-      ..movie.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
-
-    expect(Joke.fromJson(jokeJson), jokeObject);
-    expect(Joke.fromJson(jokeJson2).dateAdded.year, jokeObject2.dateAdded.year);
-  });
-
-  test('get movie from joke', (){
-       Joke jokeObject = Joke((b) => b
-      ..id = 'id'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-      ..movie.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
-
-      Movie movie = Movie((m) => m..basicDetails.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
-
-        expect(movie, jokeObject.getMovie());
-
-  });
-
-  test('can deserialize jokeType', (){
-
-    String jokeJson =
-        '{ "id" : "id", "title" : "title", "content":"content", "totalComments":22, "jokeType":"image","movie" : ' +
-            '{ "id": "id", "name":"name", "description":"desc",  "tmdbMovieId":1 } }';
-    Joke jokeObject = Joke((b) => b
-      ..id = 'id'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-      ..movie.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
-
-    expect(Joke.fromJson(jokeJson).jokeType, jokeObject.jokeType);
-
-  });
-
-  test('Convert from joke object to json', () {
-    // String jokeJson = """ 
-    //                       {
-    //                         "id":"id",
-    //                         "title": "title",
-    //                         "content": "content"
-    //                       }
-    //                     """;
-    //Joke jokeObject = Joke(id: 'id',title: 'title', content: 'content');
-    // expect(jokeObject.toJSon() , jokeJson);
+Joke convertedJoke =Joke.fromJson(json.decode(jokeJson));
+    expect(convertedJoke.id, '55fb43e1-9b5d-5f47-ae5e-99d034437ae1');
   });
 }

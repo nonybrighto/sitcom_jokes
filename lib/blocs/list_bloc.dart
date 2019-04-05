@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:rxdart/rxdart.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
+import 'package:sitcom_joke/models/list_response.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 
 abstract class ListBloc<T> extends BlocBase{
@@ -53,7 +54,9 @@ abstract class ListBloc<T> extends BlocBase{
     }
 
     try{
-      List<T> gottenItems = await fetchFromServer();
+      ListResponse gottenResponse = await fetchFromServer();
+      List<T> gottenItems =  gottenResponse.results.toList();
+     
       if(currentPage == 1){
         if(gottenItems.isEmpty){
           _loadStateController.sink.add(LoadEmpty(emptyMessage));
@@ -92,7 +95,7 @@ abstract class ListBloc<T> extends BlocBase{
   }
 
 
-  Future<List<T>> fetchFromServer();
+  Future<ListResponse> fetchFromServer();
 
   bool itemUpdateCondition(T currentItem , T updatedItem);
 

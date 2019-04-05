@@ -6,8 +6,10 @@ import 'dart:async';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:http/http.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
+import 'package:sitcom_joke/models/user_list_response.dart';
 //import 'package:http/http.dart' as http;
 import '../constants/constants.dart';
 
@@ -32,12 +34,18 @@ Future<User> getUser(User user) async{
 }
 
 
-Future<List<User>> fetchJokeLikers({Joke jokeLiked}) async{
+Future<UserListResponse> fetchJokeLikers({Joke jokeLiked}) async{
 
-    return List.generate(20, (num) => User((b) => b
+   var userListGen = List.generate(20, (num) => User((b) => b
       ..id='id liked $num'
       ..username='peter liked $num'
       ..profileIconUrl='url $num'
     )).toList();
+
+     BuiltList<User> userList = BuiltList();
+      var userBuilder = userList.toBuilder();
+      userBuilder.addAll(userListGen);
+      userList =userBuilder.build();
+      return UserListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  userList.toBuilder());
 }
 }

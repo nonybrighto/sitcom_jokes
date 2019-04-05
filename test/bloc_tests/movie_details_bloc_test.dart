@@ -1,37 +1,16 @@
+import 'package:mockito/mockito.dart';
 import 'package:sitcom_joke/blocs/movie_details_bloc.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/services/movie_service.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../general_mocks.dart';
 import '../type_matchers.dart';
 
 void main() {
-  MovieService movieService;
-  List<Movie> sampleMovies;
+ 
 
   setUp(() {
-    movieService = MockMovieService();
-
-    sampleMovies = [
-      Movie((b) => b
-        ..basicDetails.id = 'id1'
-        ..basicDetails.name = 'name ssnum'
-        ..basicDetails.tmdbMovieId = 1
-        ..basicDetails.followed = true
-        ..basicDetails.description = 'desc'
-        ..tmdbDetails.id = 1
-        ..tmdbDetails.title = 'peter'
-        ..tmdbDetails.backdropPath = ''
-        ..tmdbDetails.overview = 'ddd'
-        ..tmdbDetails.releaseDate = DateTime(2000,10,10)
-        ..tmdbDetails.voteAverage = 8.9
-        )
-    ];
-
-    when(movieService.getMovies(page: anyNamed('page')))
-      ..thenAnswer((_) async => [sampleMovies[0]]);
   });
 
   test('Load movie if it is incomplete', () async{
@@ -39,14 +18,14 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
           ..basicDetails.id = 'id1'
-          ..basicDetails.name = 'name ssnum'
+          ..basicDetails.title = 'name ssnum'
           ..basicDetails.tmdbMovieId = 1
           ..basicDetails.followed = true
           ..basicDetails.description = 'desc'
         );
     Movie fullMovieDetails = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
@@ -73,7 +52,7 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
@@ -100,13 +79,13 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc');
     Movie fullMovieDetails = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
@@ -119,7 +98,7 @@ void main() {
       );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'
@@ -165,13 +144,13 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc');
     Movie fullMovieDetails = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = true
       ..basicDetails.description = 'desc'
@@ -184,7 +163,7 @@ void main() {
       );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
       ..basicDetails.id = 'id1'
-      ..basicDetails.name = 'name ssnum'
+      ..basicDetails.title = 'name ssnum'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'

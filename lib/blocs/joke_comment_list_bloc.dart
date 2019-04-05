@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:sitcom_joke/blocs/list_bloc.dart';
 import 'package:sitcom_joke/models/comment.dart';
+import 'package:sitcom_joke/models/comment_list_response.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 
@@ -28,7 +29,7 @@ class JokeCommentListBloc extends ListBloc<Comment>{
   }
 
   @override
-  Future<List<Comment>> fetchFromServer() async{
+  Future<CommentListResponse> fetchFromServer() async{
     return  await jokeService.getComments(joke:commentJoke.id, page: super.currentPage);
   }
 

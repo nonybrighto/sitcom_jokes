@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sitcom_joke/blocs/list_bloc.dart';
+import 'package:sitcom_joke/models/joke_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -84,7 +85,7 @@ class JokeListBloc extends ListBloc<Joke>{
   }
 
   @override
-  Future<List<Joke>> fetchFromServer() async{
+  Future<JokeListResponse> fetchFromServer() async{
 
     switch (fetchType) {
       case JokeListFetchType.userFavJokes:

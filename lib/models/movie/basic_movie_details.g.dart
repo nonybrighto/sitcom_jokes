@@ -22,8 +22,9 @@ class _$BasicMovieDetailsSerializer
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
-      'name',
-      serializers.serialize(object.name, specifiedType: const FullType(String)),
+      'title',
+      serializers.serialize(object.title,
+          specifiedType: const FullType(String)),
       'tmdbMovieId',
       serializers.serialize(object.tmdbMovieId,
           specifiedType: const FullType(int)),
@@ -59,8 +60,8 @@ class _$BasicMovieDetailsSerializer
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'name':
-          result.name = serializers.deserialize(value,
+        case 'title':
+          result.title = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'tmdbMovieId':
@@ -86,7 +87,7 @@ class _$BasicMovieDetails extends BasicMovieDetails {
   @override
   final String id;
   @override
-  final String name;
+  final String title;
   @override
   final int tmdbMovieId;
   @override
@@ -98,13 +99,13 @@ class _$BasicMovieDetails extends BasicMovieDetails {
       (new BasicMovieDetailsBuilder()..update(updates)).build();
 
   _$BasicMovieDetails._(
-      {this.id, this.name, this.tmdbMovieId, this.followed, this.description})
+      {this.id, this.title, this.tmdbMovieId, this.followed, this.description})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('BasicMovieDetails', 'id');
     }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('BasicMovieDetails', 'name');
+    if (title == null) {
+      throw new BuiltValueNullFieldError('BasicMovieDetails', 'title');
     }
     if (tmdbMovieId == null) {
       throw new BuiltValueNullFieldError('BasicMovieDetails', 'tmdbMovieId');
@@ -124,7 +125,7 @@ class _$BasicMovieDetails extends BasicMovieDetails {
     if (identical(other, this)) return true;
     return other is BasicMovieDetails &&
         id == other.id &&
-        name == other.name &&
+        title == other.title &&
         tmdbMovieId == other.tmdbMovieId &&
         followed == other.followed &&
         description == other.description;
@@ -133,7 +134,7 @@ class _$BasicMovieDetails extends BasicMovieDetails {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), name.hashCode), tmdbMovieId.hashCode),
+        $jc($jc($jc($jc(0, id.hashCode), title.hashCode), tmdbMovieId.hashCode),
             followed.hashCode),
         description.hashCode));
   }
@@ -142,7 +143,7 @@ class _$BasicMovieDetails extends BasicMovieDetails {
   String toString() {
     return (newBuiltValueToStringHelper('BasicMovieDetails')
           ..add('id', id)
-          ..add('name', name)
+          ..add('title', title)
           ..add('tmdbMovieId', tmdbMovieId)
           ..add('followed', followed)
           ..add('description', description))
@@ -158,9 +159,9 @@ class BasicMovieDetailsBuilder
   String get id => _$this._id;
   set id(String id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String _title;
+  String get title => _$this._title;
+  set title(String title) => _$this._title = title;
 
   int _tmdbMovieId;
   int get tmdbMovieId => _$this._tmdbMovieId;
@@ -179,7 +180,7 @@ class BasicMovieDetailsBuilder
   BasicMovieDetailsBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
-      _name = _$v.name;
+      _title = _$v.title;
       _tmdbMovieId = _$v.tmdbMovieId;
       _followed = _$v.followed;
       _description = _$v.description;
@@ -206,7 +207,7 @@ class BasicMovieDetailsBuilder
     final _$result = _$v ??
         new _$BasicMovieDetails._(
             id: id,
-            name: name,
+            title: title,
             tmdbMovieId: tmdbMovieId,
             followed: followed,
             description: description);

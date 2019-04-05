@@ -1,74 +1,94 @@
 import 'dart:io';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/models/comment.dart';
+import 'package:sitcom_joke/models/comment_list_response.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
+import 'package:sitcom_joke/models/joke_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/models/user.dart';
 
 class JokeService {
   final String jokeUrl = kAppApiUrl + '/jokes/';
 
-  Future<List<Joke>> fetchAllJokes({
+  Future<JokeListResponse> fetchAllJokes({
       JokeType jokeType,
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       int page}) async {
-    await Future.delayed(Duration(seconds: 2));
+    
 
-    String content;
-    if (jokeType == JokeType.image) {
-      content =
-          'https://images.pexels.com/photos/1151262/pexels-photo-1151262.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
-    } else {
-      content = 'this is the stupid joke that i just added';
-    }
+    // Response response;
+    // try{
+    //   Dio dio = new Dio();
+    //   response = await dio.get(jokeUrl);
 
-    return List.generate(20, (num) => 
+
+
+    // } on DioError catch(error){
+    //       throw Exception((error.response != null)?response.data['message']:'Error Connectiing to server');
+    // }
+
+List<Joke> jokeListGen = List.generate(20, (num) => 
       Joke((b) => b
         ..id = 'id$num'
-        ..title = 'title$num'
-        ..content = content
-        ..totalComments = 21
-        ..likes = 1
-        ..isLiked = false
-        ..isFavorited = false
+        ..title = 'fav Joke $num'
+        ..content = 'fav Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
-        ..movie.name = 'movie name $num'
+        ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'));
 
+      BuiltList<Joke> jokeList = BuiltList();
+      var jokeBuilder = jokeList.toBuilder();
+      jokeBuilder.addAll(jokeListGen);
+      jokeList =jokeBuilder.build();
+      return JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  jokeList.toBuilder());
+
+
+
   }
 
-  Future<List<Joke>> fetchUserFavJokes({
+  Future<JokeListResponse> fetchUserFavJokes({
       JokeType jokeType,
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       int page
   }) async{
 
-        return List.generate(20, (num) => 
+      List<Joke> jokeListGen = List.generate(20, (num) => 
       Joke((b) => b
         ..id = 'id$num'
         ..title = 'fav Joke $num'
         ..content = 'fav Joke'
-        ..totalComments = 21
-        ..likes = 1
-        ..isLiked = false
-        ..isFavorited = false
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
-        ..movie.name = 'movie name $num'
+        ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'));
 
+      BuiltList<Joke> jokeList = BuiltList();
+      var jokeBuilder = jokeList.toBuilder();
+      jokeBuilder.addAll(jokeListGen);
+      jokeList =jokeBuilder.build();
+      return JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  jokeList.toBuilder());
+
   }
 
-  Future<List<Joke>> fetchMovieJokes({
+  Future<JokeListResponse> fetchMovieJokes({
       JokeType jokeType,
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
@@ -76,24 +96,30 @@ class JokeService {
       int page
   }) async{
 
-      return List.generate(20, (num) => 
+      List<Joke> jokeListGen = List.generate(20, (num) => 
       Joke((b) => b
         ..id = 'id$num'
-        ..title = 'movie joke $num'
-        ..content = 'movie Joke'
-        ..totalComments = 21
-        ..likes = 1
-        ..isLiked = false
-        ..isFavorited = false
+        ..title = 'fav Joke $num'
+        ..content = 'fav Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
-        ..movie.name = 'movie name $num'
+        ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'));
 
+      BuiltList<Joke> jokeList = BuiltList();
+      var jokeBuilder = jokeList.toBuilder();
+      jokeBuilder.addAll(jokeListGen);
+      jokeList =jokeBuilder.build();
+      return JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  jokeList.toBuilder());
+
   }
-  Future<List<Joke>> fetchUserJokes({
+  Future<JokeListResponse> fetchUserJokes({
       JokeType jokeType,
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
@@ -101,29 +127,33 @@ class JokeService {
       int page
   }) async{
 
-      await Future.delayed(Duration(seconds: 2));
-      return List.generate(20, (num) => 
+      List<Joke> jokeListGen = List.generate(20, (num) => 
       Joke((b) => b
         ..id = 'id$num'
-        ..title = 'user joke $num'
-        ..content = 'user Joke'
-        ..totalComments = 21
-        ..likes = 1
-        ..isLiked = false
-        ..isFavorited = false
+        ..title = 'fav Joke $num'
+        ..content = 'fav Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
         ..dateAdded = DateTime(2003)
         ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
-        ..movie.name = 'movie name $num'
+        ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'));
 
+      BuiltList<Joke> jokeList = BuiltList();
+      var jokeBuilder = jokeList.toBuilder();
+      jokeBuilder.addAll(jokeListGen);
+      jokeList =jokeBuilder.build();
+      return JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  jokeList.toBuilder());
   }
 
-  Future<List<Comment>> getComments({String joke, int page}) async {
+  Future<CommentListResponse> getComments({String joke, int page}) async {
 
 
-    return List.generate(20, (num) => Comment((b) => b
+    var commentListGen =  List.generate(20, (num) => Comment((b) => b
         ..id = num.toString()
         ..content = 'content $num'
         ..dateAdded = DateTime(2000)
@@ -131,6 +161,12 @@ class JokeService {
           ..id = '1 $num'
           ..username = 'John $num'
           ..profileIconUrl = 'the_url')));
+
+           BuiltList<Comment> commentList = BuiltList();
+      var commentBuilder = commentList.toBuilder();
+      commentBuilder.addAll(commentListGen);
+      commentList =commentBuilder.build();
+      return CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  commentList.toBuilder());
    
   }
 

@@ -170,10 +170,10 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              GestureDetector(child: Text('${joke.totalComments} comments'), onTap: (){
+              GestureDetector(child: Text('${joke.commentCount} comments'), onTap: (){
                 Router.gotoJokeCommentsPage(context, joke: joke);
               },),
-              GestureDetector(child: Text('${joke.likes} likes'), onTap: (){
+              GestureDetector(child: Text('${joke.likeCount} likes'), onTap: (){
                 Router.gotoJokeLikersPage(context, joke: joke);
               },),
           ],),
@@ -181,11 +181,11 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
         Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _jokeActionBox('Likes', Icons.thumb_up, (joke.isLiked)?true:false, () {
+          _jokeActionBox('Likes', Icons.thumb_up, (joke.liked)?true:false, () {
             jokeControlBloc.toggleJokeLike();
           }),
           _jokeActionBox('Save', Icons.arrow_downward, false, () {}),
-          _jokeActionBox('Favorite', Icons.favorite,(joke.isFavorited) ?true : false, () {
+          _jokeActionBox('Favorite', Icons.favorite,(joke.favorited) ?true : false, () {
             jokeControlBloc.toggleJokeFavorite();
           }),
           _jokeActionBox('Share', Icons.share, false, () {}),

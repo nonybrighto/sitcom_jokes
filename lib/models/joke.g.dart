@@ -26,12 +26,17 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
       'content',
       serializers.serialize(object.content,
           specifiedType: const FullType(String)),
-      'totalComments',
-      serializers.serialize(object.totalComments,
+      'commentCount',
+      serializers.serialize(object.commentCount,
           specifiedType: const FullType(int)),
       'jokeType',
       serializers.serialize(object.jokeType,
           specifiedType: const FullType(JokeType)),
+      'liked',
+      serializers.serialize(object.liked, specifiedType: const FullType(bool)),
+      'favorited',
+      serializers.serialize(object.favorited,
+          specifiedType: const FullType(bool)),
     ];
     if (object.dateAdded != null) {
       result
@@ -39,29 +44,23 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
         ..add(serializers.serialize(object.dateAdded,
             specifiedType: const FullType(DateTime)));
     }
-    if (object.likes != null) {
+    if (object.likeCount != null) {
       result
-        ..add('likes')
-        ..add(serializers.serialize(object.likes,
+        ..add('likeCount')
+        ..add(serializers.serialize(object.likeCount,
             specifiedType: const FullType(int)));
-    }
-    if (object.isLiked != null) {
-      result
-        ..add('isLiked')
-        ..add(serializers.serialize(object.isLiked,
-            specifiedType: const FullType(bool)));
-    }
-    if (object.isFavorited != null) {
-      result
-        ..add('isFavorited')
-        ..add(serializers.serialize(object.isFavorited,
-            specifiedType: const FullType(bool)));
     }
     if (object.movie != null) {
       result
         ..add('movie')
         ..add(serializers.serialize(object.movie,
             specifiedType: const FullType(BasicMovieDetails)));
+    }
+    if (object.owner != null) {
+      result
+        ..add('owner')
+        ..add(serializers.serialize(object.owner,
+            specifiedType: const FullType(User)));
     }
 
     return result;
@@ -90,8 +89,8 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.content = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'totalComments':
-          result.totalComments = serializers.deserialize(value,
+        case 'commentCount':
+          result.commentCount = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
         case 'jokeType':
@@ -102,22 +101,26 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.dateAdded = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
-        case 'likes':
-          result.likes = serializers.deserialize(value,
+        case 'likeCount':
+          result.likeCount = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'isLiked':
-          result.isLiked = serializers.deserialize(value,
+        case 'liked':
+          result.liked = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
-        case 'isFavorited':
-          result.isFavorited = serializers.deserialize(value,
+        case 'favorited':
+          result.favorited = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
         case 'movie':
           result.movie.replace(serializers.deserialize(value,
                   specifiedType: const FullType(BasicMovieDetails))
               as BasicMovieDetails);
+          break;
+        case 'owner':
+          result.owner.replace(serializers.deserialize(value,
+              specifiedType: const FullType(User)) as User);
           break;
       }
     }
@@ -134,19 +137,21 @@ class _$Joke extends Joke {
   @override
   final String content;
   @override
-  final int totalComments;
+  final int commentCount;
   @override
   final JokeType jokeType;
   @override
   final DateTime dateAdded;
   @override
-  final int likes;
+  final int likeCount;
   @override
-  final bool isLiked;
+  final bool liked;
   @override
-  final bool isFavorited;
+  final bool favorited;
   @override
   final BasicMovieDetails movie;
+  @override
+  final User owner;
 
   factory _$Joke([void updates(JokeBuilder b)]) =>
       (new JokeBuilder()..update(updates)).build();
@@ -155,13 +160,14 @@ class _$Joke extends Joke {
       {this.id,
       this.title,
       this.content,
-      this.totalComments,
+      this.commentCount,
       this.jokeType,
       this.dateAdded,
-      this.likes,
-      this.isLiked,
-      this.isFavorited,
-      this.movie})
+      this.likeCount,
+      this.liked,
+      this.favorited,
+      this.movie,
+      this.owner})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Joke', 'id');
@@ -172,11 +178,17 @@ class _$Joke extends Joke {
     if (content == null) {
       throw new BuiltValueNullFieldError('Joke', 'content');
     }
-    if (totalComments == null) {
-      throw new BuiltValueNullFieldError('Joke', 'totalComments');
+    if (commentCount == null) {
+      throw new BuiltValueNullFieldError('Joke', 'commentCount');
     }
     if (jokeType == null) {
       throw new BuiltValueNullFieldError('Joke', 'jokeType');
+    }
+    if (liked == null) {
+      throw new BuiltValueNullFieldError('Joke', 'liked');
+    }
+    if (favorited == null) {
+      throw new BuiltValueNullFieldError('Joke', 'favorited');
     }
   }
 
@@ -194,13 +206,14 @@ class _$Joke extends Joke {
         id == other.id &&
         title == other.title &&
         content == other.content &&
-        totalComments == other.totalComments &&
+        commentCount == other.commentCount &&
         jokeType == other.jokeType &&
         dateAdded == other.dateAdded &&
-        likes == other.likes &&
-        isLiked == other.isLiked &&
-        isFavorited == other.isFavorited &&
-        movie == other.movie;
+        likeCount == other.likeCount &&
+        liked == other.liked &&
+        favorited == other.favorited &&
+        movie == other.movie &&
+        owner == other.owner;
   }
 
   @override
@@ -212,15 +225,19 @@ class _$Joke extends Joke {
                     $jc(
                         $jc(
                             $jc(
-                                $jc($jc($jc(0, id.hashCode), title.hashCode),
-                                    content.hashCode),
-                                totalComments.hashCode),
-                            jokeType.hashCode),
-                        dateAdded.hashCode),
-                    likes.hashCode),
-                isLiked.hashCode),
-            isFavorited.hashCode),
-        movie.hashCode));
+                                $jc(
+                                    $jc(
+                                        $jc($jc(0, id.hashCode),
+                                            title.hashCode),
+                                        content.hashCode),
+                                    commentCount.hashCode),
+                                jokeType.hashCode),
+                            dateAdded.hashCode),
+                        likeCount.hashCode),
+                    liked.hashCode),
+                favorited.hashCode),
+            movie.hashCode),
+        owner.hashCode));
   }
 
   @override
@@ -229,13 +246,14 @@ class _$Joke extends Joke {
           ..add('id', id)
           ..add('title', title)
           ..add('content', content)
-          ..add('totalComments', totalComments)
+          ..add('commentCount', commentCount)
           ..add('jokeType', jokeType)
           ..add('dateAdded', dateAdded)
-          ..add('likes', likes)
-          ..add('isLiked', isLiked)
-          ..add('isFavorited', isFavorited)
-          ..add('movie', movie))
+          ..add('likeCount', likeCount)
+          ..add('liked', liked)
+          ..add('favorited', favorited)
+          ..add('movie', movie)
+          ..add('owner', owner))
         .toString();
   }
 }
@@ -255,9 +273,9 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   String get content => _$this._content;
   set content(String content) => _$this._content = content;
 
-  int _totalComments;
-  int get totalComments => _$this._totalComments;
-  set totalComments(int totalComments) => _$this._totalComments = totalComments;
+  int _commentCount;
+  int get commentCount => _$this._commentCount;
+  set commentCount(int commentCount) => _$this._commentCount = commentCount;
 
   JokeType _jokeType;
   JokeType get jokeType => _$this._jokeType;
@@ -267,22 +285,26 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   DateTime get dateAdded => _$this._dateAdded;
   set dateAdded(DateTime dateAdded) => _$this._dateAdded = dateAdded;
 
-  int _likes;
-  int get likes => _$this._likes;
-  set likes(int likes) => _$this._likes = likes;
+  int _likeCount;
+  int get likeCount => _$this._likeCount;
+  set likeCount(int likeCount) => _$this._likeCount = likeCount;
 
-  bool _isLiked;
-  bool get isLiked => _$this._isLiked;
-  set isLiked(bool isLiked) => _$this._isLiked = isLiked;
+  bool _liked;
+  bool get liked => _$this._liked;
+  set liked(bool liked) => _$this._liked = liked;
 
-  bool _isFavorited;
-  bool get isFavorited => _$this._isFavorited;
-  set isFavorited(bool isFavorited) => _$this._isFavorited = isFavorited;
+  bool _favorited;
+  bool get favorited => _$this._favorited;
+  set favorited(bool favorited) => _$this._favorited = favorited;
 
   BasicMovieDetailsBuilder _movie;
   BasicMovieDetailsBuilder get movie =>
       _$this._movie ??= new BasicMovieDetailsBuilder();
   set movie(BasicMovieDetailsBuilder movie) => _$this._movie = movie;
+
+  UserBuilder _owner;
+  UserBuilder get owner => _$this._owner ??= new UserBuilder();
+  set owner(UserBuilder owner) => _$this._owner = owner;
 
   JokeBuilder();
 
@@ -291,13 +313,14 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
       _id = _$v.id;
       _title = _$v.title;
       _content = _$v.content;
-      _totalComments = _$v.totalComments;
+      _commentCount = _$v.commentCount;
       _jokeType = _$v.jokeType;
       _dateAdded = _$v.dateAdded;
-      _likes = _$v.likes;
-      _isLiked = _$v.isLiked;
-      _isFavorited = _$v.isFavorited;
+      _likeCount = _$v.likeCount;
+      _liked = _$v.liked;
+      _favorited = _$v.favorited;
       _movie = _$v.movie?.toBuilder();
+      _owner = _$v.owner?.toBuilder();
       _$v = null;
     }
     return this;
@@ -325,18 +348,21 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
               id: id,
               title: title,
               content: content,
-              totalComments: totalComments,
+              commentCount: commentCount,
               jokeType: jokeType,
               dateAdded: dateAdded,
-              likes: likes,
-              isLiked: isLiked,
-              isFavorited: isFavorited,
-              movie: _movie?.build());
+              likeCount: likeCount,
+              liked: liked,
+              favorited: favorited,
+              movie: _movie?.build(),
+              owner: _owner?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'movie';
         _movie?.build();
+        _$failedField = 'owner';
+        _owner?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Joke', _$failedField, e.toString());

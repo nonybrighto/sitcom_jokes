@@ -1,8 +1,8 @@
+import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:sitcom_joke/models/movie/basic_movie_details.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:built_value/built_value.dart';
-import 'dart:convert' as json;
+import 'package:sitcom_joke/models/user.dart';
 
 import 'serializers.dart';
 
@@ -24,28 +24,27 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   String get id;
   String get title;
   String get content;
-  int get totalComments;
+  int get commentCount;
   //@BuiltValueField(wireName: 'joke_type')
   JokeType get jokeType;
   @nullable
   DateTime get dateAdded;
   @nullable
-  int get likes;
-  @nullable 
-  bool get isLiked;
-  @nullable
-  bool get isFavorited;
+  int get likeCount;
+  bool get liked;
+  bool get favorited;
   @nullable
   BasicMovieDetails get movie;
+  @nullable 
+  User get owner;
 
   factory Joke([updates(JokeBuilder b)]) = _$Joke;
   Joke._();
 
 
-  factory Joke.fromJson(String jsonString){
+  factory Joke.fromJson(Map<String, dynamic> json){
 
-    final parsed = json.jsonDecode(jsonString);
-    Joke joke = standardSerializers.deserializeWith(Joke.serializer, parsed);
+    Joke joke = standardSerializers.deserializeWith(Joke.serializer, json);
     return joke;
   }
 

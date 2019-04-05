@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:sitcom_joke/blocs/list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
+import 'package:sitcom_joke/models/user_list_response.dart';
 import 'package:sitcom_joke/services/user_service.dart';
 
 class UserListBloc extends ListBloc<User>{
@@ -46,7 +47,7 @@ class UserListBloc extends ListBloc<User>{
   }
 
   @override
-  Future<List<User>> fetchFromServer() async{
+  Future<UserListResponse> fetchFromServer() async{
 
     switch (userListFetchType) {
       case UserListFetchType.jokeLikers:

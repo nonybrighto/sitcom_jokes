@@ -53,7 +53,7 @@ class MovieDetialsBloc extends BlocBase{
           await movieService.changeMovieFollow(movieId:  currentMovie.basicDetails.id, userId: null, follow: shouldFollow);
          }catch(err){
           _swapFollowState();
-          _followErrorCallBack('Error while following movie '+currentMovie.basicDetails.name);
+          _followErrorCallBack('Error while following movie '+currentMovie.basicDetails.title);
          }
 
   }

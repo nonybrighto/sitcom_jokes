@@ -30,7 +30,7 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.updateItem(toggledJoke);
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
-          if(jokeControlled.isLiked){
+          if(jokeControlled.liked){
               jokeControlled = toggledJoke;
               await jokeService.dislikeJoke(joke: jokeControlled);
           }else{
@@ -52,7 +52,7 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.updateItem(toggledJoke);
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
-          if(jokeControlled.isFavorited){
+          if(jokeControlled.favorited){
               jokeControlled = toggledJoke;
               await jokeService.favoriteJoke(joke: jokeControlled);
           }else{
@@ -71,11 +71,11 @@ class JokeControlBloc extends BlocBase{
 
   Joke _toggledJokeLike(){
         Joke joke =jokeControlled;
-        return joke.rebuild((b) => b..isLiked = !b.isLiked..likes = (joke.isLiked)? --b.likes: ++b.likes);
+        return joke.rebuild((b) => b..liked = !b.liked..likeCount = (joke.liked)? --b.likeCount: ++b.likeCount);
   }
   Joke _toggledJokeFavorite(){
         Joke joke =jokeControlled;
-        return joke.rebuild((b) => b.isFavorited = !b.isFavorited);
+        return joke.rebuild((b) => b.favorited = !b.favorited);
   }
 
   

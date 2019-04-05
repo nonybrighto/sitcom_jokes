@@ -37,7 +37,7 @@ class _MovieListPageState extends State<MovieListPage> {
         _movieListBloc.getItems();
       },
       listItemWidget: (movie, index){
-        return ListTile(title: Container(height: 30.0, child: Text(movie.basicDetails.name)), trailing: Text('dd'), onTap: (){
+        return ListTile(title: Container(height: 30.0, child: Text(movie.basicDetails.title)), trailing: Text('dd'), onTap: (){
           Router.gotoMovieDetialsPage(context, movie: movie, movieListBloc: _movieListBloc);
         },);
       },

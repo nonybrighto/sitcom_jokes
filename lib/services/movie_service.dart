@@ -1,19 +1,28 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
+import 'package:sitcom_joke/models/movie/movie_list_response.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
 
 class MovieService{
 
 
-  Future<List<Movie>> getMovies({int page}) async{
+  Future<MovieListResponse> getMovies({int page}) async{
 
-        return List.generate(20, (num) => Movie((b) => b
+    var movieListGen =  List.generate(20, (num) => Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'name $num'
+      ..basicDetails.title = 'name $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc') );
+
+
+       BuiltList<Movie> movieList = BuiltList();
+      var movieBuilder = movieList.toBuilder();
+      movieBuilder.addAll(movieListGen);
+      movieList =movieBuilder.build();
+      return MovieListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  movieList.toBuilder());
     
   }
 
@@ -38,38 +47,38 @@ class MovieService{
       List<Movie> movies = [
         Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'name $num'
+      ..basicDetails.title = 'name $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'namew $num'
+      ..basicDetails.title = 'namew $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'namew $num'
+      ..basicDetails.title = 'namew $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'a $num'
+      ..basicDetails.title = 'a $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
       ..basicDetails.id = 'id $num'
-      ..basicDetails.name = 'b $num'
+      ..basicDetails.title = 'b $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       ];
 
 
-      List<Movie> gotten = movies.where((movie) => movie.basicDetails.name.startsWith(searchText)).toList();
+      List<Movie> gotten = movies.where((movie) => movie.basicDetails.title.startsWith(searchText)).toList();
 
         return gotten;
   }

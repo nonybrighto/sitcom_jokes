@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:sitcom_joke/blocs/joke_comment_list_bloc.dart';
+import 'package:sitcom_joke/models/comment_list_response.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:test/test.dart';
 import 'package:sitcom_joke/models/comment.dart';
@@ -14,24 +16,31 @@ import '../type_matchers.dart';
 void main() {
   JokeService jokeService;
   Joke joke;
-  List<Comment> sampleComments;
+  BuiltList<Comment> sampleComments;
   setUp(() {
 
     jokeService = MockJokeService();
 
     joke = Joke((b) => b
-      ..id = 'id'
-      ..title = 'title'
-      ..content = 'content'
-      ..totalComments = 22
-      ..jokeType = JokeType.image
-      ..movie.update((b) => b
-        ..id = 'id'
-        ..name = 'name'
-        ..tmdbMovieId = 1
-        ..description = 'desc'));
+        ..id = 'id$num'
+        ..title = 'user joke $num'
+        ..content = 'user Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.title = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'
+        ..owner.update((u) => u
+          ..id = '1 $num'
+          ..username = 'John $num'
+          ..profileIconUrl = 'the_url'));
 
-    sampleComments = [
+    sampleComments = BuiltList([
       
       Comment((u) => u
       ..id = '1'
@@ -43,9 +52,9 @@ void main() {
           ..profileIconUrl = 'the_url')
       )
 
-    ];
+    ]);
     when(jokeService.getComments(joke: anyNamed('joke'), page: anyNamed('page')))
-        .thenAnswer((_) async => [sampleComments[0]]);
+        .thenAnswer((_) async => CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleComments.toBuilder()));
   });
 
   
@@ -66,7 +75,7 @@ void main() {
   test('Expected order when joke loading joke for first time', () {
      JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
     expect(commentListBloc.loadState, emitsInOrder([loading, loaded]));
-    expect(commentListBloc.items, emits([sampleComments[0]]));
+    expect(commentListBloc.items, emits(BuiltList<Comment>([sampleComments[0]])));
   });
 
   test('when loading the second time, expect state to be loading more and list should contain two items',() async{
@@ -76,13 +85,13 @@ void main() {
     commentListBloc.getItems();
 
     expect(commentListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loaded]));
-    expect(commentListBloc.items, emits([sampleComments[0], sampleComments[0] ]));
+    expect(commentListBloc.items, emits(BuiltList<Comment>([sampleComments[0], sampleComments[0] ])));
   });
 
   test('When no item to load and first trial, send load empty', (){
     JokeService jokeService = MockJokeService();
     when(jokeService.getComments(joke: anyNamed('joke'), page: anyNamed('page')))
-        .thenAnswer((_) async => []);
+        .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results = BuiltList<Comment>([]).toBuilder()));
 
    JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
 
@@ -106,9 +115,9 @@ void main() {
     JokeService jokeService = MockJokeService();
 
          when(jokeService.getComments(joke: anyNamed('joke'), page: 1))
-        .thenAnswer((_) async => [sampleComments[0]]);
+        .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleComments.toBuilder()));
          when(jokeService.getComments(joke: anyNamed('joke'), page: 2))
-        .thenAnswer((_) async => []);
+        .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  BuiltList<Comment>([]).toBuilder()));
 
     JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
     commentListBloc.getItems();

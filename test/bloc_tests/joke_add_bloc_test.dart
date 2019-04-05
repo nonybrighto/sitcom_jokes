@@ -33,16 +33,23 @@ void main(){
     jokeService = MockJokeService();
     sampleJokes = [
       Joke((b) => b
-        ..id = 'id'
-        ..title = 'title'
-        ..content = 'content'
-        ..totalComments = 21
-        ..jokeType = JokeType.image
-        ..movie.update((b) => b
-          ..id = 'id'
-          ..name = 'name'
-          ..tmdbMovieId = 1
-          ..description = 'desc')),
+        ..id = 'id$num'
+        ..title = 'user joke $num'
+        ..content = 'user Joke'
+        ..commentCount = 21
+        ..likeCount = 1
+        ..liked = false
+        ..favorited = false
+        ..dateAdded = DateTime(2003)
+        ..jokeType = JokeType.text
+        ..movie.id = 'movid $num'
+        ..movie.title = 'movie name $num'
+        ..movie.tmdbMovieId = 1
+        ..movie.description = 'description'
+        ..owner.update((u) => u
+          ..id = '1 $num'
+          ..username = 'John $num'
+          ..profileIconUrl = 'the_url')),
 
     ];
 

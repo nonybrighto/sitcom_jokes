@@ -36,7 +36,7 @@ class _JokeListState extends State<JokeList> {
         jokeListBloc.getItems();
       },
       listItemWidget: (joke, int index){
-        return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Icon(Icons.thumb_up, color: (joke.isLiked? Colors.amber: Colors.black),), onTap: (){
+        return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Icon(Icons.thumb_up, color: (joke.liked? Colors.amber: Colors.black),), onTap: (){
             jokeListBloc.changeCurrentJoke(joke);
             Router.gotoJokeDisplayPage(context, initialPage: index, jokeType: widget.jokeType, jokeListBloc: jokeListBloc, joke: joke);
         },);

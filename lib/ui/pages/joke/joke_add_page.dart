@@ -40,7 +40,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
     _selectedMovie =widget.selectedMovie;
     jokeAddBloc =  JokeAddBloc(jokeService: JokeService(), delegate: this);
    
-    _movieController.text = (_selectedMovie != null)? _selectedMovie.basicDetails.name: '';
+    _movieController.text = (_selectedMovie != null)? _selectedMovie.basicDetails.title: '';
   }
 
   @override
@@ -130,8 +130,8 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                 ..id = 'id'
                 ..title = _titleController.text
                 ..content = (jokeType ==JokeType.text)? _textController.text: ''
-                ..totalComments = 0
-                ..likes = 0
+                ..commentCount = 0
+                ..likeCount = 0
                 ..dateAdded = DateTime.now()
                 ..jokeType = jokeType
                 ..movie = _selectedMovie.basicDetails.toBuilder()

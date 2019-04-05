@@ -15,7 +15,7 @@ abstract class BasicMovieDetails implements Built<BasicMovieDetails, BasicMovieD
   static Serializer<BasicMovieDetails> get serializer => _$basicMovieDetailsSerializer;
 
   String get id;
-  String get name;
+  String get title;
   int get tmdbMovieId;
   @nullable
   bool get followed;
