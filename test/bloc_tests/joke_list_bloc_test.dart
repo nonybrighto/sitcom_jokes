@@ -107,7 +107,7 @@ void main() {
         page: anyNamed('page'),
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
-        .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results = BuiltList([]).toBuilder()));
+        .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results = BuiltList<Joke>([]).toBuilder()));
 
     JokeListBloc imageJokeListBloc =
     JokeListBloc(JokeType.image, jokeService: jokeService);
@@ -134,7 +134,7 @@ void main() {
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loadError]));
   });
 
-  test('when loading second or more page and no content, send load end', (){
+  test('when response current page is same as total page, send load end', (){
 
     JokeService jokeService = MockJokeService();
     when(jokeService.fetchAllJokes(
@@ -149,7 +149,7 @@ void main() {
         page: 2,
         sortOrder: anyNamed('sortOrder'),
         jokeSortProperty: anyNamed('jokeSortProperty')))
-        .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results = BuiltList([]).toBuilder()));
+        .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 2 ..perPage = 10 ..results = sampleJokes.toBuilder()));
 
 
 
