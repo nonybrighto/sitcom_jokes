@@ -11,7 +11,7 @@ class MovieService{
   Future<MovieListResponse> getMovies({int page}) async{
 
     var movieListGen =  List.generate(20, (num) => Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'name $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
@@ -46,31 +46,31 @@ class MovieService{
 
       List<Movie> movies = [
         Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'name $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'namew $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'namew $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'a $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false
       ..basicDetails.description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'id $num'
+      ..basicDetails.id = 'abcde'
       ..basicDetails.title = 'b $num'
       ..basicDetails.tmdbMovieId = 1
       ..basicDetails.followed = false

@@ -36,7 +36,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
   @override
   void initState() {
     super.initState();
-    jokeType = widget.jokeType;
+    jokeType = widget.jokeType ?? JokeType.text;
     _selectedMovie =widget.selectedMovie;
     jokeAddBloc =  JokeAddBloc(jokeService: JokeService(), delegate: this);
    
@@ -134,6 +134,8 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                 ..likeCount = 0
                 ..dateAdded = DateTime.now()
                 ..jokeType = jokeType
+                ..liked =false
+                ..favorited = false
                 ..movie = _selectedMovie.basicDetails.toBuilder()
                 );
               jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
@@ -170,7 +172,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                             },
                             itemBuilder: (context, movieSuggestion) {
                               return ListTile(
-                                title: Text(movieSuggestion.basicDetails.username),
+                                title: Text(movieSuggestion.basicDetails.title),
                               );
                             },
                             transitionBuilder:
@@ -178,7 +180,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                               return suggestionsBox;
                             },
                             onSuggestionSelected: (movieSuggestion) {
-                              this._movieController.text = movieSuggestion.basicDetails.username;
+                              this._movieController.text = movieSuggestion.basicDetails.title;
                               _selectedMovie =  movieSuggestion;
                             },
                             validator: (value) {

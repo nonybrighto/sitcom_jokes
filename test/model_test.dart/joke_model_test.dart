@@ -50,30 +50,30 @@ main() {
   test('Convert json to joke object', () {
    
    String jokeJson = '''{
-    "likeCount": 0,
-    "commentCount": 0,
-    "id": "55fb43e1-9b5d-5f47-ae5e-99d034437ae1",
-    "title": "This is a fresh joke sssa ddd this s",
-    "dateAdded": "2019-04-04 15:39:58",
-    "content": "anoxxx xxther joke is the text ss  s sdddddd eeess rrrrresdd",
-    "liked": false,
-    "favorited": false,
-    "jokeType": "text",
-    "owner": {
-        "photoUrl": "https://lh3.googleusercontent.com/-7pX2KjlP-14/AAAAAAAAAAI/AAAAAAAAABQ/oylyelUx3Nw/s96-c/photo.jpg",
-        "id": "bd19684f-6e1d-57c2-b612-1d03fd1d8227",
-        "username": "nony"
-    },
-    "movie": {
-        "description": "the movie description",
-        "tmdbMovieId": 1,
-        "id": "abcde",
-        "title": "movie title",
-        "followed": false
-    }
-}''';
+            "likeCount": 0,
+            "id": "310e6f23-77c0-52c9-931d-801a3d7783f1",
+            "title": "This a text joke 3",
+            "content": "3 Lorem ipsum is a joke about the joke of all craps and i dont know Lorem ipsum is a joke about the joke of all craps and i dont know Lorem ipsum is a joke about the joke of all craps and i dont know 2",
+            "dateAdded": "2019-04-05 17:00:57",
+            "commentCount": 0,
+            "liked": false,
+            "favorited": false,
+            "jokeType": "text",
+            "owner": {
+                "photoUrl": "https://lh3.googleusercontent.com/-7pX2KjlP-14/AAAAAAAAAAI/AAAAAAAAABQ/oylyelUx3Nw/s96-c/photo.jpg",
+                "id": "bd19684f-6e1d-57c2-b612-1d03fd1d8227",
+                "username": "nony"
+            },
+            "movie": {
+                "description": "the movie description",
+                "tmdbMovieId": 1,
+                "id": "abcde",
+                "title": "movie title",
+                "followed": false
+            }
+        }''';
 
 Joke convertedJoke =Joke.fromJson(json.decode(jokeJson));
-    expect(convertedJoke.id, '55fb43e1-9b5d-5f47-ae5e-99d034437ae1');
+    expect(convertedJoke.id, '310e6f23-77c0-52c9-931d-801a3d7783f1');
   });
 }
