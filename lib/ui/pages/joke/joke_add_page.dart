@@ -40,7 +40,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
     _selectedMovie =widget.selectedMovie;
     jokeAddBloc =  JokeAddBloc(jokeService: JokeService(), delegate: this);
    
-    _movieController.text = (_selectedMovie != null)? _selectedMovie.basicDetails.title: '';
+    _movieController.text = (_selectedMovie != null)? _selectedMovie.title: '';
   }
 
   @override
@@ -136,7 +136,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                 ..jokeType = jokeType
                 ..liked =false
                 ..favorited = false
-                ..movie = _selectedMovie.basicDetails.toBuilder()
+                ..movie = _selectedMovie.toBuilder()
                 );
               jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
         } else {
@@ -172,7 +172,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                             },
                             itemBuilder: (context, movieSuggestion) {
                               return ListTile(
-                                title: Text(movieSuggestion.basicDetails.title),
+                                title: Text(movieSuggestion.title),
                               );
                             },
                             transitionBuilder:
@@ -180,7 +180,7 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
                               return suggestionsBox;
                             },
                             onSuggestionSelected: (movieSuggestion) {
-                              this._movieController.text = movieSuggestion.basicDetails.title;
+                              this._movieController.text = movieSuggestion.title;
                               _selectedMovie =  movieSuggestion;
                             },
                             validator: (value) {

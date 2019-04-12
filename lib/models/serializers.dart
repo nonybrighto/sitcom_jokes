@@ -6,9 +6,7 @@ import 'package:sitcom_joke/models/comment.dart';
 import 'package:sitcom_joke/models/comment_list_response.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/joke_list_response.dart';
-import 'package:sitcom_joke/models/movie/basic_movie_details_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:sitcom_joke/models/movie/basic_movie_details.dart';
 import 'package:sitcom_joke/models/movie/movie_list_response.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_cast.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
@@ -28,8 +26,6 @@ part 'serializers.g.dart';
   JokeListResponse,
   UserListResponse,
   CommentListResponse,
-  BasicMovieDetails,
-  BasicMovieDetailsListResponse,
   TmdbMovieDetails,
   TmdbMovieCredit,
   TmdbMovieCast,

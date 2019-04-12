@@ -17,18 +17,18 @@ void main() {
     MovieService movieService = MockMovieService();
 
     Movie movieToGet = Movie((b) => b
-          ..basicDetails.id = 'id1'
-          ..basicDetails.title = 'name ssnum'
-          ..basicDetails.tmdbMovieId = 1
-          ..basicDetails.followed = true
-          ..basicDetails.description = 'desc'
+          ..id = 'id1'
+          ..title = 'name ssnum'
+          ..tmdbMovieId = 1
+          ..followed = true
+          ..description = 'desc'
         );
     Movie fullMovieDetails = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -51,11 +51,11 @@ void main() {
     MovieService movieService = MockMovieService();
 
     Movie movieToGet = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -78,17 +78,17 @@ void main() {
     MovieService movieService = MockMovieService();
 
     Movie movieToGet = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc');
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc');
     Movie fullMovieDetails = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -97,11 +97,11 @@ void main() {
       ..tmdbDetails.voteAverage = 8.9
       );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -141,17 +141,17 @@ void main() {
     MovieService movieService = MockMovieService();
 
     Movie movieToGet = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc');
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc');
     Movie fullMovieDetails = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -160,11 +160,11 @@ void main() {
       ..tmdbDetails.voteAverage = 8.9
       );
     Movie fullMovieDetailsSwappedFav = Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''

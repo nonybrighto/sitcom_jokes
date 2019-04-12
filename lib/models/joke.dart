@@ -1,6 +1,5 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:sitcom_joke/models/movie/basic_movie_details.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/user.dart';
 
@@ -34,7 +33,7 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   bool get liked;
   bool get favorited;
   @nullable
-  BasicMovieDetails get movie;
+  Movie get movie;
   @nullable 
   User get owner;
 
@@ -46,11 +45,6 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
 
     Joke joke = standardSerializers.deserializeWith(Joke.serializer, json);
     return joke;
-  }
-
-  Movie getMovie(){
-    BasicMovieDetailsBuilder builder = movie.toBuilder();
-    return Movie((b) => b.basicDetails = builder );
   }
 
 }

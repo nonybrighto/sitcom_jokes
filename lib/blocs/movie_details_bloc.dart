@@ -46,21 +46,21 @@ class MovieDetialsBloc extends BlocBase{
 
 
   _changeMovieFollow() async{
-     bool shouldFollow = currentMovie.basicDetails.followed;
+     bool shouldFollow = currentMovie.followed;
          
          try{
           _swapFollowState();
           await movieService.changeMovieFollow(movie: currentMovie, follow: shouldFollow);
          }catch(err){
           _swapFollowState();
-          _followErrorCallBack('Error while following movie '+currentMovie.basicDetails.title);
+          _followErrorCallBack('Error while following movie '+currentMovie.title);
          }
 
   }
 
   _swapFollowState(){
 
-     currentMovie = currentMovie.rebuild((b) => b.basicDetails.followed =  !currentMovie.basicDetails.followed);
+     currentMovie = currentMovie.rebuild((b) => b.followed =  !currentMovie.followed);
     _movieController.sink.add(currentMovie);
   }
 

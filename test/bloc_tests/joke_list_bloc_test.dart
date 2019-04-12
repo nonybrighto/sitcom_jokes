@@ -185,11 +185,11 @@ void main() {
     JokeListBloc(JokeType.image, jokeService: jokeService);
 
     imageJokeListBloc.fetchMovieJokes( Movie((b) => b
-      ..basicDetails.id = 'id $num'
-      ..basicDetails.title = 'name $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'));
+      ..id = 'id $num'
+      ..title = 'name $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'));
 
      await Future.delayed(Duration(seconds: 2));
 

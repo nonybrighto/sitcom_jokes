@@ -51,8 +51,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
                           return Column(children: <Widget>[
 
-                                Text(movie.basicDetails.title),
-                                RaisedButton(child: Text(movie.basicDetails.followed? 'UNFOLLOW': 'FOLLOW'), onPressed: (){
+                                Text(movie.title),
+                                RaisedButton(child: Text(movie.followed? 'UNFOLLOW': 'FOLLOW'), onPressed: (){
                                       movieDetialsBloc.changeMovieFollow((errorMessage){
                                         _onMovieFollowError(context, errorMessage);
                                       });
@@ -87,7 +87,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   _showFullInfo(Movie movie, {bool visible}){
 
         if(visible){
-          return Text(movie.basicDetails.description);
+          return Text(movie.description);
         }
         return containerPlaceHolder();
   }

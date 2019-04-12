@@ -54,7 +54,7 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
       result
         ..add('movie')
         ..add(serializers.serialize(object.movie,
-            specifiedType: const FullType(BasicMovieDetails)));
+            specifiedType: const FullType(Movie)));
     }
     if (object.owner != null) {
       result
@@ -115,8 +115,7 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           break;
         case 'movie':
           result.movie.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(BasicMovieDetails))
-              as BasicMovieDetails);
+              specifiedType: const FullType(Movie)) as Movie);
           break;
         case 'owner':
           result.owner.replace(serializers.deserialize(value,
@@ -149,7 +148,7 @@ class _$Joke extends Joke {
   @override
   final bool favorited;
   @override
-  final BasicMovieDetails movie;
+  final Movie movie;
   @override
   final User owner;
 
@@ -297,10 +296,9 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   bool get favorited => _$this._favorited;
   set favorited(bool favorited) => _$this._favorited = favorited;
 
-  BasicMovieDetailsBuilder _movie;
-  BasicMovieDetailsBuilder get movie =>
-      _$this._movie ??= new BasicMovieDetailsBuilder();
-  set movie(BasicMovieDetailsBuilder movie) => _$this._movie = movie;
+  MovieBuilder _movie;
+  MovieBuilder get movie => _$this._movie ??= new MovieBuilder();
+  set movie(MovieBuilder movie) => _$this._movie = movie;
 
   UserBuilder _owner;
   UserBuilder get owner => _$this._owner ??= new UserBuilder();

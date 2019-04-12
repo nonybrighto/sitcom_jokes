@@ -7,8 +7,6 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
-      ..add(BasicMovieDetails.serializer)
-      ..add(BasicMovieDetailsListResponse.serializer)
       ..add(Comment.serializer)
       ..add(CommentListResponse.serializer)
       ..add(Joke.serializer)
@@ -19,9 +17,6 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(TmdbMovieDetails.serializer)
       ..add(User.serializer)
       ..add(UserListResponse.serializer)
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(BasicMovieDetails)]),
-          () => new ListBuilder<BasicMovieDetails>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Comment)]),
           () => new ListBuilder<Comment>())

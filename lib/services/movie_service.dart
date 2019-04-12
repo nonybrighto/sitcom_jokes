@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:sitcom_joke/constants/constants.dart';
-import 'package:sitcom_joke/models/movie/basic_movie_details_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/movie/movie_list_response.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
@@ -21,17 +19,7 @@ class MovieService{
     try {
       Options authHeaderOption = await getAuthHeaderOption();
       Response response = await dio.get(moviesUrl + '?page=$page', options: authHeaderOption);
-      BasicMovieDetailsListResponse basicMovieDetailsListResponse  =BasicMovieDetailsListResponse.fromJson(response.data);
-  
-     BuiltList<Movie> movies =BuiltList(basicMovieDetailsListResponse.results.map((b) => Movie((v) => v.basicDetails = b.toBuilder())));
-
-      return MovieListResponse((b) => 
-                      b..totalPages = basicMovieDetailsListResponse.totalPages
-                      ..perPage =basicMovieDetailsListResponse.perPage
-                      ..currentPage =basicMovieDetailsListResponse.currentPage
-                      ..previousPage =basicMovieDetailsListResponse.previousPage
-                      ..results =movies.toBuilder()
-                      );
+        return MovieListResponse.fromJson(response.data);
 
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -53,9 +41,9 @@ class MovieService{
         try {
           Options authHeaderOption = await getAuthHeaderOption();
           if(follow){
-              await dio.put(moviesUrl + '${movie.basicDetails.id}/following', options: authHeaderOption);
+              await dio.put(moviesUrl + '${movie.id}/following', options: authHeaderOption);
           }else{
-              await dio.delete(moviesUrl + '${movie.basicDetails.id}/following', options: authHeaderOption);
+              await dio.delete(moviesUrl + '${movie.id}/following', options: authHeaderOption);
           }
           return true;
         } on DioError catch (error) {
@@ -69,39 +57,39 @@ class MovieService{
 
       List<Movie> movies = [
         Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'name $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'),
+      ..id = 'abcde'
+      ..title = 'name $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'namew $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'),
+      ..id = 'abcde'
+      ..title = 'namew $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'namew $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'),
+      ..id = 'abcde'
+      ..title = 'namew $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'a $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'),
+      ..id = 'abcde'
+      ..title = 'a $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'),
       Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'b $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc'),
+      ..id = 'abcde'
+      ..title = 'b $num'
+      ..tmdbMovieId = 1
+      ..followed = false
+      ..description = 'desc'),
       ];
 
 
-      List<Movie> gotten = movies.where((movie) => movie.basicDetails.title.startsWith(searchText)).toList();
+      List<Movie> gotten = movies.where((movie) => movie.title.startsWith(searchText)).toList();
 
         return gotten;
   }

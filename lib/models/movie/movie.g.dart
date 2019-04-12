@@ -8,14 +8,39 @@ part of 'movie.dart';
 
 class _$Movie extends Movie {
   @override
-  final BasicMovieDetails basicDetails;
+  final String id;
+  @override
+  final String title;
+  @override
+  final int tmdbMovieId;
+  @override
+  final bool followed;
+  @override
+  final String description;
   @override
   final TmdbMovieDetails tmdbDetails;
 
   factory _$Movie([void updates(MovieBuilder b)]) =>
       (new MovieBuilder()..update(updates)).build();
 
-  _$Movie._({this.basicDetails, this.tmdbDetails}) : super._();
+  _$Movie._(
+      {this.id,
+      this.title,
+      this.tmdbMovieId,
+      this.followed,
+      this.description,
+      this.tmdbDetails})
+      : super._() {
+    if (id == null) {
+      throw new BuiltValueNullFieldError('Movie', 'id');
+    }
+    if (title == null) {
+      throw new BuiltValueNullFieldError('Movie', 'title');
+    }
+    if (tmdbMovieId == null) {
+      throw new BuiltValueNullFieldError('Movie', 'tmdbMovieId');
+    }
+  }
 
   @override
   Movie rebuild(void updates(MovieBuilder b)) =>
@@ -28,19 +53,34 @@ class _$Movie extends Movie {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Movie &&
-        basicDetails == other.basicDetails &&
+        id == other.id &&
+        title == other.title &&
+        tmdbMovieId == other.tmdbMovieId &&
+        followed == other.followed &&
+        description == other.description &&
         tmdbDetails == other.tmdbDetails;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, basicDetails.hashCode), tmdbDetails.hashCode));
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc($jc($jc(0, id.hashCode), title.hashCode),
+                    tmdbMovieId.hashCode),
+                followed.hashCode),
+            description.hashCode),
+        tmdbDetails.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('Movie')
-          ..add('basicDetails', basicDetails)
+          ..add('id', id)
+          ..add('title', title)
+          ..add('tmdbMovieId', tmdbMovieId)
+          ..add('followed', followed)
+          ..add('description', description)
           ..add('tmdbDetails', tmdbDetails))
         .toString();
   }
@@ -49,11 +89,25 @@ class _$Movie extends Movie {
 class MovieBuilder implements Builder<Movie, MovieBuilder> {
   _$Movie _$v;
 
-  BasicMovieDetailsBuilder _basicDetails;
-  BasicMovieDetailsBuilder get basicDetails =>
-      _$this._basicDetails ??= new BasicMovieDetailsBuilder();
-  set basicDetails(BasicMovieDetailsBuilder basicDetails) =>
-      _$this._basicDetails = basicDetails;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
+
+  String _title;
+  String get title => _$this._title;
+  set title(String title) => _$this._title = title;
+
+  int _tmdbMovieId;
+  int get tmdbMovieId => _$this._tmdbMovieId;
+  set tmdbMovieId(int tmdbMovieId) => _$this._tmdbMovieId = tmdbMovieId;
+
+  bool _followed;
+  bool get followed => _$this._followed;
+  set followed(bool followed) => _$this._followed = followed;
+
+  String _description;
+  String get description => _$this._description;
+  set description(String description) => _$this._description = description;
 
   TmdbMovieDetailsBuilder _tmdbDetails;
   TmdbMovieDetailsBuilder get tmdbDetails =>
@@ -65,7 +119,11 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
 
   MovieBuilder get _$this {
     if (_$v != null) {
-      _basicDetails = _$v.basicDetails?.toBuilder();
+      _id = _$v.id;
+      _title = _$v.title;
+      _tmdbMovieId = _$v.tmdbMovieId;
+      _followed = _$v.followed;
+      _description = _$v.description;
       _tmdbDetails = _$v.tmdbDetails?.toBuilder();
       _$v = null;
     }
@@ -91,13 +149,15 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
     try {
       _$result = _$v ??
           new _$Movie._(
-              basicDetails: _basicDetails?.build(),
+              id: id,
+              title: title,
+              tmdbMovieId: tmdbMovieId,
+              followed: followed,
+              description: description,
               tmdbDetails: _tmdbDetails?.build());
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'basicDetails';
-        _basicDetails?.build();
         _$failedField = 'tmdbDetails';
         _tmdbDetails?.build();
       } catch (e) {

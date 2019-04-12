@@ -1,13 +1,17 @@
 import 'package:built_value/built_value.dart';
-import 'package:sitcom_joke/models/movie/basic_movie_details.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
 
 part 'movie.g.dart';
 
 abstract class Movie implements Built<Movie, MovieBuilder> {
 
+  String get id;
+  String get title;
+  int get tmdbMovieId;
   @nullable
-  BasicMovieDetails get basicDetails;
+  bool get followed;
+  @nullable
+  String get description;
   @nullable
   TmdbMovieDetails get tmdbDetails;
 
@@ -16,7 +20,7 @@ abstract class Movie implements Built<Movie, MovieBuilder> {
   Movie._();
 
   bool hasFullDetails(){
-    return basicDetails != null && tmdbDetails != null;
+    return tmdbDetails != null;
   }
 
 }

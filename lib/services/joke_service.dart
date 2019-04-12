@@ -64,7 +64,7 @@ class JokeService {
           try {
        Options authHeaderOption = await getAuthHeaderOption();
       String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(moviesUrl + '${movie.basicDetails.id}/jokes?type=$type&page=$page', options:authHeaderOption);
+      Response response = await dio.get(moviesUrl + '${movie.id}/jokes?type=$type&page=$page', options:authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)

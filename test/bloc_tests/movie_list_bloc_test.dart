@@ -22,11 +22,11 @@ void main(){
 
       sampleMovies = BuiltList([
         Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name ssnum'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = true
-      ..basicDetails.description = 'desc'
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''
@@ -68,10 +68,10 @@ void main(){
       await Future.delayed(Duration(seconds: 5));
      
        Movie movieUpdate =  Movie((b) => b
-      ..basicDetails.id = 'id1'
-      ..basicDetails.title = 'name  new'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.description = 'desc new');
+      ..id = 'id1'
+      ..title = 'name  new'
+      ..tmdbMovieId = 1
+      ..description = 'desc new');
 
       movieListBloc.updateItem(movieUpdate);
       expect(movieListBloc.items, emits([movieUpdate]));
