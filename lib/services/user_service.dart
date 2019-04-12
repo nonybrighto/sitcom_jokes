@@ -1,22 +1,19 @@
 import 'dart:async';
-//import 'dart:convert';
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-//import 'package:http/http.dart';
-import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/models/user_list_response.dart';
-//import 'package:http/http.dart' as http;
+import 'package:sitcom_joke/services/auth_header.dart';
 import '../constants/constants.dart';
 
 class UserService {
 
-  static const userUrl = kAppApiUrl+'/users';
-  static const authUrl = kAppApiUrl+'/auth';
+  final String authUrl = kAppApiUrl+'/auth';
+  final String userUrl = kAppApiUrl + '/user/';
+  final String usersUrl = kAppApiUrl + '/users/';
+  final String jokesUrl = kAppApiUrl + '/jokes/';
+
+  Dio dio = new Dio();
 
   Map<String , String> headers = {'contentType':'application/json'};
 
@@ -25,27 +22,29 @@ class UserService {
 Future<User> getUser(User user) async{
 
 
-    return User((b) => b
-      ..id='id $num'
-      ..username='peter $num'
-      ..profileIconUrl='url $num'
-    );
-
+    try {
+       Options authHeaderOption = await getAuthHeaderOption();
+       Response response = await dio.get(usersUrl + '${user.id}', options: authHeaderOption);
+      return User.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
 }
 
 
-Future<UserListResponse> fetchJokeLikers({Joke jokeLiked}) async{
+Future<UserListResponse> fetchJokeLikers({Joke jokeLiked, int page}) async{
 
-   var userListGen = List.generate(20, (num) => User((b) => b
-      ..id='id liked $num'
-      ..username='peter liked $num'
-      ..profileIconUrl='url $num'
-    )).toList();
-
-     BuiltList<User> userList = BuiltList();
-      var userBuilder = userList.toBuilder();
-      userBuilder.addAll(userListGen);
-      userList =userBuilder.build();
-      return UserListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  userList.toBuilder());
+     try {
+       Options authHeaderOption = await getAuthHeaderOption();
+       Response response = await dio.get(jokesUrl + '${jokeLiked.id}/likes?page=$page', options: authHeaderOption);
+      return UserListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+   
 }
 }

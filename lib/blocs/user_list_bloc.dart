@@ -51,7 +51,7 @@ class UserListBloc extends ListBloc<User>{
 
     switch (userListFetchType) {
       case UserListFetchType.jokeLikers:
-        return await userService.fetchJokeLikers(jokeLiked: _jokeLiked);
+        return await userService.fetchJokeLikers(jokeLiked: _jokeLiked, page: currentPage);
         break;
       default:
           return null;

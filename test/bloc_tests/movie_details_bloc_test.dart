@@ -114,8 +114,7 @@ void main() {
     when(movieService.getMovie(movieToGet))
         .thenAnswer((_) async => fullMovieDetails);
     when(movieService.changeMovieFollow(
-            movieId: anyNamed('movieId'),
-            userId: anyNamed('userId'),
+            movie: anyNamed('movie'),
             follow: anyNamed('follow')))
         .thenAnswer((_) async => null);
 
@@ -134,8 +133,7 @@ void main() {
               fullMovieDetailsSwappedFav]));
     await Future.delayed(Duration(seconds: 2));
     verify(movieService.changeMovieFollow(
-        movieId: anyNamed('movieId'),
-        userId: anyNamed('userId'),
+        movie: anyNamed('movie'),
         follow: anyNamed('follow')));
   });
 
@@ -178,8 +176,7 @@ void main() {
     when(movieService.getMovie(movieToGet))
         .thenAnswer((_) async => fullMovieDetails);
     when(movieService.changeMovieFollow(
-            movieId: anyNamed('movieId'),
-            userId: anyNamed('userId'),
+            movie: anyNamed('movie'),
             follow: anyNamed('follow')))
         .thenAnswer((_) => Future.error(Error()));
 
@@ -204,8 +201,7 @@ void main() {
    
     await Future.delayed(Duration(seconds: 2));
     verify(movieService.changeMovieFollow(
-        movieId: anyNamed('movieId'),
-        userId: anyNamed('userId'),
+        movie: anyNamed('movie'),
         follow: anyNamed('follow')));
 
     expect(errorCallbackCalled, true);

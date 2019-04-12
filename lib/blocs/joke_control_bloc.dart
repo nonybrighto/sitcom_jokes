@@ -30,19 +30,13 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.updateItem(toggledJoke);
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
-          if(jokeControlled.liked){
-              jokeControlled = toggledJoke;
-              await jokeService.dislikeJoke(joke: jokeControlled);
-          }else{
-              jokeControlled = toggledJoke;
-              await jokeService.likeJoke(joke: jokeControlled);
-          }
-    
+          jokeControlled = toggledJoke;
+          await jokeService.changeJokeLiking(joke: jokeControlled, like:(jokeControlled.liked)?false:true);
       }catch(err){
-            print(err);
-            jokeControlled = _toggledJokeLike();
-            jokeListBloc?.updateItem(jokeControlled);
-            jokeListBloc?.changeCurrentJoke(jokeControlled);
+          print(err);
+          jokeControlled = _toggledJokeLike();
+          jokeListBloc?.updateItem(jokeControlled);
+          jokeListBloc?.changeCurrentJoke(jokeControlled);
       }
     
   }
@@ -52,19 +46,12 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.updateItem(toggledJoke);
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
-          if(jokeControlled.favorited){
-              jokeControlled = toggledJoke;
-              await jokeService.favoriteJoke(joke: jokeControlled);
-          }else{
-              jokeControlled = toggledJoke;
-              await jokeService.unfavoriteJoke(joke: jokeControlled);
-          }
-    
+          jokeControlled = toggledJoke;
+          await jokeService.changeJokeFavoriting(joke: jokeControlled, favorite:(jokeControlled.favorited)?true:false);
       }catch(err){
-            print(err);
-            jokeControlled = _toggledJokeFavorite();
-            jokeListBloc?.updateItem(jokeControlled);
-            jokeListBloc?.changeCurrentJoke(jokeControlled);
+          jokeControlled = _toggledJokeFavorite();
+          jokeListBloc?.updateItem(jokeControlled);
+          jokeListBloc?.changeCurrentJoke(jokeControlled);
       }
     
   }

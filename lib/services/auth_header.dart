@@ -9,9 +9,24 @@ Future<Options> getAuthHeaderOption() async{
   SharedPreferences pref  = await SharedPreferences.getInstance();
 
   String userJwtToken = await pref.get(kUserJwtTokenPrefKey);
-  return Options(
-    headers: {
-      HttpHeaders.authorizationHeader: 'jwt $userJwtToken' , // set content-length
-    },
-  );
+  if(userJwtToken != null){
+    return Options(
+      headers: {
+        HttpHeaders.authorizationHeader: 'jwt $userJwtToken' , // set content-length
+      },
+    );
+  }
+  return null;
+}
+
+Future<bool> isAuthenticated() async{
+
+      SharedPreferences pref  = await SharedPreferences.getInstance();
+      String userJwtToken = await pref.get(kUserJwtTokenPrefKey);
+
+      if(userJwtToken != null){
+        return true;
+      }else{
+        return false;
+      }
 }

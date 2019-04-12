@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:sitcom_joke/constants/constants.dart';
-import 'package:sitcom_joke/models/comment.dart';
 import 'package:sitcom_joke/models/comment_list_response.dart';
 import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
@@ -14,7 +12,10 @@ import 'package:sitcom_joke/services/auth_header.dart';
 import 'package:sitcom_joke/utils/enum_string_util.dart';
 
 class JokeService {
-  final String jokeUrl = kAppApiUrl + '/jokes/';
+  final String jokesUrl = kAppApiUrl + '/jokes/';
+  final String userUrl = kAppApiUrl + '/user/';
+  final String usersUrl = kAppApiUrl + '/users/';
+  final String moviesUrl = kAppApiUrl + '/movies/';
   Dio dio = new Dio();
 
   Future<JokeListResponse> fetchAllJokes(
@@ -23,8 +24,9 @@ class JokeService {
       JokeSortProperty jokeSortProperty,
       int page}) async {
     try {
+      Options authHeaderOption = await getAuthHeaderOption();
       String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(jokeUrl + '?type=$type&page=$page');
+      Response response = await dio.get(jokesUrl + '?type=$type&page=$page', options: authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -38,32 +40,18 @@ class JokeService {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       int page}) async {
-    List<Joke> jokeListGen = List.generate(
-        20,
-        (num) => Joke((b) => b
-          ..id = 'id$num'
-          ..title = 'fav Joke $num'
-          ..content = 'fav Joke'
-          ..commentCount = 21
-          ..likeCount = 1
-          ..liked = false
-          ..favorited = false
-          ..dateAdded = DateTime(2003)
-          ..jokeType = JokeType.text
-          ..movie.id = 'movid $num'
-          ..movie.title = 'movie name $num'
-          ..movie.tmdbMovieId = 1
-          ..movie.description = 'description'));
 
-    BuiltList<Joke> jokeList = BuiltList();
-    var jokeBuilder = jokeList.toBuilder();
-    jokeBuilder.addAll(jokeListGen);
-    jokeList = jokeBuilder.build();
-    return JokeListResponse((b) => b
-      ..totalPages = 2
-      ..currentPage = 1
-      ..perPage = 10
-      ..results = jokeList.toBuilder());
+
+    try {
+       Options authHeaderOption = await getAuthHeaderOption();
+      String type = EnumStringUtil().jokeTypeToString(jokeType);
+      Response response = await dio.get(userUrl + 'favorites/jokes?type=$type&page=$page', options:authHeaderOption);
+      return JokeListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
   }
 
   Future<JokeListResponse> fetchMovieJokes(
@@ -72,32 +60,18 @@ class JokeService {
       JokeSortProperty jokeSortProperty,
       Movie movie,
       int page}) async {
-    List<Joke> jokeListGen = List.generate(
-        20,
-        (num) => Joke((b) => b
-          ..id = 'id$num'
-          ..title = 'fav Joke $num'
-          ..content = 'fav Joke'
-          ..commentCount = 21
-          ..likeCount = 1
-          ..liked = false
-          ..favorited = false
-          ..dateAdded = DateTime(2003)
-          ..jokeType = JokeType.text
-          ..movie.id = 'movid $num'
-          ..movie.title = 'movie name $num'
-          ..movie.tmdbMovieId = 1
-          ..movie.description = 'description'));
 
-    BuiltList<Joke> jokeList = BuiltList();
-    var jokeBuilder = jokeList.toBuilder();
-    jokeBuilder.addAll(jokeListGen);
-    jokeList = jokeBuilder.build();
-    return JokeListResponse((b) => b
-      ..totalPages = 2
-      ..currentPage = 1
-      ..perPage = 10
-      ..results = jokeList.toBuilder());
+          try {
+       Options authHeaderOption = await getAuthHeaderOption();
+      String type = EnumStringUtil().jokeTypeToString(jokeType);
+      Response response = await dio.get(moviesUrl + '${movie.basicDetails.id}/jokes?type=$type&page=$page', options:authHeaderOption);
+      return JokeListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+
   }
 
   Future<JokeListResponse> fetchUserJokes(
@@ -106,55 +80,32 @@ class JokeService {
       JokeSortProperty jokeSortProperty,
       User user,
       int page}) async {
-    List<Joke> jokeListGen = List.generate(
-        20,
-        (num) => Joke((b) => b
-          ..id = 'id$num'
-          ..title = 'fav Joke $num'
-          ..content = 'fav Joke'
-          ..commentCount = 21
-          ..likeCount = 1
-          ..liked = false
-          ..favorited = false
-          ..dateAdded = DateTime(2003)
-          ..jokeType = JokeType.text
-          ..movie.id = 'movid $num'
-          ..movie.title = 'movie name $num'
-          ..movie.tmdbMovieId = 1
-          ..movie.description = 'description'));
+  
+        
+    try {
+       Options authHeaderOption = await getAuthHeaderOption();
+      String type = EnumStringUtil().jokeTypeToString(jokeType);
+      Response response = await dio.get(usersUrl + '${user.id}/jokes?type=$type&page=$page', options:authHeaderOption);
+      return JokeListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
 
-    BuiltList<Joke> jokeList = BuiltList();
-    var jokeBuilder = jokeList.toBuilder();
-    jokeBuilder.addAll(jokeListGen);
-    jokeList = jokeBuilder.build();
-    return JokeListResponse((b) => b
-      ..totalPages = 2
-      ..currentPage = 1
-      ..perPage = 10
-      ..results = jokeList.toBuilder());
+
   }
 
-  Future<CommentListResponse> getComments({String joke, int page}) async {
-    var commentListGen = List.generate(
-        20,
-        (num) => Comment((b) => b
-          ..id = num.toString()
-          ..content = 'content $num'
-          ..dateAdded = DateTime(2000)
-          ..owner.update((u) => u
-            ..id = '1 $num'
-            ..username = 'John $num'
-            ..profileIconUrl = 'the_url')));
-
-    BuiltList<Comment> commentList = BuiltList();
-    var commentBuilder = commentList.toBuilder();
-    commentBuilder.addAll(commentListGen);
-    commentList = commentBuilder.build();
-    return CommentListResponse((b) => b
-      ..totalPages = 2
-      ..currentPage = 1
-      ..perPage = 10
-      ..results = commentList.toBuilder());
+  Future<CommentListResponse> getComments({Joke joke, int page}) async {
+   
+   try {
+      Response response = await dio.get(jokesUrl + '/${joke.id}/comments?page=$page');
+      return CommentListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
   }
 
   Future<Joke> addJoke({Joke joke, File imageToUpload}) async {
@@ -173,7 +124,7 @@ class JokeService {
       Map<String, dynamic> responseData = (joke.jokeType == JokeType.text)
           ? gottenData
           : FormData.from(gottenData);
-      Response response = await dio.post(jokeUrl,
+      Response response = await dio.post(jokesUrl,
           data: responseData, options: authHeaderOption);
       return Joke.fromJson(response.data);
     } on DioError catch (error) {
@@ -183,27 +134,35 @@ class JokeService {
     }
   }
 
-  Future<bool> likeJoke({Joke joke}) async {
-    return true;
+  Future<bool> changeJokeLiking({Joke joke, bool like}) async {
+    try {
+       Options authHeaderOption = await getAuthHeaderOption();
+       if(like){
+          await dio.put(jokesUrl + '/${joke.id}/likes', options: authHeaderOption);
+       }else{
+          await dio.delete(jokesUrl + '/${joke.id}/likes', options: authHeaderOption);
+       }
+      return true;
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
   }
 
-  Future<bool> dislikeJoke({Joke joke}) async {
-    return true;
-  }
-
-  Future<bool> favoriteJoke({Joke joke}) async {
-    return true;
-  }
-
-  Future<bool> unfavoriteJoke({Joke joke}) async {
-    return true;
-  }
-
-  FormData _createImageData() {
-    return FormData.from({
-      "name": "wendux",
-      "age": 25,
-      "file": new UploadFileInfo(new File("./example/upload.txt"), "upload.txt")
-    });
+  Future<bool> changeJokeFavoriting({Joke joke, bool favorite}) async {
+     try {
+       Options authHeaderOption = await getAuthHeaderOption();
+       if(favorite){
+          await dio.put(userUrl + '/favorites/jokes/${joke.id}', options: authHeaderOption);
+       }else{
+          await dio.delete(userUrl + '/favorites/jokes/${joke.id}', options: authHeaderOption);
+       }
+      return true;
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
   }
 }

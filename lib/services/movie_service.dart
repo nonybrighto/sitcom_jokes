@@ -1,29 +1,43 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
+import 'package:sitcom_joke/constants/constants.dart';
+import 'package:sitcom_joke/models/movie/basic_movie_details_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/movie/movie_list_response.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
+import 'package:sitcom_joke/services/auth_header.dart';
 
 class MovieService{
 
 
+  Dio dio = Dio();
+
+  final String moviesUrl = kAppApiUrl + '/movies/';
+
   Future<MovieListResponse> getMovies({int page}) async{
 
-    var movieListGen =  List.generate(20, (num) => Movie((b) => b
-      ..basicDetails.id = 'abcde'
-      ..basicDetails.title = 'name $num'
-      ..basicDetails.tmdbMovieId = 1
-      ..basicDetails.followed = false
-      ..basicDetails.description = 'desc') );
+    try {
+      Options authHeaderOption = await getAuthHeaderOption();
+      Response response = await dio.get(moviesUrl + '?page=$page', options: authHeaderOption);
+      BasicMovieDetailsListResponse basicMovieDetailsListResponse  =BasicMovieDetailsListResponse.fromJson(response.data);
+  
+     BuiltList<Movie> movies =BuiltList(basicMovieDetailsListResponse.results.map((b) => Movie((v) => v.basicDetails = b.toBuilder())));
 
+      return MovieListResponse((b) => 
+                      b..totalPages = basicMovieDetailsListResponse.totalPages
+                      ..perPage =basicMovieDetailsListResponse.perPage
+                      ..currentPage =basicMovieDetailsListResponse.currentPage
+                      ..previousPage =basicMovieDetailsListResponse.previousPage
+                      ..results =movies.toBuilder()
+                      );
 
-       BuiltList<Movie> movieList = BuiltList();
-      var movieBuilder = movieList.toBuilder();
-      movieBuilder.addAll(movieListGen);
-      movieList =movieBuilder.build();
-      return MovieListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  movieList.toBuilder());
-    
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
   }
 
   Future<Movie>  getMovie(Movie movie) async{
@@ -34,12 +48,21 @@ class MovieService{
     return movie.rebuild((b) => b.tmdbDetails = tmbsmovieBuilder);
   }
 
-  Future<Null> changeMovieFollow({String movieId, String userId, bool follow}){
+  Future<bool> changeMovieFollow({Movie movie, bool follow}) async{
 
-      // put  /movie/following/:userId
-      // delete to unfollow
-
-        return null;
+        try {
+          Options authHeaderOption = await getAuthHeaderOption();
+          if(follow){
+              await dio.put(moviesUrl + '${movie.basicDetails.id}/following', options: authHeaderOption);
+          }else{
+              await dio.delete(moviesUrl + '${movie.basicDetails.id}/following', options: authHeaderOption);
+          }
+          return true;
+        } on DioError catch (error) {
+          throw Exception((error.response != null)
+              ? error.response.data['message']
+              : 'Error Connectiing to server');
+        }
   }
 
   Future<List<Movie>> searchMovies(String searchText) async{
