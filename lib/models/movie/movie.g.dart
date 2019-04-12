@@ -6,6 +6,92 @@ part of 'movie.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<Movie> _$movieSerializer = new _$MovieSerializer();
+
+class _$MovieSerializer implements StructuredSerializer<Movie> {
+  @override
+  final Iterable<Type> types = const [Movie, _$Movie];
+  @override
+  final String wireName = 'Movie';
+
+  @override
+  Iterable serialize(Serializers serializers, Movie object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'id',
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
+      'title',
+      serializers.serialize(object.title,
+          specifiedType: const FullType(String)),
+      'tmdbMovieId',
+      serializers.serialize(object.tmdbMovieId,
+          specifiedType: const FullType(int)),
+    ];
+    if (object.followed != null) {
+      result
+        ..add('followed')
+        ..add(serializers.serialize(object.followed,
+            specifiedType: const FullType(bool)));
+    }
+    if (object.description != null) {
+      result
+        ..add('description')
+        ..add(serializers.serialize(object.description,
+            specifiedType: const FullType(String)));
+    }
+    if (object.tmdbDetails != null) {
+      result
+        ..add('tmdbDetails')
+        ..add(serializers.serialize(object.tmdbDetails,
+            specifiedType: const FullType(TmdbMovieDetails)));
+    }
+
+    return result;
+  }
+
+  @override
+  Movie deserialize(Serializers serializers, Iterable serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new MovieBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'title':
+          result.title = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'tmdbMovieId':
+          result.tmdbMovieId = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'followed':
+          result.followed = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'description':
+          result.description = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'tmdbDetails':
+          result.tmdbDetails.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(TmdbMovieDetails))
+              as TmdbMovieDetails);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$Movie extends Movie {
   @override
   final String id;

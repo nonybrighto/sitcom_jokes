@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:sitcom_joke/constants/constants.dart';
+import 'package:sitcom_joke/constants/secrets.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/movie/movie_list_response.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
@@ -13,6 +14,7 @@ class MovieService{
   Dio dio = Dio();
 
   final String moviesUrl = kAppApiUrl + '/movies/';
+  final String tmdbmovieUrl =kTmdbApiUrl + '/movie/';
 
   Future<MovieListResponse> getMovies({int page}) async{
 
@@ -30,10 +32,22 @@ class MovieService{
 
   Future<Movie>  getMovie(Movie movie) async{
 
-    TmdbMovieDetails tmdbDetails = TmdbMovieDetails((b) => b..id=1..title='name');
+    String tmdbMovieUrl = tmdbmovieUrl+'${movie.tmdbMovieId}?api_key=$kTmdbApiKey&append_to_response=credits,images';
 
-    final tmbsmovieBuilder = tmdbDetails.toBuilder();
-    return movie.rebuild((b) => b.tmdbDetails = tmbsmovieBuilder);
+     try {
+
+      Options authHeaderOption = await getAuthHeaderOption();
+      List<Response> response = await Future.wait([dio.get(tmdbMovieUrl), dio.get(moviesUrl+'${movie.id}', options: authHeaderOption)]);
+      TmdbMovieDetails tmdbMovieDetails = TmdbMovieDetails.fromJson(response[0].data);
+      Movie gottenMovie =  Movie.fromJson(response[1].data);
+      return gottenMovie.rebuild((b) => b.tmdbDetails = tmdbMovieDetails.toBuilder());
+
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+   
   }
 
   Future<bool> changeMovieFollow({Movie movie, bool follow}) async{

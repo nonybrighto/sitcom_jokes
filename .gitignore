@@ -12,6 +12,7 @@
 
 # mine
 test/personal_test.dart
+lib/constants/secrets.dart
 
 # IntelliJ related
 *.iml
