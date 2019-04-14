@@ -13,7 +13,14 @@ class MyApp extends StatelessWidget {
           child: MaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              brightness: Brightness.dark,
+              primaryColor: Color(0XFF212845),
+              accentColor: Color(0XFFfc6b00),
+              scaffoldBackgroundColor: Color(0XFF212845),
+              primarySwatch: Colors.orange,
+              buttonColor: Color(0XFFfc6b00),
+              canvasColor: Color(0XFF212845),
+              dividerColor: Color(0XFFC0c0c0)
             ),
             home: HomePage(),
           ),

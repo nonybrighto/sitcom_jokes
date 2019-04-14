@@ -21,12 +21,16 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: <Widget>[
+            Divider(
+                height: 1,
+                color: Theme.of(context).accentColor,
+            ),
             _drawerHeader(applicationBloc),
             _drawerItem(context, Icons.cloud, 'Latest Posts' , countDetails: CountDetails(5, Colors.red), onTap: _handleLatestPostTap),
             _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
             _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap),
             _drawerItem(context, Icons.favorite, 'Add Joke', onTap: _handleAddJokeTap(context)),
-            Divider(color: Colors.grey[200],),
+            Divider(),
             _drawerItem(context, Icons.favorite, 'Settings', onTap: _handleSettingsTap(context)),
             _drawerItem(context, Icons.favorite, 'Share', onTap: _handleShareTap()),
             _drawerItem(context, Icons.favorite, 'About' , onTap: _handleAboutTap(context)),
@@ -38,40 +42,95 @@ class AppDrawer extends StatelessWidget {
 
   _drawerHeader(ApplicationBloc appBloc){
 
-      return Row(children: <Widget>[
-
-          StreamBuilder<User>(
+      
+          return StreamBuilder<User>(
             stream: appBloc.currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> currentUserSnapshot ){
 
                 if(currentUserSnapshot.hasData && currentUserSnapshot.data != null){
 
-                   return _buildUserProfile(currentUserSnapshot.data);
+                   return _buildUserProfile(currentUserSnapshot.data, context);
                 }else{
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                        _buildAuthNavButton(context, authType: AuthType.login, buttonText: 'Login'),
+                       _buildAuthNavButton(context, authType: AuthType.login, buttonText: 'Login'),
                         _buildAuthNavButton(context, authType: AuthType.signup, buttonText: 'Sign Up'),
+
                     ],
                   );
                 }
-            
             }
-          )
+          );
 
-      ],);
+    
 
   }
 
-  _buildUserProfile(User user){
+  _buildUserProfile(User user, BuildContext context){
 
-      return Text(user.username);
+    return Container(
+      height: 70,
+      child: Stack(
+        children: <Widget>[
+          Row(
+                children: <Widget>[
+                   _buildProfileDetail(context, title:'Followers', count:10, onPressed: (){
+                     print('pressed');
+                   }),
+                   _buildProfileDetail(context, title:'Following', count:50, onPressed: (){
+                     print('pressed');
+                   }),
+                ],
+              ),
+
+              Positioned(
+                top: 0,
+                right: 0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(90)),
+                                  child: Container(
+                    height: 70,
+                    width: 70,
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.all(5.0),
+                    color: Theme.of(context).accentColor,
+                    child: CircleAvatar(
+                        radius: 20,
+                        child: Text('N'),
+                    ),
+                  ),
+                ),
+              )
+        ],
+      ),
+    );
   }
 
-  _buildAuthNavButton(BuildContext context, {String buttonText, AuthType authType }){
+  _buildProfileDetail(BuildContext context, {String title, int count, onPressed}){
 
-    return FlatButton(child: Text(buttonText), onPressed: (){
+        return InkWell(
+                  onTap: onPressed,
+                  splashColor: Theme.of(context).accentColor,
+                  child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 12, top:10, bottom: 4),
+                  child: Text(title, style: TextStyle(color: Theme.of(context).accentColor),),
+                ),
+                Text(count.toString(), style: TextStyle(color: Colors.grey[500],)),
+                //Text(count.toString()),
+              ],
+          ),
+        );
+  }
+
+   _buildAuthNavButton(BuildContext context, {String buttonText, AuthType authType }){
+
+    return FlatButton(
+      textColor: Theme.of(context).accentColor,
+      child: Text(buttonText), onPressed: (){
         Router.gotoAuthPage(context, authType);
     });
   }
