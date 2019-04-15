@@ -10,6 +10,7 @@ import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/services/movie_service.dart';
+import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
 
 class JokeAddPage extends StatefulWidget {
   final JokeType jokeType;
@@ -20,12 +21,13 @@ class JokeAddPage extends StatefulWidget {
   _JokeAddPageState createState() => new _JokeAddPageState();
 }
 
-class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke>{
+class _JokeAddPageState extends State<JokeAddPage>
+    implements BlocDelegate<Joke> {
   JokeType jokeType;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _titleController =  TextEditingController();
-  TextEditingController _textController =  TextEditingController();
-  TextEditingController _movieController =  TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
+  TextEditingController _movieController = TextEditingController();
   File _imageToUpload;
   Movie _selectedMovie;
   BuildContext _context;
@@ -37,10 +39,11 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
   void initState() {
     super.initState();
     jokeType = widget.jokeType ?? JokeType.text;
-    _selectedMovie =widget.selectedMovie;
-    jokeAddBloc =  JokeAddBloc(jokeService: JokeService(), delegate: this);
-   
-    _movieController.text = (_selectedMovie != null)? _selectedMovie.title: '';
+    _selectedMovie = widget.selectedMovie;
+    jokeAddBloc = JokeAddBloc(jokeService: JokeService(), delegate: this);
+
+    _movieController.text =
+        (_selectedMovie != null) ? _selectedMovie.title : '';
   }
 
   @override
@@ -51,98 +54,90 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
         title: Text('Add $addTypeString Joke'),
         actions: <Widget>[_buildTypeSwapIconButton()],
       ),
-      body: Builder(builder:(context){
-            _context =context;
-            return SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.black12,
-                    labelText: 'Title',
-                    hintText: 'Title'),
+      body: Builder(builder: (context) {
+        _context = context;
+        return SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: InputDecoration(
+                        labelText: 'Title',
+                        hintText: 'Title'),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  _buildMovieSelectionField(),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  (jokeType == JokeType.image)
+                      ? _buildImageJokeSpecificLayout()
+                      : _buildTextJokeSpecificLayout(),
+                  _buildJokeAddSubmitionButton()
+                ],
               ),
-              SizedBox(
-                height: 10.0,
-              ),
-              _buildMovieSelectionField(),
-              SizedBox(
-                height: 10.0,
-              ),
-              (jokeType == JokeType.image)
-                  ? _buildImageJokeSpecificLayout()
-                  : _buildTextJokeSpecificLayout(),
-
-              _buildJokeAddSubmitionButton()
-            ],
+            ),
           ),
-        ),
-      );
-
+        );
       }),
     );
   }
 
+  _buildJokeAddSubmitionButton() {
+    return StreamBuilder<LoadState>(
+      initialData: Loaded(),
+      stream: jokeAddBloc.loadState,
+      builder: (context, loadStateSnapShot) {
+        LoadState loadState = loadStateSnapShot.data;
 
-  _buildJokeAddSubmitionButton(){
-
-     return StreamBuilder<LoadState>(
-                            initialData: Loaded(),
-                            stream: jokeAddBloc.loadState,
-                            builder: (context, loadStateSnapShot) {
-                              LoadState loadState =
-                                  loadStateSnapShot.data;
-
-                              return SizedBox(
-                                width: double.infinity,
-                                child: RaisedButton(
-                                  color: const Color(0Xfffe0e4f),
-                                  child: (loadState is Loading)
-                                      ? CircularProgressIndicator()
-                                      : Text(
-                                          'ADD JOKE',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                  onPressed:
-                                      (loadState is Loading)
-                                          ? null
-                                          : () {
-                                              _submitJoke();
-                                            },
-                                ),
-                              );
-                            },
-                          );
-    
+        return Hero(
+          tag: 'joke_add',
+                  child: RoundedButton(
+              child: (loadState is Loading)
+                  ? CircularProgressIndicator()
+                  : Text(
+                      'ADD JOKE',
+                      style: TextStyle(color: Colors.white),
+                    ),
+              onPressed: (loadState is Loading)
+                  ? null
+                  : () {
+                      _submitJoke();
+                    },
+            ),
+        );
+      },
+    );
   }
 
-   _submitJoke() {
+  _submitJoke() {
     if (_formKey.currentState.validate()) {
       if (_selectedMovie != null) {
-        if ((jokeType == JokeType.image && _imageToUpload != null) || jokeType ==JokeType.text) {
-
-              Joke jokeToAdd = Joke((b) => b
-                ..id = 'id'
-                ..title = _titleController.text
-                ..content = (jokeType ==JokeType.text)? _textController.text: ''
-                ..commentCount = 0
-                ..likeCount = 0
-                ..dateAdded = DateTime.now()
-                ..jokeType = jokeType
-                ..liked =false
-                ..favorited = false
-                ..movie = _selectedMovie.toBuilder()
-                );
-              jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
+        if ((jokeType == JokeType.image && _imageToUpload != null) ||
+            jokeType == JokeType.text) {
+          Joke jokeToAdd = Joke((b) => b
+            ..id = 'id'
+            ..title = _titleController.text
+            ..content = (jokeType == JokeType.text) ? _textController.text : ''
+            ..commentCount = 0
+            ..likeCount = 0
+            ..dateAdded = DateTime.now()
+            ..jokeType = jokeType
+            ..liked = false
+            ..favorited = false
+            ..movie = _selectedMovie.toBuilder());
+          jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
         } else {
           Scaffold.of(_context).showSnackBar(SnackBar(
-              content: Text('Please select an image to upload'),
-            ));
+            content: Text('Please select an image to upload'),
+          ));
         }
       } else {
         Scaffold.of(_context).showSnackBar(SnackBar(
@@ -152,46 +147,40 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
     }
   }
 
-   _buildMovieSelectionField(){
-
-    return  TypeAheadFormField(
-                            textFieldConfiguration: TextFieldConfiguration(
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Movie',
-                                labelText: 'Movie',
-                                filled: true,
-                                fillColor: Colors.black12,
-                              ),
-                              controller: this._movieController,
-                            ),
-                            suggestionsCallback: (String pattern)async {
-                                return await movieService.searchMovies(pattern);
-                            },
-                            itemBuilder: (context, movieSuggestion) {
-                              return ListTile(
-                                title: Text(movieSuggestion.title),
-                              );
-                            },
-                            transitionBuilder:
-                                (context, suggestionsBox, controller) {
-                              return suggestionsBox;
-                            },
-                            onSuggestionSelected: (movieSuggestion) {
-                              this._movieController.text = movieSuggestion.title;
-                              _selectedMovie =  movieSuggestion;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please select a Movie';
-                              }
-                            },
-                          );
+  _buildMovieSelectionField() {
+    return TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        onChanged: (value) {
+          print(value);
+        },
+        decoration: InputDecoration(
+          hintText: 'Movie',
+          labelText: 'Movie',
+        ),
+        controller: this._movieController,
+      ),
+      suggestionsCallback: (String pattern) async {
+        return await movieService.searchMovies(pattern);
+      },
+      itemBuilder: (context, movieSuggestion) {
+        return ListTile(
+          title: Text(movieSuggestion.title),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (movieSuggestion) {
+        this._movieController.text = movieSuggestion.title;
+        _selectedMovie = movieSuggestion;
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please select a Movie';
+        }
+      },
+    );
   }
-
-  
 
   _buildTextJokeSpecificLayout() {
     return TextFormField(
@@ -199,35 +188,36 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
       controller: _textController,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.black12,
           hintText: 'Text Joke\n\n\n',
           labelText: 'Text Joke'),
     );
   }
 
   _buildImageJokeSpecificLayout() {
-    return Column(
+    return Row(
       children: <Widget>[
-        Container(
-          height: 180.0,
-          width: 180.0,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: (_imageToUpload != null)
-                      ? FileImage(_imageToUpload)
-                      : AssetImage('assets/images/add_image_place_holder.jpg'))),
-        ),
-        RaisedButton(
-          child: Text(
-            'SELECT IMAGE',
-            style: TextStyle(color: Colors.white),
+         FlatButton(
+           textColor: Theme.of(context).accentColor ,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.image),
+              Text('SELECT IMAGE',)
+            ],
           ),
-          color: const Color(0Xfffe0e4f),
           onPressed: () {
             _getImageFromGallery();
           },
-        )
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        (_imageToUpload != null)?Container(
+          height: 180.0,
+          width: 180.0,
+          decoration: BoxDecoration(
+              image: DecorationImage(image: FileImage(_imageToUpload))),
+        ): Container(),
+       
       ],
     );
   }
@@ -255,15 +245,15 @@ class _JokeAddPageState extends State<JokeAddPage>  implements BlocDelegate<Joke
   @override
   error(String errorMessage) {
     Scaffold.of(_context).showSnackBar(SnackBar(
-              content: Text('Error while adding joke $errorMessage'),
+      content: Text('Error while adding joke $errorMessage'),
     ));
     return null;
   }
 
   @override
-  success(Joke t) async{
+  success(Joke t) async {
     Scaffold.of(_context).showSnackBar(SnackBar(
-              content: Text('Joke successfully added!!'),
+      content: Text('Joke successfully added!!'),
     ));
     await Future.delayed(Duration(seconds: 2));
     //navigate to homepage

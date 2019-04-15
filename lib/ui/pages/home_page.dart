@@ -93,12 +93,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
     
 
-      return FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: (){
-            JokeType jokeTypeToAdd = (_tabController.index == 0)? JokeType.image : JokeType.text;
-            Router.gotoAddJokePage(context, jokeType: jokeTypeToAdd, selectedMovie: widget.selectedMovie); 
-        },
+      return Hero(
+              tag: 'joke_add',
+              child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: (){
+              JokeType jokeTypeToAdd = (_tabController.index == 0)? JokeType.image : JokeType.text;
+              Router.gotoAddJokePage(context, jokeType: jokeTypeToAdd, selectedMovie: widget.selectedMovie); 
+          },
+        ),
       );
   }
 
