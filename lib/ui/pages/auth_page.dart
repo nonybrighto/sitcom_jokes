@@ -9,6 +9,9 @@ import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/services/auth_service.dart';
 import 'package:sitcom_joke/ui/pages/home_page.dart';
+import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
+import 'package:sitcom_joke/ui/widgets/clips/login_bottom_clipper.dart';
+import 'package:sitcom_joke/ui/widgets/clips/login_top_clipper.dart';
 import 'package:sitcom_joke/utils/validator.dart';
 
 enum AuthType { login, signup }
@@ -45,89 +48,119 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
   @override
   Widget build(BuildContext context) {
     authBloc = AuthBloc(authService: AuthService(), delegate: this);
-    return Scaffold(
-        backgroundColor: const Color(0Xffe6e6e6),
-        appBar: AppBar(
-          title: Text((authType == AuthType.signup) ? 'Sign up' : 'Login'),
-        ),
-        body: Builder(
-          builder: (context) {
-            _context = context;
 
-            return Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                        //   child: Image.asset(
-                        //     'assets/images/app_logo.jpg',
-                        //     fit: BoxFit.fitHeight,
-                        //     height: 80.0,
-                        //   ),
-                        // ),
-                        Center(
-                          child: Text('Sitcom Jokes'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              _buildAuthForm(),
-                              SizedBox(height: 10.0),
-                              _footerHorizontalDivider(),
-                              _buildSocialButtons(),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 15.0),
-                                  child: (authType == AuthType.signup)
-                                      ? _buildFootDetail(
-                                          infoText:
-                                              'By Signing up, you agree to our',
-                                          buttonText: 'Terms and Conditions',
-                                          onPressed: () {})
-                                      : _buildFootDetail(
-                                          infoText: 'Don\'t have an account?',
-                                          buttonText: 'Sign up',
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AuthPage(
-                                                            AuthType.signup)));
-                                          }))
-                            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text((authType == AuthType.signup) ? 'Sign up' : 'Login'),
+      ),
+      body: Builder(
+        builder: (context) {
+          _context = context;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _buildHeader(),
+                _buildAuthForm(),
+                _footerHorizontalDivider(),
+                _buildSocialButtons(),
+                _buildFooter(authType)
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildHeader(){
+    return Stack(
+                  children: <Widget>[
+                    ClipPath(
+                      clipper: LoginBottomClipper(),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            //decoration: BoxDecoration(color: Color(0Xc0fc6b00)),
+                            color: Colors.white24,
+                            height: 300,
                           ),
-                        ),
-                      ],
+                          Container(
+                            decoration: BoxDecoration(color: Color(0Xc0fc6b00)),
+                            height: 300,
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
-            );
-          },
-        ));
+                    ClipPath(
+                      clipper: LoginTopClipper(),
+                      child: Container(
+                        height: 260,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Color(0Xfffa7c05),
+                              Color(0Xffee3e00)
+                            ])),
+                      ),
+                    ),
+                  ],
+                );
+  }
+
+  _buildFooter(AuthType authType) {
+    if (authType == AuthType.signup) {
+      return _buildFootDetail(
+          infoText: 'By Signing up, you agree to our',
+          buttonText: 'Terms and Conditions',
+          onPressed: () {});
+    } else {
+      return _buildFootDetail(
+          infoText: 'Don\'t have an account?',
+          buttonText: 'Sign up',
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AuthPage(AuthType.signup)));
+          });
+    }
   }
 
   _buildAuthForm() {
-    return Column(
-      children: <Widget>[
-        (authType == AuthType.signup)
-            ? 
-            _authFormTextField(hintText: 'Username', controller: _usernameController, validator: validator.usernameValidator)
-            : Container(),
-        (authType == AuthType.signup)
-            ? SizedBox(height: 10.0)
-            : Container(),
-            _authFormTextField(hintText: 'Email', controller: _emailController, validator: validator.emailValidator),
-        SizedBox(height: 10.0),
-        _authFormTextField(hintText: 'Password', controller: _passwordController, validator: validator.passwordValidator, obscureText: true),
-        SizedBox(height: 10.0),
-        _buildAuthButton(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Form(
+            key: _formKey,
+              child: Column(
+          children: <Widget>[
+            (authType == AuthType.signup)
+                ? _authFormTextField(
+                    hintText: 'Username',
+                    controller: _usernameController,
+                    icon: Icons.verified_user,
+                    validator: validator.usernameValidator)
+                : Container(),
+            (authType == AuthType.signup) ? SizedBox(height: 10.0) : Container(),
+            _authFormTextField(
+                hintText: 'Email',
+                controller: _emailController,
+                icon: Icons.verified_user,
+                validator: validator.emailValidator),
+            SizedBox(height: 10.0),
+            _authFormTextField(
+                hintText: 'Password',
+                controller: _passwordController,
+                icon: Icons.verified_user,
+                validator: validator.passwordValidator,
+                obscureText: true),
+            SizedBox(height: 10.0),
+            _buildAuthButton(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -135,16 +168,14 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
       {TextEditingController controller,
       String hintText,
       Function(String) validator,
+      IconData icon,
       bool obscureText = false}) {
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
-          hintText: hintText),
       validator: validator,
+      decoration: InputDecoration(icon: Icon(icon), hintText: hintText),
     );
   }
 
@@ -153,20 +184,17 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
         initialData: Loaded(),
         stream: authBloc.loadState,
         builder: (context, AsyncSnapshot<LoadState> loadStateSnapShot) {
-          LoadState loadState =loadStateSnapShot.data;
-          return  SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-              color: const Color(0Xfffe0e4f),
-              child: (_canClickAuthButton(loadState))
+          LoadState loadState = loadStateSnapShot.data;
+          return RoundedButton(
+            child:  (_canClickAuthButton(loadState))
                   ? Text(
                       (authType == AuthType.signup) ? 'SIGN UP' : 'LOGIN',
                       style: TextStyle(color: Colors.white),
                     )
                   : CircularProgressIndicator(
-                      backgroundColor: const Color(0Xfffe0e4f),
+                      backgroundColor: Colors.white,
                     ),
-              onPressed: (_canClickAuthButton(loadState))
+            onPressed: (_canClickAuthButton(loadState))
                   ? () {
                       if (_formKey.currentState.validate()) {
                         if (authType == AuthType.signup) {
@@ -179,7 +207,7 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
                       }
                     }
                   : null,
-            ),
+                  
           );
         });
   }
@@ -196,7 +224,7 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Divider(
-                color: Colors.red,
+                color: Theme.of(context).accentColor,
               ),
             ],
           ),
@@ -206,7 +234,7 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.all(8.0),
-              color: const Color(0Xffe6e6e6),
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Text('OR'),
             )
           ],
@@ -235,7 +263,7 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
         initialData: Loaded(),
         stream: authBloc.loadState,
         builder: (context, loadStateSnapShot) {
-          LoadState loadState =loadStateSnapShot.data;
+          LoadState loadState = loadStateSnapShot.data;
           bool buttonClickable = _canClickAuthButton(loadState);
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
