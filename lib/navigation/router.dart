@@ -14,6 +14,7 @@ import 'package:sitcom_joke/services/movie_service.dart';
 import 'package:sitcom_joke/services/user_service.dart';
 import 'package:sitcom_joke/ui/pages/about_page.dart';
 import 'package:sitcom_joke/ui/pages/auth_page.dart';
+import 'package:sitcom_joke/ui/pages/home_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_add_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_comments_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_display_page.dart';
@@ -26,11 +27,16 @@ import 'package:sitcom_joke/ui/pages/user/user_list_page.dart';
 class Router{
 
 
+
+  static gotoHomePage(BuildContext context, {Movie movie}){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+  }
+
   static gotoUserDetailsPage(BuildContext context, User user){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserDetailsBloc>(
           bloc: UserDetailsBloc(userService: UserService(), currentUser: user),
           child: UserDetailsPage(user: user,),
-        )));
+    )));
 
   }
 

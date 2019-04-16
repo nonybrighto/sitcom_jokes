@@ -19,7 +19,7 @@ class MovieListBloc extends ListBloc<Movie>{
 
  
  MovieListBloc({this.movieService}){
-      super.getItems();
+      super.getItems(); 
  }
  
   @override

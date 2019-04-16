@@ -14,13 +14,17 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: ThemeData(
               brightness: Brightness.dark,
-              primaryColor: Color(0XFF212845),
-              accentColor: Color(0XFFfc6b00),
-              scaffoldBackgroundColor: Color(0XFF212845),
+              primaryColor: const Color(0XFF212845),
+              accentColor: const Color(0XFFfc6b00),
+              scaffoldBackgroundColor:const  Color(0XFF212845),
               primarySwatch: Colors.orange,
-              buttonColor: Color(0XFFfc6b00),
-              canvasColor: Color(0XFF212845),
-              dividerColor: Color(0XFFC0c0c0)
+              buttonColor: const Color(0XFFfc6b00),
+              canvasColor: const Color(0XFF212845),
+              dividerColor: const Color(0XFFC0c0c0),
+              cardColor: const Color(0X252836),
+              buttonTheme: ButtonThemeData(
+                textTheme: ButtonTextTheme.accent
+              )
             ),
             home: HomePage(),
           ),
