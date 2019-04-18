@@ -138,9 +138,9 @@ class JokeService {
     try {
        Options authHeaderOption = await getAuthHeaderOption();
        if(like){
-          await dio.put(jokesUrl + '/${joke.id}/likes', options: authHeaderOption);
+          await dio.put(jokesUrl + '${joke.id}/likes', options: authHeaderOption);
        }else{
-          await dio.delete(jokesUrl + '/${joke.id}/likes', options: authHeaderOption);
+          await dio.delete(jokesUrl + '${joke.id}/likes', options: authHeaderOption);
        }
       return true;
     } on DioError catch (error) {
@@ -154,9 +154,9 @@ class JokeService {
      try {
        Options authHeaderOption = await getAuthHeaderOption();
        if(favorite){
-          await dio.put(userUrl + '/favorites/jokes/${joke.id}', options: authHeaderOption);
+          await dio.put(userUrl + 'favorites/jokes/${joke.id}', options: authHeaderOption);
        }else{
-          await dio.delete(userUrl + '/favorites/jokes/${joke.id}', options: authHeaderOption);
+          await dio.delete(userUrl + 'favorites/jokes/${joke.id}', options: authHeaderOption);
        }
       return true;
     } on DioError catch (error) {

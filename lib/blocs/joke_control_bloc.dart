@@ -31,7 +31,7 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
           jokeControlled = toggledJoke;
-          await jokeService.changeJokeLiking(joke: jokeControlled, like:(jokeControlled.liked)?false:true);
+          await jokeService.changeJokeLiking(joke: jokeControlled, like:jokeControlled.liked);
       }catch(err){
           print(err);
           jokeControlled = _toggledJokeLike();
@@ -47,7 +47,7 @@ class JokeControlBloc extends BlocBase{
       jokeListBloc?.changeCurrentJoke(toggledJoke);
       try{
           jokeControlled = toggledJoke;
-          await jokeService.changeJokeFavoriting(joke: jokeControlled, favorite:(jokeControlled.favorited)?true:false);
+          await jokeService.changeJokeFavoriting(joke: jokeControlled, favorite:jokeControlled.favorited);
       }catch(err){
           jokeControlled = _toggledJokeFavorite();
           jokeListBloc?.updateItem(jokeControlled);
