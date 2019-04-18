@@ -36,6 +36,8 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   Movie get movie;
   @nullable 
   User get owner;
+  @nullable
+  String get imageUrl;
 
   factory Joke([updates(JokeBuilder b)]) = _$Joke;
   Joke._();

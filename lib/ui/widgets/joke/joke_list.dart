@@ -4,6 +4,7 @@ import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/ui/widgets/general/scroll_list.dart';
+import 'package:sitcom_joke/ui/widgets/joke/joke_card.dart';
 
 
 
@@ -36,13 +37,38 @@ class _JokeListState extends State<JokeList> {
         jokeListBloc.getItems();
       },
       listItemWidget: (joke, int index){
-        return ListTile(title: Container(height: 30.0, child: Text(joke.title)), trailing: Icon(Icons.thumb_up, color: (joke.liked? Colors.amber: Colors.black),), onTap: (){
-            jokeListBloc.changeCurrentJoke(joke);
-            Router.gotoJokeDisplayPage(context, initialPage: index, jokeType: widget.jokeType, jokeListBloc: jokeListBloc, joke: joke);
-        },);
+
+            return JokeCard(index, joke:joke);
       },
 
     );
+
+      // return ListView.builder(
+
+      //   itemBuilder: (context, index){
+      //       return JokeCard(index, joke:  Joke((b) => b
+      //   ..id = 'id$num'
+      //   ..title = 'user joke $num'
+      //   ..content = 'user Joke'
+      //   ..commentCount = 21
+      //   ..likeCount = 1
+      //   ..liked = false
+      //   ..favorited = false
+      //   ..dateAdded = DateTime(2003)
+      //   ..jokeType = JokeType.text
+      //   ..movie.id = 'movid $num'
+      //   ..movie.title = 'movie name $num'
+      //   ..movie.tmdbMovieId = 1
+      //   ..movie.description = 'description'
+      //   ..owner.update((u) => u
+      //     ..id = '1 $num'
+      //     ..username = 'John $num'
+      //     ..profileIconUrl = 'the_url')),);
+      //   },
+      // );
+
   }
+
+ 
 }
 

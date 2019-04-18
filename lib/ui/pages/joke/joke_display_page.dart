@@ -7,13 +7,13 @@ import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
+import 'package:sitcom_joke/ui/widgets/joke/joke_action_button.dart';
 import 'package:zoomable_image/zoomable_image.dart';
 
 class JokeDisplayPage extends StatefulWidget {
   final int initialPage;
-  final JokeType jokeType;
   final Joke currentJoke;
-  JokeDisplayPage({Key key, this.initialPage, this.jokeType, this.currentJoke})
+  JokeDisplayPage({Key key, this.initialPage, this.currentJoke})
       : super(key: key);
 
   @override
@@ -38,10 +38,11 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     jokeListBloc = BlocProvider.of<JokeListBloc>(context);
-    jokeControlBloc =JokeControlBloc(jokeControlled: widget.currentJoke, jokeListBloc: jokeListBloc, jokeService: JokeService());
-    
+    jokeControlBloc = JokeControlBloc(
+        jokeControlled: widget.currentJoke,
+        jokeListBloc: jokeListBloc,
+        jokeService: JokeService());
   }
-
 
   void _scrollListener() {
     print(_pageController.position.extentAfter);
@@ -55,13 +56,22 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   _handlePageChanged(index, Joke joke) {
     // _currentPageIndex = index;
     jokeListBloc.changeCurrentJoke(joke);
-    jokeControlBloc =JokeControlBloc( jokeControlled: joke, jokeListBloc: jokeListBloc, jokeService: JokeService());
+    jokeControlBloc = JokeControlBloc(
+        jokeControlled: joke,
+        jokeListBloc: jokeListBloc,
+        jokeService: JokeService());
   }
 
   _displayImageJoke(Joke joke) {
-    return ZoomableImage(NetworkImage(joke.content),
-        placeholder: const Center(child: const CircularProgressIndicator()),
-        backgroundColor: Colors.black);
+    return Stack(
+      children: <Widget>[
+        
+        ZoomableImage(NetworkImage(joke.imageUrl),
+            placeholder: const Center(child: const CircularProgressIndicator()),
+            backgroundColor: Colors.black),
+        (joke.content != null)? _buildImageJokeTextContent(joke.content) :Container(),
+      ],
+    );
   }
 
   _displayTextJoke(Joke joke) {
@@ -82,6 +92,19 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
     );
   }
 
+  _buildImageJokeTextContent(String content){
+
+    return Positioned(
+         
+          child: (content.length > 50 )?ExpansionTile(
+            title: Text(content.substring(0, 47)+'...'),
+            children: <Widget>[
+              Text(content)
+            ],
+        ):Text(content),
+        );
+  }
+
   _jokeSlide(UnmodifiableListView<Joke> jokes) {
     return (jokes.isNotEmpty)
         ? PageView.builder(
@@ -92,7 +115,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
             },
             itemBuilder: (BuildContext context, int index) {
               Joke joke = jokes[index];
-              if (widget.jokeType == JokeType.image) {
+              if (joke.jokeType == JokeType.image) {
                 return _displayImageJoke(joke);
               } else {
                 return _displayTextJoke(joke);
@@ -104,8 +127,6 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-    
     return Scaffold(
       appBar: AppBar(
         title: StreamBuilder<Joke>(
@@ -118,8 +139,6 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
           },
         ),
       ),
-      backgroundColor:
-          (widget.jokeType == JokeType.image) ? Colors.black : null,
       body: StreamBuilder<LoadState>(
           initialData: Loading(),
           stream: jokeListBloc.loadState,
@@ -136,23 +155,26 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
                   AsyncSnapshot<UnmodifiableListView<Joke>> jokesSnapshot) {
                 UnmodifiableListView<Joke> jokes = jokesSnapshot.data;
 
-                return Stack(
-                  children: <Widget>[
-                    _jokeSlide(jokes),
-                    Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: StreamBuilder<Joke>(
-                          stream: jokeListBloc.currentJoke,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Joke> jokeSnapshot) {
-                            return (jokesSnapshot.hasData)
-                                ? _jokeOptions(jokeSnapshot.data, context)
-                                : Container();
-                          },
-                        )),
-                  ],
+                return StreamBuilder<Joke>(
+                  stream: jokeListBloc.currentJoke,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Joke> jokeSnapshot) {
+                    return Container(
+                      color: (jokeSnapshot.hasData && jokeSnapshot.data.jokeType ==JokeType.image)?Colors.black: null,
+                      child: Stack(
+                        children: <Widget>[
+                          _jokeSlide(jokes),
+                          Positioned(
+                              bottom: 0.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: (jokesSnapshot.hasData)
+                                  ? _jokeOptions(jokeSnapshot.data, context)
+                                  : Container()),
+                        ],
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -161,69 +183,65 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   }
 
   _jokeOptions(Joke joke, BuildContext context) {
-
+    Color iconColor = (joke.jokeType == JokeType.image)
+        ? Colors.white
+        : Theme.of(context).iconTheme.color;
     return Column(
-
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              GestureDetector(child: Text('${joke.commentCount} comments'), onTap: (){
-                Router.gotoJokeCommentsPage(context, joke: joke);
-              },),
-              GestureDetector(child: Text('${joke.likeCount} likes'), onTap: (){
-                Router.gotoJokeLikersPage(context, joke: joke);
-              },),
-          ],),
+              GestureDetector(
+                child: Text('${joke.commentCount} comments'),
+                onTap: () {
+                  Router.gotoJokeCommentsPage(context, joke: joke);
+                },
+              ),
+              GestureDetector(
+                child: Text('${joke.likeCount} likes'),
+                onTap: () {
+                  Router.gotoJokeLikersPage(context, joke: joke);
+                },
+              ),
+            ],
+          ),
         ),
         Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _jokeActionBox('Likes', Icons.thumb_up, (joke.liked)?true:false, () {
-            jokeControlBloc.toggleJokeLike();
-          }),
-          _jokeActionBox('Save', Icons.arrow_downward, false, () {}),
-          _jokeActionBox('Favorite', Icons.favorite,(joke.favorited) ?true : false, () {
-            jokeControlBloc.toggleJokeFavorite();
-          }),
-          _jokeActionBox('Share', Icons.share, false, () {}),
-        ],
-         )
-
-      ],
-    );
-  }
-
-  _jokeActionBox(String title, IconData icon, bool selected, onTap) {
-    Color iconColor =
-        (widget.jokeType == JokeType.image) ? Colors.white : Colors.black;
-    Color textColor =
-        (widget.jokeType == JokeType.image) ? Colors.grey : Colors.grey;
-
-    return InkWell(
-      borderRadius: BorderRadius.all(Radius.circular(60.0)),
-      splashColor: Colors.orange,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Icon(
-              icon,
-              color: (selected) ? Colors.orange : iconColor,
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              title,
-              style: TextStyle(color: textColor),
-            )
+            JokeActionButton(
+                title: 'Likes',
+                icon: Icons.thumb_up,
+                iconColor: iconColor,
+                selected: joke.liked,
+                onTap: () {
+                  jokeControlBloc.toggleJokeLike();
+                }),
+            JokeActionButton(
+                title: 'Save',
+                icon: Icons.arrow_downward,
+                iconColor: iconColor,
+                selected: false,
+                onTap: () {}),
+            JokeActionButton(
+                title: 'Favorite',
+                icon: Icons.favorite,
+                iconColor: iconColor,
+                selected: joke.favorited,
+                onTap: () {
+                  jokeControlBloc.toggleJokeFavorite();
+                }),
+            JokeActionButton(
+                title: 'Share',
+                icon: Icons.share,
+                iconColor: iconColor,
+                selected: false,
+                onTap: () {}),
           ],
-        ),
-      ),
-      onTap: onTap,
+        )
+      ],
     );
   }
 }

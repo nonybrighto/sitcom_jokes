@@ -62,6 +62,12 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
         ..add(serializers.serialize(object.owner,
             specifiedType: const FullType(User)));
     }
+    if (object.imageUrl != null) {
+      result
+        ..add('imageUrl')
+        ..add(serializers.serialize(object.imageUrl,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -121,6 +127,10 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.owner.replace(serializers.deserialize(value,
               specifiedType: const FullType(User)) as User);
           break;
+        case 'imageUrl':
+          result.imageUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -151,6 +161,8 @@ class _$Joke extends Joke {
   final Movie movie;
   @override
   final User owner;
+  @override
+  final String imageUrl;
 
   factory _$Joke([void updates(JokeBuilder b)]) =>
       (new JokeBuilder()..update(updates)).build();
@@ -166,7 +178,8 @@ class _$Joke extends Joke {
       this.liked,
       this.favorited,
       this.movie,
-      this.owner})
+      this.owner,
+      this.imageUrl})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Joke', 'id');
@@ -212,7 +225,8 @@ class _$Joke extends Joke {
         liked == other.liked &&
         favorited == other.favorited &&
         movie == other.movie &&
-        owner == other.owner;
+        owner == other.owner &&
+        imageUrl == other.imageUrl;
   }
 
   @override
@@ -226,17 +240,19 @@ class _$Joke extends Joke {
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc($jc(0, id.hashCode),
-                                            title.hashCode),
-                                        content.hashCode),
-                                    commentCount.hashCode),
-                                jokeType.hashCode),
-                            dateAdded.hashCode),
-                        likeCount.hashCode),
-                    liked.hashCode),
-                favorited.hashCode),
-            movie.hashCode),
-        owner.hashCode));
+                                        $jc(
+                                            $jc($jc(0, id.hashCode),
+                                                title.hashCode),
+                                            content.hashCode),
+                                        commentCount.hashCode),
+                                    jokeType.hashCode),
+                                dateAdded.hashCode),
+                            likeCount.hashCode),
+                        liked.hashCode),
+                    favorited.hashCode),
+                movie.hashCode),
+            owner.hashCode),
+        imageUrl.hashCode));
   }
 
   @override
@@ -252,7 +268,8 @@ class _$Joke extends Joke {
           ..add('liked', liked)
           ..add('favorited', favorited)
           ..add('movie', movie)
-          ..add('owner', owner))
+          ..add('owner', owner)
+          ..add('imageUrl', imageUrl))
         .toString();
   }
 }
@@ -304,6 +321,10 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   UserBuilder get owner => _$this._owner ??= new UserBuilder();
   set owner(UserBuilder owner) => _$this._owner = owner;
 
+  String _imageUrl;
+  String get imageUrl => _$this._imageUrl;
+  set imageUrl(String imageUrl) => _$this._imageUrl = imageUrl;
+
   JokeBuilder();
 
   JokeBuilder get _$this {
@@ -319,6 +340,7 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
       _favorited = _$v.favorited;
       _movie = _$v.movie?.toBuilder();
       _owner = _$v.owner?.toBuilder();
+      _imageUrl = _$v.imageUrl;
       _$v = null;
     }
     return this;
@@ -353,7 +375,8 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
               liked: liked,
               favorited: favorited,
               movie: _movie?.build(),
-              owner: _owner?.build());
+              owner: _owner?.build(),
+              imageUrl: imageUrl);
     } catch (_) {
       String _$failedField;
       try {
