@@ -30,6 +30,7 @@ class UserListBloc extends ListBloc<User>{
 
     _fetchjokeLikersController.stream.listen((joke){
           userListFetchType =UserListFetchType.jokeLikers;
+          _jokeLiked =joke;
           _getFirstPageUsers();
     });
  }
