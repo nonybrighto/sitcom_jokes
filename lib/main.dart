@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.orange,
               buttonColor: const Color(0XFFfc6b00),
               canvasColor: const Color(0XFF212845),
-              dividerColor: const Color(0XFFC0c0c0),
+              dividerColor: const Color(0XFF676b67),
               cardColor: const Color(0X252836),
               buttonTheme: ButtonThemeData(
                 textTheme: ButtonTextTheme.accent
