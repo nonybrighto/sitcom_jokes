@@ -16,10 +16,14 @@ abstract class User implements Built<User, UserBuilder> {
   String get profileIconUrl;
   @nullable
   String get email;
+  int get jokeCount;
+  bool get following;
+  bool get followed;
+  int get followerCount;
+  int get followingCount;
 
   factory User([updates(UserBuilder b)]) = _$User;
   User._();
-
 
   factory User.fromJson( Map<String, dynamic> json){
 

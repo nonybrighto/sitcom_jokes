@@ -23,6 +23,21 @@ class _$UserSerializer implements StructuredSerializer<User> {
       'username',
       serializers.serialize(object.username,
           specifiedType: const FullType(String)),
+      'jokeCount',
+      serializers.serialize(object.jokeCount,
+          specifiedType: const FullType(int)),
+      'following',
+      serializers.serialize(object.following,
+          specifiedType: const FullType(bool)),
+      'followed',
+      serializers.serialize(object.followed,
+          specifiedType: const FullType(bool)),
+      'followerCount',
+      serializers.serialize(object.followerCount,
+          specifiedType: const FullType(int)),
+      'followingCount',
+      serializers.serialize(object.followingCount,
+          specifiedType: const FullType(int)),
     ];
     if (object.profileIconUrl != null) {
       result
@@ -67,6 +82,26 @@ class _$UserSerializer implements StructuredSerializer<User> {
           result.email = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'jokeCount':
+          result.jokeCount = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'following':
+          result.following = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'followed':
+          result.followed = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'followerCount':
+          result.followerCount = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'followingCount':
+          result.followingCount = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
       }
     }
 
@@ -83,17 +118,51 @@ class _$User extends User {
   final String profileIconUrl;
   @override
   final String email;
+  @override
+  final int jokeCount;
+  @override
+  final bool following;
+  @override
+  final bool followed;
+  @override
+  final int followerCount;
+  @override
+  final int followingCount;
 
   factory _$User([void updates(UserBuilder b)]) =>
       (new UserBuilder()..update(updates)).build();
 
-  _$User._({this.id, this.username, this.profileIconUrl, this.email})
+  _$User._(
+      {this.id,
+      this.username,
+      this.profileIconUrl,
+      this.email,
+      this.jokeCount,
+      this.following,
+      this.followed,
+      this.followerCount,
+      this.followingCount})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('User', 'id');
     }
     if (username == null) {
       throw new BuiltValueNullFieldError('User', 'username');
+    }
+    if (jokeCount == null) {
+      throw new BuiltValueNullFieldError('User', 'jokeCount');
+    }
+    if (following == null) {
+      throw new BuiltValueNullFieldError('User', 'following');
+    }
+    if (followed == null) {
+      throw new BuiltValueNullFieldError('User', 'followed');
+    }
+    if (followerCount == null) {
+      throw new BuiltValueNullFieldError('User', 'followerCount');
+    }
+    if (followingCount == null) {
+      throw new BuiltValueNullFieldError('User', 'followingCount');
     }
   }
 
@@ -111,15 +180,30 @@ class _$User extends User {
         id == other.id &&
         username == other.username &&
         profileIconUrl == other.profileIconUrl &&
-        email == other.email;
+        email == other.email &&
+        jokeCount == other.jokeCount &&
+        following == other.following &&
+        followed == other.followed &&
+        followerCount == other.followerCount &&
+        followingCount == other.followingCount;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), username.hashCode),
-            profileIconUrl.hashCode),
-        email.hashCode));
+        $jc(
+            $jc(
+                $jc(
+                    $jc(
+                        $jc(
+                            $jc($jc($jc(0, id.hashCode), username.hashCode),
+                                profileIconUrl.hashCode),
+                            email.hashCode),
+                        jokeCount.hashCode),
+                    following.hashCode),
+                followed.hashCode),
+            followerCount.hashCode),
+        followingCount.hashCode));
   }
 
   @override
@@ -128,7 +212,12 @@ class _$User extends User {
           ..add('id', id)
           ..add('username', username)
           ..add('profileIconUrl', profileIconUrl)
-          ..add('email', email))
+          ..add('email', email)
+          ..add('jokeCount', jokeCount)
+          ..add('following', following)
+          ..add('followed', followed)
+          ..add('followerCount', followerCount)
+          ..add('followingCount', followingCount))
         .toString();
   }
 }
@@ -153,6 +242,27 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get email => _$this._email;
   set email(String email) => _$this._email = email;
 
+  int _jokeCount;
+  int get jokeCount => _$this._jokeCount;
+  set jokeCount(int jokeCount) => _$this._jokeCount = jokeCount;
+
+  bool _following;
+  bool get following => _$this._following;
+  set following(bool following) => _$this._following = following;
+
+  bool _followed;
+  bool get followed => _$this._followed;
+  set followed(bool followed) => _$this._followed = followed;
+
+  int _followerCount;
+  int get followerCount => _$this._followerCount;
+  set followerCount(int followerCount) => _$this._followerCount = followerCount;
+
+  int _followingCount;
+  int get followingCount => _$this._followingCount;
+  set followingCount(int followingCount) =>
+      _$this._followingCount = followingCount;
+
   UserBuilder();
 
   UserBuilder get _$this {
@@ -161,6 +271,11 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _username = _$v.username;
       _profileIconUrl = _$v.profileIconUrl;
       _email = _$v.email;
+      _jokeCount = _$v.jokeCount;
+      _following = _$v.following;
+      _followed = _$v.followed;
+      _followerCount = _$v.followerCount;
+      _followingCount = _$v.followingCount;
       _$v = null;
     }
     return this;
@@ -186,7 +301,12 @@ class UserBuilder implements Builder<User, UserBuilder> {
             id: id,
             username: username,
             profileIconUrl: profileIconUrl,
-            email: email);
+            email: email,
+            jokeCount: jokeCount,
+            following: following,
+            followed: followed,
+            followerCount: followerCount,
+            followingCount: followingCount);
     replace(_$result);
     return _$result;
   }

@@ -84,7 +84,7 @@ class Router{
         userListBloc.fetchJokeLikers(joke);
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserListBloc>(
           bloc: userListBloc,
-          child: UserListPage(),
+          child: UserListPage(showFollowDetails: false,),
         )));
   }
 
