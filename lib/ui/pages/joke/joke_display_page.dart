@@ -45,7 +45,6 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   }
 
   void _scrollListener() {
-    print(_pageController.position.extentAfter);
     if (_pageController.position.extentAfter < 2000 && canLoadMore) {
       print("Load more stuffs");
       jokeListBloc.getItems();
@@ -65,11 +64,12 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   _displayImageJoke(Joke joke) {
     return Stack(
       children: <Widget>[
-        
         ZoomableImage(NetworkImage(joke.imageUrl),
             placeholder: const Center(child: const CircularProgressIndicator()),
             backgroundColor: Colors.black),
-        (joke.text != null)? _buildImageJokeTextContent(joke.text) :Container(),
+        (joke.text != null)
+            ? _buildImageJokeTextContent(joke.text)
+            : Container(),
       ],
     );
   }
@@ -92,21 +92,19 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
     );
   }
 
-  _buildImageJokeTextContent(String content){
-
+  _buildImageJokeTextContent(String content) {
     return Positioned(
-         
-          child: (content.length > 50 )?ExpansionTile(
-            title: Text(content.substring(0, 47)+'...'),
-            children: <Widget>[
-              Text(content)
-            ],
-        ):Text(content),
-        );
+      child: (content.length > 50)
+          ? ExpansionTile(
+              title: Text(content.substring(0, 47) + '...'),
+              children: <Widget>[Text(content)],
+            )
+          : Text(content),
+    );
   }
 
   _jokeSlide(UnmodifiableListView<Joke> jokes) {
-    return (jokes.isNotEmpty)
+    return (jokes != null && jokes.isNotEmpty)
         ? PageView.builder(
             itemCount: jokes.length,
             controller: _pageController,
@@ -149,43 +147,37 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
             }
 
             return StreamBuilder<UnmodifiableListView<Joke>>(
-              initialData: UnmodifiableListView([]),
               stream: jokeListBloc.items,
               builder: (BuildContext context,
                   AsyncSnapshot<UnmodifiableListView<Joke>> jokesSnapshot) {
-                UnmodifiableListView<Joke> jokes = jokesSnapshot.data;
-
-                return StreamBuilder<Joke>(
-                  stream: jokeListBloc.currentJoke,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<Joke> jokeSnapshot) {
-                    return Container(
-                      color: (jokeSnapshot.hasData && jokeSnapshot.data.hasImage())?Colors.black: null,
-                      child: Stack(
-                        children: <Widget>[
-                          _jokeSlide(jokes),
-                          Positioned(
-                              bottom: 0.0,
-                              left: 0.0,
-                              right: 0.0,
-                              child: (jokesSnapshot.hasData)
-                                  ? _jokeOptions(jokeSnapshot.data, context)
-                                  : Container()),
-                        ],
-                      ),
+                
+                    return Stack(
+                      children: <Widget>[
+                        _jokeSlide(jokesSnapshot.data),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: StreamBuilder<Joke>(
+                              stream: jokeListBloc.currentJoke,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<Joke> jokeSnapshot) {
+                                return (jokesSnapshot.hasData)
+                                    ? _jokeOptions(jokeSnapshot.data, context)
+                                    : Container();
+                              }),
+                        ),
+                      ],
                     );
                   },
-                );
-              },
             );
           }),
     );
   }
 
   _jokeOptions(Joke joke, BuildContext context) {
-    Color iconColor = (joke.hasImage())
-        ? Colors.white
-        : Theme.of(context).iconTheme.color;
+    Color iconColor =
+        (joke.hasImage()) ? Colors.white : Theme.of(context).iconTheme.color;
     return Column(
       children: <Widget>[
         Padding(
