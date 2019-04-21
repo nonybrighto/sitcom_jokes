@@ -69,7 +69,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
         ZoomableImage(NetworkImage(joke.imageUrl),
             placeholder: const Center(child: const CircularProgressIndicator()),
             backgroundColor: Colors.black),
-        (joke.content != null)? _buildImageJokeTextContent(joke.content) :Container(),
+        (joke.text != null)? _buildImageJokeTextContent(joke.text) :Container(),
       ],
     );
   }
@@ -81,7 +81,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
           padding: const EdgeInsets.only(
               top: 8.0, left: 8.0, right: 8.0, bottom: 40.0),
           child: Text(
-            joke.content,
+            joke.text,
             textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 22.0,
@@ -115,7 +115,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
             },
             itemBuilder: (BuildContext context, int index) {
               Joke joke = jokes[index];
-              if (joke.jokeType == JokeType.image) {
+              if (joke.hasImage()) {
                 return _displayImageJoke(joke);
               } else {
                 return _displayTextJoke(joke);
@@ -160,7 +160,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
                   builder:
                       (BuildContext context, AsyncSnapshot<Joke> jokeSnapshot) {
                     return Container(
-                      color: (jokeSnapshot.hasData && jokeSnapshot.data.jokeType ==JokeType.image)?Colors.black: null,
+                      color: (jokeSnapshot.hasData && jokeSnapshot.data.hasImage())?Colors.black: null,
                       child: Stack(
                         children: <Widget>[
                           _jokeSlide(jokes),
@@ -183,7 +183,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   }
 
   _jokeOptions(Joke joke, BuildContext context) {
-    Color iconColor = (joke.jokeType == JokeType.image)
+    Color iconColor = (joke.hasImage())
         ? Colors.white
         : Theme.of(context).iconTheme.color;
     return Column(

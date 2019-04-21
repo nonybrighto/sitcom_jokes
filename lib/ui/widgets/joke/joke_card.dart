@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_control_bloc.dart';
@@ -95,8 +93,8 @@ class JokeCard extends StatelessWidget {
         },
           child: Column(
         children: <Widget>[
-                          (joke.content != null)?_buildTextDisplay(joke.content): Container(),
-                          (joke.jokeType == JokeType.image)?_buildImageDisplay(joke.imageUrl): Container(),
+                          (joke.text != null)?_buildTextDisplay(joke.text): Container(),
+                          (joke.hasImage())?_buildImageDisplay(joke.imageUrl): Container(),
         ],
       ),
     );

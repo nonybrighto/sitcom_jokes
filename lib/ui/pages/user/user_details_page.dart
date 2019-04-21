@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/blocs/user_details_bloc.dart';
-import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
@@ -22,11 +21,8 @@ class _UserDetailsPageState extends State<UserDetailsPage>
     with SingleTickerProviderStateMixin {
   UserDetailsBloc userDetailsBloc;
   TabController _tabController;
-  JokeListBloc imageJokeListBloc =
-      JokeListBloc(JokeType.image, jokeService: JokeService());
-  JokeListBloc textJokeListBloc =
-      JokeListBloc(JokeType.text, jokeService: JokeService());
-
+  JokeListBloc jokeListBloc =
+      JokeListBloc(jokeService: JokeService());
   @override
   void initState() {
     super.initState();
@@ -43,8 +39,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
     userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
-    imageJokeListBloc.fetchUserJokes(widget.user);
-    textJokeListBloc.fetchUserJokes(widget.user);
+    jokeListBloc.fetchUserJokes(widget.user);
   }
 
   @override
@@ -116,18 +111,11 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                         ),
                       ];
                     },
-                    body: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        BlocProvider<JokeListBloc>(
-                          bloc: imageJokeListBloc,
-                          child: JokeList(JokeType.image),
+                    body: SliverToBoxAdapter(
+                      child: BlocProvider<JokeListBloc>(
+                          bloc: jokeListBloc,
+                          child: JokeList(),
                         ),
-                        BlocProvider<JokeListBloc>(
-                          bloc: textJokeListBloc,
-                          child: JokeList(JokeType.text),
-                        ),
-                      ],
                     ),
                   ),
                 )

@@ -9,10 +9,9 @@ import 'package:sitcom_joke/ui/pages/auth_page.dart';
 
 class AppDrawer extends StatelessWidget {
 
-  final JokeListBloc imageJokeListBloc;
-  final JokeListBloc textJokeListBloc;
+  final JokeListBloc jokeListBloc;
 
-  AppDrawer({this.imageJokeListBloc, this.textJokeListBloc});
+  AppDrawer({this.jokeListBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -136,15 +135,9 @@ class AppDrawer extends StatelessWidget {
   }
 
   _handleLatestPostTap(){
-    _handleLatestPostForBloc(imageJokeListBloc);
-    _handleLatestPostForBloc(textJokeListBloc);
+    jokeListBloc.changeSortOrder(SortOrder.desc);
+    jokeListBloc.fetchAllJokes();
 
-  }
-
-  _handleLatestPostForBloc(JokeListBloc bloc){
-
-    bloc.changeSortOrder(SortOrder.desc);
-    bloc.fetchAllJokes();
   }
 
   _handleAllSitcomsTap(context){
@@ -154,13 +147,7 @@ class AppDrawer extends StatelessWidget {
   }
 
   _handleFavoritesTap(){
-    _handleFavoriteForBloc(imageJokeListBloc);
-    _handleFavoriteForBloc(textJokeListBloc);
-  }
-
-  _handleFavoriteForBloc(JokeListBloc bloc){
-   
-    bloc.fetchUserFavoriteJokes();
+    jokeListBloc.fetchUserFavoriteJokes();
   }
 
   _handleAddJokeTap(context){

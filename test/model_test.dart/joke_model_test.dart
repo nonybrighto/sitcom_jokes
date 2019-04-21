@@ -8,13 +8,12 @@ main() {
     Joke firstJoke = Joke((b) => b
         ..id = 'id$num'
         ..title = 'user joke $num'
-        ..content = 'user Joke'
+        ..text = 'user Joke'
         ..commentCount = 21
         ..likeCount = 1
         ..liked = false
         ..favorited = false
         ..dateAdded = DateTime(2003)
-        ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
         ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
@@ -22,18 +21,22 @@ main() {
         ..owner.update((u) => u
           ..id = '1 $num'
           ..username = 'John $num'
-          ..profileIconUrl = 'the_url'));
+          ..profileIconUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22));
 
     Joke secondJoke = Joke((b) => b
         ..id = 'id$num'
         ..title = 'user joke $num'
-        ..content = 'user Joke'
+        ..text = 'user Joke'
         ..commentCount = 21
         ..likeCount = 1
         ..liked = false
         ..favorited = false
         ..dateAdded = DateTime(2003)
-        ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
         ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
@@ -41,13 +44,19 @@ main() {
         ..owner.update((u) => u
           ..id = '1 $num'
           ..username = 'John $num'
-          ..profileIconUrl = 'the_url'));
+          ..profileIconUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22));
     
     expect(firstJoke, secondJoke);
     expect(true, firstJoke == secondJoke);
   });
 
   test('Convert json to joke object', () {
+
    
    String jokeJson = '''{
             "likeCount": 0,
@@ -58,11 +67,15 @@ main() {
             "commentCount": 0,
             "liked": false,
             "favorited": false,
-            "jokeType": "text",
             "owner": {
                 "photoUrl": "https://lh3.googleusercontent.com/-7pX2KjlP-14/AAAAAAAAAAI/AAAAAAAAABQ/oylyelUx3Nw/s96-c/photo.jpg",
                 "id": "bd19684f-6e1d-57c2-b612-1d03fd1d8227",
-                "username": "nony"
+                "username": "nony",
+                "jokeCount": 55,
+                "following": true,
+                "followed": true,
+                "followerCount":10,
+                "followingCount":20
             },
             "movie": {
                 "description": "the movie description",

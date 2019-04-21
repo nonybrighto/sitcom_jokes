@@ -7,8 +7,6 @@ import 'serializers.dart';
 
 part 'joke.g.dart'; 
 
-enum JokeType{image, text}
-
 enum JokeSortProperty{title, dataAdded, likes}
 
 
@@ -22,10 +20,10 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
 
   String get id;
   String get title;
-  String get content;
+  @nullable
+  String get text;
   int get commentCount;
   //@BuiltValueField(wireName: 'joke_type')
-  JokeType get jokeType;
   @nullable
   DateTime get dateAdded;
   @nullable
@@ -42,6 +40,10 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
   factory Joke([updates(JokeBuilder b)]) = _$Joke;
   Joke._();
 
+
+  bool hasImage(){
+    return imageUrl != null;
+  }
 
   factory Joke.fromJson(Map<String, dynamic> json){
 

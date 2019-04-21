@@ -9,14 +9,5 @@ class EnumStringUtil{
 
     String jokeSortPropertyToString(JokeSortProperty jokeSortProperty){
       return jokeSortProperty.toString().split('.')[1];
-    }
-
-    String jokeTypeToString(JokeType jokeType){
-      return jokeType.toString().split('.')[1];
-    }
-
-    JokeType stringToJokeType(String enumString){
-      return JokeType.values.firstWhere((jokeType) => jokeType.toString().split('.')[1] == enumString);
-    }
-    
+    }    
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
-import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
@@ -19,8 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
 
-  JokeListBloc imageJokeListBloc =JokeListBloc(JokeType.image, jokeService: JokeService());
-  JokeListBloc textJokeListBloc =JokeListBloc(JokeType.text, jokeService: JokeService());
+  JokeListBloc jokeListBloc =JokeListBloc(jokeService: JokeService());
   ApplicationBloc appBloc;
   TabController _tabController;
 
@@ -31,11 +29,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _tabController = TabController(vsync: this, length: 2);
 
     if(widget.selectedMovie != null){
-        imageJokeListBloc.fetchMovieJokes(widget.selectedMovie);
-        textJokeListBloc.fetchMovieJokes(widget.selectedMovie);
+        jokeListBloc.fetchMovieJokes(widget.selectedMovie);
     }else{
-      imageJokeListBloc.fetchAllJokes();
-      textJokeListBloc.fetchAllJokes();
+      jokeListBloc.fetchAllJokes();
     }
   }
 
@@ -51,7 +47,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return DefaultTabController(
         length: 3,
         child: Scaffold(
-          drawer: AppDrawer(imageJokeListBloc: imageJokeListBloc, textJokeListBloc: textJokeListBloc,),
+          drawer: AppDrawer(jokeListBloc: jokeListBloc),
           appBar: AppBar(
             bottom: TabBar(
               controller: _tabController,
@@ -73,13 +69,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             controller: _tabController,
             children: [
                  BlocProvider<JokeListBloc>(
-                    bloc: imageJokeListBloc,
-                    child: JokeList(JokeType.image),
+                    bloc: jokeListBloc,
+                    child: JokeList(),
               ),
-                BlocProvider<JokeListBloc>(
-                    bloc: textJokeListBloc,
-                    child: JokeList(JokeType.text),
-              ),
+               Center(child: Text('Joke details stuff'),),
             ],
           ),
           floatingActionButton: _buildAddJokeFloatingActionButton(),
@@ -98,8 +91,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: (){
-              JokeType jokeTypeToAdd = (_tabController.index == 0)? JokeType.image : JokeType.text;
-              Router.gotoAddJokePage(context, jokeType: jokeTypeToAdd, selectedMovie: widget.selectedMovie); 
+              Router.gotoAddJokePage(context, selectedMovie: widget.selectedMovie); 
           },
         ),
       );

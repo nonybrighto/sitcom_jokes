@@ -24,21 +24,25 @@ void main() {
     joke = Joke((b) => b
         ..id = 'id$num'
         ..title = 'user joke $num'
-        ..content = 'user Joke'
+        ..text = 'user Joke'
         ..commentCount = 21
         ..likeCount = 1
         ..liked = false
         ..favorited = false
         ..dateAdded = DateTime(2003)
-        ..jokeType = JokeType.text
         ..movie.id = 'movid $num'
         ..movie.title = 'movie name $num'
         ..movie.tmdbMovieId = 1
         ..movie.description = 'description'
-        ..owner.update((u) => u
+         ..owner.update((u) => u
           ..id = '1 $num'
           ..username = 'John $num'
-          ..profileIconUrl = 'the_url'));
+          ..profileIconUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22));
 
     sampleComments = BuiltList([
       
@@ -49,7 +53,12 @@ void main() {
       ..owner.update((u) => u
           ..id = '1'
           ..username = 'John'
-          ..profileIconUrl = 'the_url')
+          ..profileIconUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22)
       )
 
     ]);
@@ -110,14 +119,14 @@ void main() {
     expect(commentListBloc.loadState, emitsInOrder([loading, loadError]));
   });
 
-  test('when loading second or more page and no content, send load end', (){
+  test('when current page gets to total pages, emit loadend', (){
 
     JokeService jokeService = MockJokeService();
 
          when(jokeService.getComments(joke: anyNamed('joke'), page: 1))
         .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleComments.toBuilder()));
          when(jokeService.getComments(joke: anyNamed('joke'), page: 2))
-        .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  BuiltList<Comment>([]).toBuilder()));
+        .thenAnswer((_) async =>  CommentListResponse((b) => b..totalPages = 2..currentPage = 2 ..perPage = 10 ..results =  BuiltList<Comment>([]).toBuilder()));
 
     JokeCommentListBloc commentListBloc = JokeCommentListBloc(joke, jokeService: jokeService);
     commentListBloc.getItems();

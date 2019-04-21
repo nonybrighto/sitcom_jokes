@@ -9,7 +9,6 @@ import 'package:sitcom_joke/models/joke_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/services/auth_header.dart';
-import 'package:sitcom_joke/utils/enum_string_util.dart';
 
 class JokeService {
   final String jokesUrl = kAppApiUrl + '/jokes/';
@@ -19,14 +18,13 @@ class JokeService {
   Dio dio = new Dio();
 
   Future<JokeListResponse> fetchAllJokes(
-      {JokeType jokeType,
+      {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
-      int page}) async {
+      int page,}) async {
     try {
       Options authHeaderOption = await getAuthHeaderOption();
-      String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(jokesUrl + '?type=$type&page=$page', options: authHeaderOption);
+      Response response = await dio.get(jokesUrl + '?page=$page', options: authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -36,7 +34,7 @@ class JokeService {
   }
 
   Future<JokeListResponse> fetchUserFavJokes(
-      {JokeType jokeType,
+      {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       int page}) async {
@@ -44,8 +42,7 @@ class JokeService {
 
     try {
        Options authHeaderOption = await getAuthHeaderOption();
-      String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(userUrl + 'favorites/jokes?type=$type&page=$page', options:authHeaderOption);
+      Response response = await dio.get(userUrl + 'favorites/jokes?page=$page', options:authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -55,7 +52,7 @@ class JokeService {
   }
 
   Future<JokeListResponse> fetchMovieJokes(
-      {JokeType jokeType,
+      {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       Movie movie,
@@ -63,8 +60,7 @@ class JokeService {
 
           try {
        Options authHeaderOption = await getAuthHeaderOption();
-      String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(moviesUrl + '${movie.id}/jokes?type=$type&page=$page', options:authHeaderOption);
+      Response response = await dio.get(moviesUrl + '${movie.id}/jokes?page=$page', options:authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -75,7 +71,7 @@ class JokeService {
   }
 
   Future<JokeListResponse> fetchUserJokes(
-      {JokeType jokeType,
+      {
       SortOrder sortOrder,
       JokeSortProperty jokeSortProperty,
       User user,
@@ -84,8 +80,7 @@ class JokeService {
         
     try {
        Options authHeaderOption = await getAuthHeaderOption();
-      String type = EnumStringUtil().jokeTypeToString(jokeType);
-      Response response = await dio.get(usersUrl + '${user.id}/jokes?type=$type&page=$page', options:authHeaderOption);
+      Response response = await dio.get(usersUrl + '${user.id}/jokes?page=$page', options:authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
       throw Exception((error.response != null)
@@ -111,17 +106,14 @@ class JokeService {
   Future<Joke> addJoke({Joke joke, File imageToUpload}) async {
     try {
       Options authHeaderOption = await getAuthHeaderOption();
-      String type = EnumStringUtil().jokeTypeToString(joke.jokeType);
 
       Map<String, dynamic> gottenData = {
-        'type': type,
         'title': joke.title,
         'movie': joke.movie.id,
-        'content': (joke.jokeType == JokeType.text)
-            ? joke.content
-            : UploadFileInfo(imageToUpload, "upload.txt")
-      };
-      Map<String, dynamic> responseData = (joke.jokeType == JokeType.text)
+      }..addAll((imageToUpload != null)? {'image': UploadFileInfo(imageToUpload, "joke_image")}:{})
+      ..addAll((joke.text.isNotEmpty)? {'text': joke.text}:{});
+
+      Map<String, dynamic> responseData = (imageToUpload == null)
           ? gottenData
           : FormData.from(gottenData);
       Response response = await dio.post(jokesUrl,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_comment_list_bloc.dart';
 import 'package:sitcom_joke/models/comment.dart';
-import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/ui/widgets/general/scroll_list.dart';
 import 'package:sitcom_joke/ui/widgets/joke/joke_comment_card.dart';
 

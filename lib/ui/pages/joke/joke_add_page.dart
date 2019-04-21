@@ -13,9 +13,8 @@ import 'package:sitcom_joke/services/movie_service.dart';
 import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
 
 class JokeAddPage extends StatefulWidget {
-  final JokeType jokeType;
   final Movie selectedMovie;
-  JokeAddPage({Key key, this.jokeType, this.selectedMovie}) : super(key: key);
+  JokeAddPage({Key key, this.selectedMovie}) : super(key: key);
 
   @override
   _JokeAddPageState createState() => new _JokeAddPageState();
@@ -23,7 +22,6 @@ class JokeAddPage extends StatefulWidget {
 
 class _JokeAddPageState extends State<JokeAddPage>
     implements BlocDelegate<Joke> {
-  JokeType jokeType;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _textController = TextEditingController();
@@ -38,7 +36,6 @@ class _JokeAddPageState extends State<JokeAddPage>
   @override
   void initState() {
     super.initState();
-    jokeType = widget.jokeType ?? JokeType.text;
     _selectedMovie = widget.selectedMovie;
     jokeAddBloc = JokeAddBloc(jokeService: JokeService(), delegate: this);
 
@@ -48,11 +45,9 @@ class _JokeAddPageState extends State<JokeAddPage>
 
   @override
   Widget build(BuildContext context) {
-    String addTypeString = (jokeType == JokeType.image) ? 'Image' : 'Text';
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add $addTypeString Joke'),
-        actions: <Widget>[_buildTypeSwapIconButton()],
+        title: Text('Add Joke'),
       ),
       body: Builder(builder: (context) {
         _context = context;
@@ -77,9 +72,8 @@ class _JokeAddPageState extends State<JokeAddPage>
                   SizedBox(
                     height: 10.0,
                   ),
-                  (jokeType == JokeType.image)
-                      ? _buildImageJokeSpecificLayout()
-                      : _buildTextJokeSpecificLayout(),
+                  _buildTextJokeSpecificLayout(),
+                  _buildImageJokeSpecificLayout(),
                   _buildJokeAddSubmitionButton()
                 ],
               ),
@@ -120,25 +114,17 @@ class _JokeAddPageState extends State<JokeAddPage>
   _submitJoke() {
     if (_formKey.currentState.validate()) {
       if (_selectedMovie != null) {
-        if ((jokeType == JokeType.image && _imageToUpload != null) ||
-            jokeType == JokeType.text) {
           Joke jokeToAdd = Joke((b) => b
             ..id = 'id'
             ..title = _titleController.text
-            ..content = (jokeType == JokeType.text) ? _textController.text : ''
+            ..text = _textController.text
             ..commentCount = 0
             ..likeCount = 0
             ..dateAdded = DateTime.now()
-            ..jokeType = jokeType
             ..liked = false
             ..favorited = false
             ..movie = _selectedMovie.toBuilder());
           jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
-        } else {
-          Scaffold.of(_context).showSnackBar(SnackBar(
-            content: Text('Please select an image to upload'),
-          ));
-        }
       } else {
         Scaffold.of(_context).showSnackBar(SnackBar(
           content: Text('Please select a movie'),
@@ -227,19 +213,6 @@ class _JokeAddPageState extends State<JokeAddPage>
     setState(() {
       _imageToUpload = image;
     });
-  }
-
-  _buildTypeSwapIconButton() {
-    return IconButton(
-      icon: Icon(
-          (jokeType == JokeType.image) ? Icons.ac_unit : Icons.access_alarm),
-      onPressed: () {
-        setState(() {
-          jokeType =
-              (jokeType == JokeType.image) ? JokeType.text : JokeType.image;
-        });
-      },
-    );
   }
 
   @override

@@ -23,21 +23,21 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
       'title',
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
-      'content',
-      serializers.serialize(object.content,
-          specifiedType: const FullType(String)),
       'commentCount',
       serializers.serialize(object.commentCount,
           specifiedType: const FullType(int)),
-      'jokeType',
-      serializers.serialize(object.jokeType,
-          specifiedType: const FullType(JokeType)),
       'liked',
       serializers.serialize(object.liked, specifiedType: const FullType(bool)),
       'favorited',
       serializers.serialize(object.favorited,
           specifiedType: const FullType(bool)),
     ];
+    if (object.text != null) {
+      result
+        ..add('text')
+        ..add(serializers.serialize(object.text,
+            specifiedType: const FullType(String)));
+    }
     if (object.dateAdded != null) {
       result
         ..add('dateAdded')
@@ -91,17 +91,13 @@ class _$JokeSerializer implements StructuredSerializer<Joke> {
           result.title = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'content':
-          result.content = serializers.deserialize(value,
+        case 'text':
+          result.text = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'commentCount':
           result.commentCount = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
-          break;
-        case 'jokeType':
-          result.jokeType = serializers.deserialize(value,
-              specifiedType: const FullType(JokeType)) as JokeType;
           break;
         case 'dateAdded':
           result.dateAdded = serializers.deserialize(value,
@@ -144,11 +140,9 @@ class _$Joke extends Joke {
   @override
   final String title;
   @override
-  final String content;
+  final String text;
   @override
   final int commentCount;
-  @override
-  final JokeType jokeType;
   @override
   final DateTime dateAdded;
   @override
@@ -170,9 +164,8 @@ class _$Joke extends Joke {
   _$Joke._(
       {this.id,
       this.title,
-      this.content,
+      this.text,
       this.commentCount,
-      this.jokeType,
       this.dateAdded,
       this.likeCount,
       this.liked,
@@ -187,14 +180,8 @@ class _$Joke extends Joke {
     if (title == null) {
       throw new BuiltValueNullFieldError('Joke', 'title');
     }
-    if (content == null) {
-      throw new BuiltValueNullFieldError('Joke', 'content');
-    }
     if (commentCount == null) {
       throw new BuiltValueNullFieldError('Joke', 'commentCount');
-    }
-    if (jokeType == null) {
-      throw new BuiltValueNullFieldError('Joke', 'jokeType');
     }
     if (liked == null) {
       throw new BuiltValueNullFieldError('Joke', 'liked');
@@ -217,9 +204,8 @@ class _$Joke extends Joke {
     return other is Joke &&
         id == other.id &&
         title == other.title &&
-        content == other.content &&
+        text == other.text &&
         commentCount == other.commentCount &&
-        jokeType == other.jokeType &&
         dateAdded == other.dateAdded &&
         likeCount == other.likeCount &&
         liked == other.liked &&
@@ -240,12 +226,10 @@ class _$Joke extends Joke {
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc(
-                                            $jc($jc(0, id.hashCode),
-                                                title.hashCode),
-                                            content.hashCode),
-                                        commentCount.hashCode),
-                                    jokeType.hashCode),
+                                        $jc($jc(0, id.hashCode),
+                                            title.hashCode),
+                                        text.hashCode),
+                                    commentCount.hashCode),
                                 dateAdded.hashCode),
                             likeCount.hashCode),
                         liked.hashCode),
@@ -260,9 +244,8 @@ class _$Joke extends Joke {
     return (newBuiltValueToStringHelper('Joke')
           ..add('id', id)
           ..add('title', title)
-          ..add('content', content)
+          ..add('text', text)
           ..add('commentCount', commentCount)
-          ..add('jokeType', jokeType)
           ..add('dateAdded', dateAdded)
           ..add('likeCount', likeCount)
           ..add('liked', liked)
@@ -285,17 +268,13 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
   String get title => _$this._title;
   set title(String title) => _$this._title = title;
 
-  String _content;
-  String get content => _$this._content;
-  set content(String content) => _$this._content = content;
+  String _text;
+  String get text => _$this._text;
+  set text(String text) => _$this._text = text;
 
   int _commentCount;
   int get commentCount => _$this._commentCount;
   set commentCount(int commentCount) => _$this._commentCount = commentCount;
-
-  JokeType _jokeType;
-  JokeType get jokeType => _$this._jokeType;
-  set jokeType(JokeType jokeType) => _$this._jokeType = jokeType;
 
   DateTime _dateAdded;
   DateTime get dateAdded => _$this._dateAdded;
@@ -331,9 +310,8 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
     if (_$v != null) {
       _id = _$v.id;
       _title = _$v.title;
-      _content = _$v.content;
+      _text = _$v.text;
       _commentCount = _$v.commentCount;
-      _jokeType = _$v.jokeType;
       _dateAdded = _$v.dateAdded;
       _likeCount = _$v.likeCount;
       _liked = _$v.liked;
@@ -367,9 +345,8 @@ class JokeBuilder implements Builder<Joke, JokeBuilder> {
           new _$Joke._(
               id: id,
               title: title,
-              content: content,
+              text: text,
               commentCount: commentCount,
-              jokeType: jokeType,
               dateAdded: dateAdded,
               likeCount: likeCount,
               liked: liked,

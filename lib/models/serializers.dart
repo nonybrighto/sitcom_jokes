@@ -13,7 +13,6 @@ import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_credit.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/models/user_list_response.dart';
-import 'package:sitcom_joke/utils/serializer/joke_type_serializer.dart';
 
 part 'serializers.g.dart';
 
@@ -32,4 +31,4 @@ part 'serializers.g.dart';
 ])
 
 final Serializers serializers = _$serializers;
-final Serializers standardSerializers = (serializers.toBuilder()..addPlugin(new StandardJsonPlugin())..add(Iso8601DateTimeSerializer())..add(JokeTypeSerializer())).build();
+final Serializers standardSerializers = (serializers.toBuilder()..addPlugin(new StandardJsonPlugin())..add(Iso8601DateTimeSerializer())).build();

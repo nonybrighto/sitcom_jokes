@@ -55,8 +55,8 @@ class Router{
   static gotoAuthPage(BuildContext context, AuthType authType){
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthPage(authType)));
   }
-  static gotoAddJokePage(BuildContext context, {JokeType jokeType, Movie selectedMovie}){
-     Navigator.of(context).push(MaterialPageRoute(builder: (context) => JokeAddPage(jokeType: jokeType, selectedMovie: selectedMovie,)));
+  static gotoAddJokePage(BuildContext context, {Movie selectedMovie}){
+     Navigator.of(context).push(MaterialPageRoute(builder: (context) => JokeAddPage(selectedMovie: selectedMovie,)));
   }
   static gotoSettingsPage(BuildContext context){
      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));

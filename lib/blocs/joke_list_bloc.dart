@@ -13,7 +13,6 @@ import 'package:sitcom_joke/services/joke_service.dart';
 class JokeListBloc extends ListBloc<Joke>{
  
  final JokeService jokeService;
- final JokeType jokeType;
 
   JokeListFetchType fetchType =JokeListFetchType.allJokes;
   SortOrder _sortOrder = SortOrder.desc;
@@ -49,7 +48,7 @@ class JokeListBloc extends ListBloc<Joke>{
 
 
  
- JokeListBloc(this.jokeType, {this.jokeService}){
+ JokeListBloc({this.jokeService}){
 
     _sortOrderController.sink.add(SortOrder.desc);
     _sortPropertyController.sink.add(JokeSortProperty.dataAdded);
@@ -89,16 +88,16 @@ class JokeListBloc extends ListBloc<Joke>{
 
     switch (fetchType) {
       case JokeListFetchType.userFavJokes:
-       return await jokeService.fetchUserFavJokes(jokeType: jokeType, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+       return await jokeService.fetchUserFavJokes(jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
       break;
       case JokeListFetchType.movieJokes:
-       return await jokeService.fetchMovieJokes(jokeType: jokeType, movie: _movie, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+       return await jokeService.fetchMovieJokes(movie: _movie, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
       break;
       case JokeListFetchType.userJokes:
-       return await jokeService.fetchUserJokes(jokeType: jokeType, user: _user, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
+       return await jokeService.fetchUserJokes(user: _user, jokeSortProperty: _sortProperty, sortOrder: _sortOrder, page: super.currentPage);
       break;
       case JokeListFetchType.allJokes:
-       return await jokeService.fetchAllJokes(jokeType: jokeType, sortOrder: _sortOrder, jokeSortProperty: _sortProperty, page: super.currentPage );
+       return await jokeService.fetchAllJokes(sortOrder: _sortOrder, jokeSortProperty: _sortProperty, page: super.currentPage );
       break;
       default:
         return null;
