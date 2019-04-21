@@ -7,7 +7,7 @@ import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
 import 'package:sliver_fab/sliver_fab.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:sitcom_joke/ui/widgets/general/main_error_widget.dart';
+import 'package:sitcom_joke/ui/widgets/general/main_error_display.dart';
 import 'package:sitcom_joke/ui/widgets/general/minor.dart';
 
 class MovieDetailsPage extends StatefulWidget {
@@ -87,10 +87,10 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Padding(
       padding: const EdgeInsets.all(50.0),
       child: Center(
-        child: (loadState is Loading)? CircularProgressIndicator() : MainErrorWidget(
+        child: (loadState is Loading)? CircularProgressIndicator() : MainErrorDisplay(
             errorMessage: (loadState as LoadError).message,
             buttonText: 'RETRY',
-            errorTap: () {
+            onErrorButtonTap: () {
               movieDetialsBloc.getMovieDetails();
             },
           ),

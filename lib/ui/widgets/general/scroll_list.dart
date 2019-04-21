@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:sitcom_joke/models/load_state.dart';
+import 'package:sitcom_joke/ui/widgets/general/main_error_display.dart';
 
 enum ScrollListType{
   grid,
@@ -72,21 +73,23 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
   _initialError(LoadState error, {bool visible, Function onRetry}){
 
     if(visible){
-        return Center(
-            child: InkWell(
-              onTap: (){
-              },
-                child: Column(
-                children: <Widget>[
-                  Text((error as LoadError).message),
+        // return Center(
+        //     child: InkWell(
+        //       onTap: (){
+        //       },
+        //         child: Column(
+        //         children: <Widget>[
+        //           Text((error as LoadError).message),
                   
-                  RaisedButton(child:  Text('RETRY'), onPressed: (){
-                    onRetry();
-                  },)
-                ],
-              ),
-            ),
-        );
+        //           RaisedButton(child:  Text('RETRY'), onPressed: (){
+        //             onRetry();
+        //           },)
+        //         ],
+        //       ),
+        //     ),
+        // );
+
+        return MainErrorDisplay(errorMessage: (error as LoadError).message, buttonText: 'RETRY', onErrorButtonTap: onRetry,);
     }else{
        return _dumbPlaceHolder();
     }
