@@ -64,6 +64,11 @@ class _JokeAddPageState extends State<JokeAddPage>
                     decoration: InputDecoration(
                         labelText: 'Title',
                         hintText: 'Title'),
+                        validator: (value){
+                          if(value.trim().length < 3){
+                            return 'Title should be more than 3 characters';
+                          }
+                        },
                   ),
                   SizedBox(
                     height: 10.0,
@@ -114,7 +119,8 @@ class _JokeAddPageState extends State<JokeAddPage>
   _submitJoke() {
     if (_formKey.currentState.validate()) {
       if (_selectedMovie != null) {
-          Joke jokeToAdd = Joke((b) => b
+          if(_textController.text.isNotEmpty || _imageToUpload != null ){
+            Joke jokeToAdd = Joke((b) => b
             ..id = 'id'
             ..title = _titleController.text
             ..text = _textController.text
@@ -125,6 +131,11 @@ class _JokeAddPageState extends State<JokeAddPage>
             ..favorited = false
             ..movie = _selectedMovie.toBuilder());
           jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
+          }else{
+             Scaffold.of(_context).showSnackBar(SnackBar(
+                content: Text('Please add an image or a text'),
+            ));
+          }
       } else {
         Scaffold.of(_context).showSnackBar(SnackBar(
           content: Text('Please select a movie'),
@@ -174,8 +185,13 @@ class _JokeAddPageState extends State<JokeAddPage>
       controller: _textController,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
-          hintText: 'Text Joke\n\n\n',
-          labelText: 'Text Joke'),
+          hintText: 'Joke Text\n\n\n',
+          labelText: 'Joke Text'),
+          validator: (value){
+            if(value.trim().isNotEmpty &&  value.trim().length < 30){
+              return 'Joke Should be more than 30 characters';
+            }
+          },
     );
   }
 
