@@ -1,3 +1,5 @@
+import 'dart:convert' as json;
+
 import 'package:built_collection/built_collection.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_cast.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
@@ -21,7 +23,7 @@ test('can deserialize tmdb movie details', (){
       } 
     } ''';
 
-    TmdbMovieDetails movieDetailsFromJson =TmdbMovieDetails.fromJson(tmdbJson);
+    TmdbMovieDetails movieDetailsFromJson =TmdbMovieDetails.fromJson(json.jsonDecode(tmdbJson));
    
     TmdbMovieDetails movieDetails =TmdbMovieDetails((b) => b
       ..id=550
@@ -51,4 +53,6 @@ test('can deserialize tmdb movie details', (){
 
   });
 
+
+ 
 }

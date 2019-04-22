@@ -29,7 +29,7 @@ class Router{
 
 
   static gotoHomePage(BuildContext context, {Movie movie}){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(selectedMovie: movie,)));
   }
 
   static gotoUserDetailsPage(BuildContext context, User user){
@@ -48,8 +48,8 @@ class Router{
   }
   static gotoMovieDetialsPage(BuildContext context, {Movie movie, MovieListBloc movieListBloc}){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<MovieDetialsBloc>(
-          bloc: MovieDetialsBloc(currentMovie: movie, movieService:  MovieService()),
-          child: MovieDetailsPage(movie: movie, movieListBloc: movieListBloc,),
+          bloc: MovieDetialsBloc(currentMovie: movie, movieService:  MovieService(), movieListBloc: movieListBloc),
+          child: MovieDetailsPage(movie: movie),
         )));
   }
   static gotoAuthPage(BuildContext context, AuthType authType){

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/movie_list_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/ui/widgets/general/scroll_list.dart';
+import 'package:sitcom_joke/utils/date_formater.dart';
 
 class MovieListPage extends StatefulWidget {
   MovieListPage({Key key}) : super(key: key);
@@ -36,7 +36,7 @@ class _MovieListPageState extends State<MovieListPage> {
           _movieListBloc.getItems();
         },
         listItemWidget: (movie, index) {
-          _buildMovieTile(movie);
+          return _buildMovieTile(movie);
         },
       ),
     );
@@ -53,7 +53,7 @@ class _MovieListPageState extends State<MovieListPage> {
             right: 0,
             child: _buildMovieDetails(movie),
           ),
-          _buildMovieImage(movie.title),
+          _buildMovieImage(movie.posterUrl),
         ],
       ),
     );
@@ -79,22 +79,23 @@ class _MovieListPageState extends State<MovieListPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'The title',
+                    movie.title,
                     style: TextStyle(fontSize: 20),
                   ),
                   Icon(Icons.favorite, color: (movie.followed)? Theme.of(context).accentColor: Theme.of(context).textTheme.body1.color,)
                 ],
               ),
               Text(
-                'Images(50) | Texts(500)',
+                '${movie.jokeCount} jokes',
                 style: TextStyle(color: const Color(0XFFc0c0c0)),
               ),
               Text(
-                'release date - Janruary 2017',
+                DateFormatter.dateToString(
+                        movie.releaseDate, DateFormatPattern.wordDate),
                 style: TextStyle(color: const Color(0XFFc0c0c0)),
               ),
               Text(
-                '50 folllowers',
+                '${movie.followerCount} followers',
                 style: TextStyle(color: const Color(0XFFc0c0c0)),
               ),
               Row(

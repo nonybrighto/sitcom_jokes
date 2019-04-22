@@ -18,6 +18,11 @@ abstract class Movie implements Built<Movie, MovieBuilder> {
   @nullable
   String get description;
   @nullable
+  String get posterUrl;
+  int get jokeCount;
+  DateTime get releaseDate;
+  int get followerCount;
+  @nullable
   TmdbMovieDetails get tmdbDetails;
 
   factory Movie([updates(MovieBuilder b)]) = _$Movie;

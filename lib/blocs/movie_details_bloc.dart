@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
+import 'package:sitcom_joke/blocs/movie_list_bloc.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/services/movie_service.dart';
@@ -11,6 +12,8 @@ class MovieDetialsBloc extends BlocBase{
   Movie currentMovie;
   final MovieService movieService;
   Function(String) _followErrorCallBack;
+
+  MovieListBloc movieListBloc;
 
   final _movieController = BehaviorSubject<Movie>();
   final _loadStateController = BehaviorSubject<LoadState>();
@@ -25,7 +28,7 @@ class MovieDetialsBloc extends BlocBase{
   void Function() get getMovieDetails => () => _getMovieDetailsController.sink.add(null);
   void changeMovieFollow(Function(String) errorCallBack){  _followErrorCallBack = errorCallBack; _changeMovieFollowController.sink.add(null); }
 
-  MovieDetialsBloc({this.currentMovie, this.movieService}){
+  MovieDetialsBloc({this.currentMovie, this.movieListBloc, this.movieService}){
       
         _movieController.sink.add(currentMovie);
         if(!currentMovie.hasFullDetails()){
@@ -70,10 +73,17 @@ class MovieDetialsBloc extends BlocBase{
             Movie movieGotten = await movieService.getMovie(currentMovie);
              currentMovie  = movieGotten;
             _movieController.sink.add(movieGotten);
+            _updateMovieInList(movieGotten);
             _loadStateController.sink.add(Loaded());
         }catch(err){
             _loadStateController.sink.add(LoadError('Could not get MovieDetails'));
         }
+  }
+
+  _updateMovieInList(Movie movieGotten){
+    if(movieListBloc != null){
+      movieListBloc.updateItem(movieGotten);
+    }
   }
   
   @override

@@ -38,6 +38,13 @@ class _$TmdbMovieDetailsSerializer
       serializers.serialize(object.voteAverage,
           specifiedType: const FullType(double)),
     ];
+    if (object.genres != null) {
+      result
+        ..add('genres')
+        ..add(serializers.serialize(object.genres,
+            specifiedType: const FullType(
+                BuiltList, const [const FullType(TmdbMovieGenre)])));
+    }
     if (object.credits != null) {
       result
         ..add('credits')
@@ -83,6 +90,12 @@ class _$TmdbMovieDetailsSerializer
           result.voteAverage = serializers.deserialize(value,
               specifiedType: const FullType(double)) as double;
           break;
+        case 'genres':
+          result.genres.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(TmdbMovieGenre)]))
+              as BuiltList);
+          break;
         case 'credits':
           result.credits.replace(serializers.deserialize(value,
                   specifiedType: const FullType(TmdbMovieCredit))
@@ -109,6 +122,8 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
   @override
   final double voteAverage;
   @override
+  final BuiltList<TmdbMovieGenre> genres;
+  @override
   final TmdbMovieCredit credits;
 
   factory _$TmdbMovieDetails([void updates(TmdbMovieDetailsBuilder b)]) =>
@@ -121,6 +136,7 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
       this.overview,
       this.releaseDate,
       this.voteAverage,
+      this.genres,
       this.credits})
       : super._() {
     if (id == null) {
@@ -161,6 +177,7 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
         overview == other.overview &&
         releaseDate == other.releaseDate &&
         voteAverage == other.voteAverage &&
+        genres == other.genres &&
         credits == other.credits;
   }
 
@@ -170,11 +187,13 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, id.hashCode), title.hashCode),
-                        backdropPath.hashCode),
-                    overview.hashCode),
-                releaseDate.hashCode),
-            voteAverage.hashCode),
+                    $jc(
+                        $jc($jc($jc(0, id.hashCode), title.hashCode),
+                            backdropPath.hashCode),
+                        overview.hashCode),
+                    releaseDate.hashCode),
+                voteAverage.hashCode),
+            genres.hashCode),
         credits.hashCode));
   }
 
@@ -187,6 +206,7 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
           ..add('overview', overview)
           ..add('releaseDate', releaseDate)
           ..add('voteAverage', voteAverage)
+          ..add('genres', genres)
           ..add('credits', credits))
         .toString();
   }
@@ -220,6 +240,11 @@ class TmdbMovieDetailsBuilder
   double get voteAverage => _$this._voteAverage;
   set voteAverage(double voteAverage) => _$this._voteAverage = voteAverage;
 
+  ListBuilder<TmdbMovieGenre> _genres;
+  ListBuilder<TmdbMovieGenre> get genres =>
+      _$this._genres ??= new ListBuilder<TmdbMovieGenre>();
+  set genres(ListBuilder<TmdbMovieGenre> genres) => _$this._genres = genres;
+
   TmdbMovieCreditBuilder _credits;
   TmdbMovieCreditBuilder get credits =>
       _$this._credits ??= new TmdbMovieCreditBuilder();
@@ -235,6 +260,7 @@ class TmdbMovieDetailsBuilder
       _overview = _$v.overview;
       _releaseDate = _$v.releaseDate;
       _voteAverage = _$v.voteAverage;
+      _genres = _$v.genres?.toBuilder();
       _credits = _$v.credits?.toBuilder();
       _$v = null;
     }
@@ -266,10 +292,13 @@ class TmdbMovieDetailsBuilder
               overview: overview,
               releaseDate: releaseDate,
               voteAverage: voteAverage,
+              genres: _genres?.build(),
               credits: _credits?.build());
     } catch (_) {
       String _$failedField;
       try {
+        _$failedField = 'genres';
+        _genres?.build();
         _$failedField = 'credits';
         _credits?.build();
       } catch (e) {

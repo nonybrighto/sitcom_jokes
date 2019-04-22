@@ -16,6 +16,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(TmdbMovieCast.serializer)
       ..add(TmdbMovieCredit.serializer)
       ..add(TmdbMovieDetails.serializer)
+      ..add(TmdbMovieGenre.serializer)
       ..add(User.serializer)
       ..add(UserListResponse.serializer)
       ..addBuilderFactory(
@@ -30,6 +31,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TmdbMovieCast)]),
           () => new ListBuilder<TmdbMovieCast>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(TmdbMovieGenre)]),
+          () => new ListBuilder<TmdbMovieGenre>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(User)]),
           () => new ListBuilder<User>()))

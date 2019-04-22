@@ -28,10 +28,13 @@ class _$TmdbMovieCastSerializer implements StructuredSerializer<TmdbMovieCast> {
           specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
-      'profile_path',
-      serializers.serialize(object.profilePath,
-          specifiedType: const FullType(String)),
     ];
+    if (object.profilePath != null) {
+      result
+        ..add('profile_path')
+        ..add(serializers.serialize(object.profilePath,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -103,9 +106,6 @@ class _$TmdbMovieCast extends TmdbMovieCast {
     }
     if (name == null) {
       throw new BuiltValueNullFieldError('TmdbMovieCast', 'name');
-    }
-    if (profilePath == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieCast', 'profilePath');
     }
   }
 

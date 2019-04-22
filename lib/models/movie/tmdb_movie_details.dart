@@ -1,8 +1,11 @@
 import 'dart:convert' as json;
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_credit.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie_genre.dart';
 
 import '../serializers.dart';
 
@@ -24,6 +27,8 @@ abstract class TmdbMovieDetails implements Built<TmdbMovieDetails, TmdbMovieDeta
   @BuiltValueField(wireName: 'vote_average')
   double get voteAverage;
   @nullable
+  BuiltList<TmdbMovieGenre> get genres;
+  @nullable
   TmdbMovieCredit get credits;
 
 
@@ -32,11 +37,21 @@ abstract class TmdbMovieDetails implements Built<TmdbMovieDetails, TmdbMovieDeta
   TmdbMovieDetails._();
 
 
-  factory TmdbMovieDetails.fromJson(String jsonString){
+  factory TmdbMovieDetails.fromJson(Map<String, dynamic> json){
 
-    final parsed = json.jsonDecode(jsonString);
-    TmdbMovieDetails movieDetails = standardSerializers.deserializeWith(TmdbMovieDetails.serializer, parsed);
+    TmdbMovieDetails movieDetails = standardSerializers.deserializeWith(TmdbMovieDetails.serializer, json);
     return movieDetails;
+  }
+
+
+  String getBackdropUrl(){
+
+    return kTmdbImageUrl+'w780'+backdropPath;
+  }
+
+  String getGenreCsv(){
+
+    return (genres != null)?genres.map((g) => g.name).join(', '): 'N/A';
   }
 
 }

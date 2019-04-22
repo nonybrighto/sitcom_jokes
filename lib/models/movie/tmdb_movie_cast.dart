@@ -1,5 +1,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:sitcom_joke/constants/constants.dart';
 
 
 part 'tmdb_movie_cast.g.dart';
@@ -16,6 +17,7 @@ abstract class TmdbMovieCast implements Built<TmdbMovieCast, TmdbMovieCastBuilde
   int get castId;
   String get character;
   String get name;
+  @nullable
   @BuiltValueField(wireName: 'profile_path')
   String get profilePath;
 
@@ -23,5 +25,10 @@ abstract class TmdbMovieCast implements Built<TmdbMovieCast, TmdbMovieCastBuilde
   factory TmdbMovieCast([updates(TmdbMovieCastBuilder b)]) = _$TmdbMovieCast;
 
   TmdbMovieCast._();
+
+
+  getProfileUrl(){
+    return (profilePath != null)?kTmdbImageUrl+'w780'+profilePath: null;
+  }
 
 }
