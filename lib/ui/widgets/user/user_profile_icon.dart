@@ -15,8 +15,8 @@ class UserProfileIcon extends StatelessWidget {
               Router.gotoUserDetailsPage(context, user);
           },
           child: CircleAvatar(
-          child: (user.profileIconUrl == null)? Text(user.username.substring(0,1)) : Text(user.profileIconUrl.substring(0,1)),
-         // backgroundImage: (user.profileIconUrl!=null)?NetworkImage(user.profileIconUrl): null,
+          child: (user.photoUrl == null)? Text(user.username.substring(0,1)) : Text(user.photoUrl.substring(0,1)),
+         // backgroundImage: (user.photoUrl!=null)?NetworkImage(user.photoUrl): null,
       ),
     );
   }

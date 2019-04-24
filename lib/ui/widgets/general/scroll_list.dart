@@ -52,6 +52,39 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
   }
 
 
+  
+
+  @override
+  Widget build(BuildContext context) {
+
+    return StreamBuilder<LoadState>(
+      stream: widget.loadStateStream,
+      builder: (BuildContext context,AsyncSnapshot<LoadState> snapshot){
+        LoadState loadState =snapshot.data;
+
+        if(loadState is LoadComplete && !(loadState is ErrorLoad)){
+          canLoadMore = true;
+        }
+
+        return Stack(
+          children: <Widget>[
+
+              _initialProgress(visible: loadState is Loading),
+              _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
+                widget.loadMoreAction();
+                }),
+              _moreError(loadState, visible: loadState is LoadMoreError,  onRetry: (){ 
+                  widget.loadMoreAction(); 
+                }),
+              _showEmpty(loadState, visible: loadState is LoadEmpty),
+              _contentList(loadState, visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
+          ],
+        );
+      },
+      
+    );
+  }
+
   _initialProgress({bool visible}){
 
       if(visible){
@@ -73,22 +106,6 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
   _initialError(LoadState error, {bool visible, Function onRetry}){
 
     if(visible){
-        // return Center(
-        //     child: InkWell(
-        //       onTap: (){
-        //       },
-        //         child: Column(
-        //         children: <Widget>[
-        //           Text((error as LoadError).message),
-                  
-        //           RaisedButton(child:  Text('RETRY'), onPressed: (){
-        //             onRetry();
-        //           },)
-        //         ],
-        //       ),
-        //     ),
-        // );
-
         return MainErrorDisplay(errorMessage: (error as LoadError).message, buttonText: 'RETRY', onErrorButtonTap: onRetry,);
     }else{
        return _dumbPlaceHolder();
@@ -140,40 +157,11 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
     
   }
 
-  @override
-  Widget build(BuildContext context) {
-
-    return StreamBuilder<LoadState>(
-      stream: widget.loadStateStream,
-      builder: (BuildContext context,AsyncSnapshot<LoadState> snapshot){
-        LoadState loadState =snapshot.data;
-
-        if(loadState is LoadComplete && !(loadState is ErrorLoad)){
-          canLoadMore = true;
-        }
-
-        return Stack(
-          children: <Widget>[
-
-              _initialProgress(visible: loadState is Loading),
-              _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
-                widget.loadMoreAction();
-                }),
-              _moreError(loadState, visible: loadState is LoadMoreError,  onRetry: (){ 
-                  widget.loadMoreAction(); 
-                }),
-              _showEmpty(loadState, visible: loadState is LoadEmpty),
-              _contentList(loadState, visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
-          ],
-        );
-      },
-      
-    );
-  }
-
 
   _buildListView(LoadState loadState, UnmodifiableListView<T> listItems){
     return ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
                     controller: _scrollController,
                     itemCount: (loadState is LoadingMore) ? listItems.length + 1 : listItems.length,
                     itemBuilder: (BuildContext context, int index){

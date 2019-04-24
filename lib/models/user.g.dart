@@ -39,10 +39,10 @@ class _$UserSerializer implements StructuredSerializer<User> {
       serializers.serialize(object.followingCount,
           specifiedType: const FullType(int)),
     ];
-    if (object.profileIconUrl != null) {
+    if (object.photoUrl != null) {
       result
-        ..add('profileIconUrl')
-        ..add(serializers.serialize(object.profileIconUrl,
+        ..add('photoUrl')
+        ..add(serializers.serialize(object.photoUrl,
             specifiedType: const FullType(String)));
     }
     if (object.email != null) {
@@ -74,8 +74,8 @@ class _$UserSerializer implements StructuredSerializer<User> {
           result.username = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'profileIconUrl':
-          result.profileIconUrl = serializers.deserialize(value,
+        case 'photoUrl':
+          result.photoUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'email':
@@ -115,7 +115,7 @@ class _$User extends User {
   @override
   final String username;
   @override
-  final String profileIconUrl;
+  final String photoUrl;
   @override
   final String email;
   @override
@@ -135,7 +135,7 @@ class _$User extends User {
   _$User._(
       {this.id,
       this.username,
-      this.profileIconUrl,
+      this.photoUrl,
       this.email,
       this.jokeCount,
       this.following,
@@ -179,7 +179,7 @@ class _$User extends User {
     return other is User &&
         id == other.id &&
         username == other.username &&
-        profileIconUrl == other.profileIconUrl &&
+        photoUrl == other.photoUrl &&
         email == other.email &&
         jokeCount == other.jokeCount &&
         following == other.following &&
@@ -197,7 +197,7 @@ class _$User extends User {
                     $jc(
                         $jc(
                             $jc($jc($jc(0, id.hashCode), username.hashCode),
-                                profileIconUrl.hashCode),
+                                photoUrl.hashCode),
                             email.hashCode),
                         jokeCount.hashCode),
                     following.hashCode),
@@ -211,7 +211,7 @@ class _$User extends User {
     return (newBuiltValueToStringHelper('User')
           ..add('id', id)
           ..add('username', username)
-          ..add('profileIconUrl', profileIconUrl)
+          ..add('photoUrl', photoUrl)
           ..add('email', email)
           ..add('jokeCount', jokeCount)
           ..add('following', following)
@@ -233,10 +233,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get username => _$this._username;
   set username(String username) => _$this._username = username;
 
-  String _profileIconUrl;
-  String get profileIconUrl => _$this._profileIconUrl;
-  set profileIconUrl(String profileIconUrl) =>
-      _$this._profileIconUrl = profileIconUrl;
+  String _photoUrl;
+  String get photoUrl => _$this._photoUrl;
+  set photoUrl(String photoUrl) => _$this._photoUrl = photoUrl;
 
   String _email;
   String get email => _$this._email;
@@ -269,7 +268,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
     if (_$v != null) {
       _id = _$v.id;
       _username = _$v.username;
-      _profileIconUrl = _$v.profileIconUrl;
+      _photoUrl = _$v.photoUrl;
       _email = _$v.email;
       _jokeCount = _$v.jokeCount;
       _following = _$v.following;
@@ -300,7 +299,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
         new _$User._(
             id: id,
             username: username,
-            profileIconUrl: profileIconUrl,
+            photoUrl: photoUrl,
             email: email,
             jokeCount: jokeCount,
             following: following,

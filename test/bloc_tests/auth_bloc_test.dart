@@ -34,7 +34,7 @@ void main(){
     User user = User((b) => b
       ..id='123a'
       ..username='john'
-      ..profileIconUrl='theurl'
+      ..photoUrl='theurl'
     );
 
     when(authService.signInWithEmailAndPassword('john@email.com', 'password123')).thenAnswer((_) async =>  user);

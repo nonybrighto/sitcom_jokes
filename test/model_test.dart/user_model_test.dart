@@ -8,11 +8,21 @@ void main() {
     User user1 = User((u) => u
       ..id = '1'
       ..username = 'John'
-      ..profileIconUrl = 'the_url');
+      ..photoUrl = 'the_url'
+      ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22);
     User user2 = User((u) => u
       ..id = '1'
       ..username = 'John'
-      ..profileIconUrl = 'the_url');
+      ..photoUrl = 'the_url'
+      ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22);
 
     expect(user1, user2);
   });
@@ -20,7 +30,7 @@ void main() {
   test('Convert json to user object', () {
     
         String userJsonString = """ {
-          "id": "1", "name":"John", "profileIconUrl":"the_url"
+          "id": "1", "name":"John", "photoUrl":"the_url"
         } """;
 
         Map<String, dynamic> jsonMap =  json.decode(userJsonString);
@@ -28,7 +38,7 @@ void main() {
         User userObject = User((u) => u
           ..id = '1'
           ..username = 'John'
-          ..profileIconUrl = 'the_url');
+          ..photoUrl = 'the_url');
         
         expect(User.fromJson(jsonMap), userObject);
   }); 

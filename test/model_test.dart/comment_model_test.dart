@@ -10,7 +10,12 @@ void main() {
       ..owner.update((u) => u
           ..id = '1'
           ..username = 'John'
-          ..profileIconUrl = 'the_url')
+          ..photoUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22)
       );
     
     Comment comment2 = Comment((u) => u
@@ -20,7 +25,12 @@ void main() {
       ..owner.update((u) => u
           ..id = '1'
           ..username = 'John'
-          ..profileIconUrl = 'the_url')
+          ..photoUrl = 'the_url'
+          ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22)
       );
     
 
@@ -30,7 +40,7 @@ void main() {
   test('Convert json to Comment object', () {
     
         String commentJsonString = """ {
-          "id": "1", "content":"Content", "dateAdded":"2000-11-22", "owner":{"id":"1", "name":"John","profileIconUrl":"the_url"}
+          "id": "1", "content":"Content", "dateAdded":"2000-11-22", "owner":{"id":"1", "name":"John","photoUrl":"the_url"}
         } """;
 
         Comment commentObject = Comment((u) => u
@@ -40,7 +50,12 @@ void main() {
             ..owner.update((u) => u
                 ..id = '1'
                 ..username = 'John'
-                ..profileIconUrl = 'the_url')
+                ..photoUrl = 'the_url'
+                ..jokeCount = 10
+                ..followed =false
+                ..following =true
+                ..followerCount = 25
+                ..followingCount = 22)
             );
     
         

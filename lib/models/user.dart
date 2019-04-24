@@ -13,7 +13,7 @@ abstract class User implements Built<User, UserBuilder> {
   String get id;
   String get username;
   @nullable
-  String get profileIconUrl;
+  String get photoUrl;
   @nullable
   String get email;
   int get jokeCount;

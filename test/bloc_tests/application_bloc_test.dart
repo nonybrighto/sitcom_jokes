@@ -19,7 +19,7 @@ void main(){
     User user = User((b) => b
       ..id='id'
       ..username='peter'
-      ..profileIconUrl='url'
+      ..photoUrl='url'
     );
     appBloc.changeCurrentUser(user);
 

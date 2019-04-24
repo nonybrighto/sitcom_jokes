@@ -76,7 +76,7 @@ class AuthService {
       String userJwtToken = response.data['token'];
       _saveUserDetailsToPreference(authenticatedUser, userJwtToken);
       return authenticatedUser;
-    } catch (error) {
+    } on DioError catch (error) {
       if (error.response != null) {
         throw Exception(error.response.data['message']);
       } else {

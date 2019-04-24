@@ -21,7 +21,12 @@ void main(){
       User((b) => b
       ..id='id $num'
       ..username='peter $num'
-      ..profileIconUrl='url $num'
+      ..photoUrl='url $num'
+      ..jokeCount = 10
+          ..followed =false
+          ..following =true
+          ..followerCount = 25
+          ..followingCount = 22
     )
     ]);
 

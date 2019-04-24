@@ -20,13 +20,11 @@ class UserDetailsPage extends StatefulWidget {
 class _UserDetailsPageState extends State<UserDetailsPage>
     with SingleTickerProviderStateMixin {
   UserDetailsBloc userDetailsBloc;
-  TabController _tabController;
   JokeListBloc jokeListBloc =
       JokeListBloc(jokeService: JokeService());
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -50,13 +48,9 @@ class _UserDetailsPageState extends State<UserDetailsPage>
         User user = userSnapshot.data;
         return Scaffold(
           body: (userSnapshot.hasData)
-              ? DefaultTabController(
-                  length: 2,
-                  child: NestedScrollView(
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
-                      return <Widget>[
-                        SliverAppBar(
+              ? CustomScrollView(
+                slivers: <Widget>[
+                   SliverAppBar(
                             expandedHeight: 250.0,
                             floating: false,
                             pinned: true,
@@ -93,32 +87,14 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                                 ],
                               ),
                             )),
-                        SliverPersistentHeader(
-                          delegate: _SliverAppBarDelegate(
-                            TabBar(
-                              labelColor: Colors.black87,
-                              unselectedLabelColor: Colors.grey,
-                              controller: _tabController,
-                              tabs: [
-                                Tab(icon: Icon(Icons.info), text: "Images"),
-                                Tab(
-                                    icon: Icon(Icons.lightbulb_outline),
-                                    text: "Texts"),
-                              ],
-                            ),
-                          ),
-                          pinned: true,
-                        ),
-                      ];
-                    },
-                    body: SliverToBoxAdapter(
-                      child: BlocProvider<JokeListBloc>(
-                          bloc: jokeListBloc,
-                          child: JokeList(),
-                        ),
-                    ),
-                  ),
-                )
+                     SliverToBoxAdapter(
+                       child:  BlocProvider<JokeListBloc>(
+                    bloc: jokeListBloc,
+                    child: JokeList(),
+              ),
+                     )       
+                ],
+              )
               : Container(),
         );
       },
@@ -177,30 +153,5 @@ class _UserDetailsPageState extends State<UserDetailsPage>
       ),
       onPressed: () {},
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
-      color: Colors.white,
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
   }
 }
