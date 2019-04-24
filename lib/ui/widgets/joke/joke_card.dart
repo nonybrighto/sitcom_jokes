@@ -103,7 +103,9 @@ class JokeCard extends StatelessWidget {
 
        return  Container(
          color: Colors.grey[900],
-         child: Row(
+         child:  BlocProvider<JokeControlBloc>(
+            bloc: jokeControlBloc,
+            child: Row(
                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                    children: <Widget>[
                     JokeActionButton(title:'like (${joke.likeCount})', icon: Icons.thumb_up,selected: joke.liked,  size:12,  onTap:() {
@@ -114,7 +116,8 @@ class JokeCard extends StatelessWidget {
                      jokeControlBloc.toggleJokeFavorite();
                     }),
                     JokeActionButton(title:'Share',icon: Icons.share,  selected: false, size:12, onTap:() {}),
-          ],),
+          ],)
+         )
        );
   }
 

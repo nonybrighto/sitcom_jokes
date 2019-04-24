@@ -200,7 +200,10 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
             ],
           ),
         ),
-        Row(
+
+        BlocProvider<JokeControlBloc>(
+            bloc: jokeControlBloc,
+            child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             JokeActionButton(
@@ -232,7 +235,9 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
                 selected: false,
                 onTap: () {}),
           ],
-        )
+        ),
+        ),
+        
       ],
     );
   }
