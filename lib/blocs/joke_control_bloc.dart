@@ -26,15 +26,14 @@ class JokeControlBloc extends BlocBase{
 
   _handleToggleJokeLike(_)  async{
 
-      Joke toggledJoke = _toggledJokeLike();
-      jokeListBloc?.updateItem(toggledJoke);
-      jokeListBloc?.changeCurrentJoke(toggledJoke);
+      _toggleLike();
+      jokeListBloc?.updateItem(jokeControlled);
+      jokeListBloc?.changeCurrentJoke(jokeControlled);
       try{
-          jokeControlled = toggledJoke;
           await jokeService.changeJokeLiking(joke: jokeControlled, like:jokeControlled.liked);
       }catch(err){
           print(err);
-          jokeControlled = _toggledJokeLike();
+          _toggleLike();
           jokeListBloc?.updateItem(jokeControlled);
           jokeListBloc?.changeCurrentJoke(jokeControlled);
       }
@@ -42,32 +41,30 @@ class JokeControlBloc extends BlocBase{
   }
   _handleToggleJokeFavorite(_) async{
 
-    Joke toggledJoke = _toggledJokeFavorite();
-      jokeListBloc?.updateItem(toggledJoke);
-      jokeListBloc?.changeCurrentJoke(toggledJoke);
+      _toggleFavorite();
+      jokeListBloc?.updateItem(jokeControlled);
+      jokeListBloc?.changeCurrentJoke(jokeControlled);
       try{
-          jokeControlled = toggledJoke;
           await jokeService.changeJokeFavoriting(joke: jokeControlled, favorite:jokeControlled.favorited);
       }catch(err){
-          jokeControlled = _toggledJokeFavorite();
+          _toggleFavorite();
           jokeListBloc?.updateItem(jokeControlled);
           jokeListBloc?.changeCurrentJoke(jokeControlled);
       }
     
   }
 
-  Joke _toggledJokeLike(){
-        Joke joke =jokeControlled;
-        return joke.rebuild((b) => b..liked = !b.liked..likeCount = (joke.liked)? --b.likeCount: ++b.likeCount);
+  _toggleLike(){
+        jokeControlled = jokeControlled.rebuild((b) => b..liked = !b.liked..likeCount = (jokeControlled.liked)? --b.likeCount: ++b.likeCount);
   }
-  Joke _toggledJokeFavorite(){
-        Joke joke =jokeControlled;
-        return joke.rebuild((b) => b.favorited = !b.favorited);
+  _toggleFavorite(){
+      jokeControlled = jokeControlled.rebuild((b) => b.favorited = !b.favorited);
   }
 
   
   @override
   void dispose() {
+    print('Joke control disposed');
     _toggleJokeLike.close();
     _toggleJokeFavorite.close();
   }
