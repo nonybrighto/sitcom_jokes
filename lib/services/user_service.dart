@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'package:sitcom_joke/blocs/user_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/models/user_list_response.dart';
@@ -46,5 +47,37 @@ Future<UserListResponse> fetchJokeLikers({Joke jokeLiked, int page}) async{
           : 'Error Connectiing to server');
     }
    
+}
+
+Future<bool> changeUserFollow({User user, bool follow}) async{
+    try {
+          Options authHeaderOption = await getAuthHeaderOption();
+          if(follow){
+              await dio.put(usersUrl + '${user.id}/followers', options: authHeaderOption);
+          }else{
+              await dio.delete(usersUrl + '${user.id}/followers', options: authHeaderOption);
+          }
+          return true;
+        } on DioError catch (error) {
+          throw Exception((error.response != null)
+              ? error.response.data['message']
+              : 'Error Connectiing to server');
+        }
+
+}
+
+Future<UserListResponse> fetchUserFollow({User user, int page, UserFollowType userFollowType}) async{
+
+     try {
+       String followTypeString = (userFollowType == UserFollowType.followers)?'followers':'following';
+       Options authHeaderOption = await getAuthHeaderOption();
+       Response response = await dio.get(usersUrl + '${user.id}/$followTypeString?page=$page', options: authHeaderOption);
+      return UserListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+  
 }
 }

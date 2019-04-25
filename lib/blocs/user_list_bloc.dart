@@ -11,11 +11,15 @@ class UserListBloc extends ListBloc<User>{
  final UserService userService;
 
   Joke _jokeLiked;
+  User _userForFollow;
+  UserFollowType _followType;
 
-  UserListFetchType userListFetchType;
+  UserListFetchType _userListFetchType;
 
 
   StreamController _fetchjokeLikersController =StreamController<Joke>();
+  StreamController<Map<String, dynamic>> _fetchUserFollowersController =StreamController<Map<String, dynamic>>();
+  StreamController _fetchUserFollowingController =StreamController<User>();
 
 
   //stream
@@ -23,15 +27,23 @@ class UserListBloc extends ListBloc<User>{
 
   //sink
   void Function(Joke) get fetchJokeLikers => (joke) => _fetchjokeLikersController.sink.add(joke);
+  void Function(User, UserFollowType) get fetchUserFollow => (user, followType) => _fetchUserFollowersController.sink.add({'user': user, 'followType':followType});
 
  
  UserListBloc({this.userService}){
 
 
     _fetchjokeLikersController.stream.listen((joke){
-          userListFetchType =UserListFetchType.jokeLikers;
+          _userListFetchType =UserListFetchType.jokeLikers;
           _jokeLiked =joke;
           _getFirstPageUsers();
+    });
+
+    _fetchUserFollowersController.stream.listen((followDetails){
+        _userForFollow =followDetails['user'];
+        _followType = followDetails['followType'];
+        _userListFetchType = UserListFetchType.userFollow;
+        _getFirstPageUsers();
     });
  }
  
@@ -39,6 +51,8 @@ class UserListBloc extends ListBloc<User>{
   void dispose() {
 
     _fetchjokeLikersController.close();
+    _fetchUserFollowersController.close();
+    _fetchUserFollowingController.close();
 
   }
 
@@ -50,10 +64,13 @@ class UserListBloc extends ListBloc<User>{
   @override
   Future<UserListResponse> fetchFromServer() async{
 
-    switch (userListFetchType) {
+    switch (_userListFetchType) {
       case UserListFetchType.jokeLikers:
         return await userService.fetchJokeLikers(jokeLiked: _jokeLiked, page: currentPage);
         break;
+      case UserListFetchType.userFollow:
+        return await userService.fetchUserFollow(user: _userForFollow, userFollowType: _followType, page: currentPage);
+      break;
       default:
           return null;
     }
@@ -71,4 +88,6 @@ class UserListBloc extends ListBloc<User>{
   }
 }
 
-enum UserListFetchType{jokeLikers }
+enum UserListFetchType{jokeLikers, userFollow}
+
+enum UserFollowType{followers, following}

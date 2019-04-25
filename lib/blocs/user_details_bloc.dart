@@ -8,7 +8,7 @@ import 'package:sitcom_joke/services/user_service.dart';
 
 class  UserDetailsBloc extends BlocBase {
  
- User currentUser;
+ User viewedUser;
  UserService userService;
 
   final _userController = BehaviorSubject<User>();
@@ -24,14 +24,11 @@ class  UserDetailsBloc extends BlocBase {
   void Function() get getUserDetails => () => _getUserDetailsController.sink.add(null);
 
 
- UserDetailsBloc({this.currentUser, this.userService}){
+ UserDetailsBloc({this.viewedUser, this.userService}){
 
-    _userController.sink.add(currentUser);
-     if(!currentUser.hasFullDetails()){
+    _userController.sink.add(viewedUser);
            getUserDetails();
-        }else{
-           _loadStateController.sink.add(Loaded());
-        }
+        
 
          _getUserDetailsController.stream.listen((_){
             _getUserFromSource();
@@ -44,13 +41,19 @@ class  UserDetailsBloc extends BlocBase {
  _getUserFromSource() async{
     _loadStateController.sink.add(Loading());
         try{
-            User userGotten = await userService.getUser(currentUser);
-             currentUser  = userGotten;
+            User userGotten = await userService.getUser(viewedUser);
+             viewedUser  = userGotten;
             _userController.sink.add(userGotten);
             _loadStateController.sink.add(Loaded());
         }catch(err){
             _loadStateController.sink.add(LoadError('Could not get user Details'));
         }
+  }
+
+  //user control bloc calls this to change the user details in this bloc eg When follow button is clicked 
+  updateUser(User updatedUser){
+        viewedUser  = updatedUser;
+        _userController.sink.add(updatedUser);
   }
  
  

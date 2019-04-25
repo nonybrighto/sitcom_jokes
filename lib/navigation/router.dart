@@ -32,10 +32,10 @@ class Router{
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(selectedMovie: movie,)));
   }
 
-  static gotoUserDetailsPage(BuildContext context, User user){
+  static gotoUserDetailsPage(BuildContext context, User user, {UserListBloc userListBloc}){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserDetailsBloc>(
-          bloc: UserDetailsBloc(userService: UserService(), currentUser: user),
-          child: UserDetailsPage(user: user,),
+          bloc: UserDetailsBloc(userService: UserService(), viewedUser: user),
+          child: UserDetailsPage(user: user, userListBloc: userListBloc,),
     )));
 
   }
@@ -86,6 +86,17 @@ class Router{
           bloc: userListBloc,
           child: UserListPage(showFollowDetails: false,),
         )));
+  }
+
+  static gotoUserFollowPage(BuildContext context, {User user, UserFollowType followType}){
+
+      UserListBloc userListBloc = UserListBloc(userService: UserService());
+        userListBloc.fetchUserFollow(user, followType);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserListBloc>(
+          bloc: userListBloc,
+          child: UserListPage(showFollowDetails: true,),
+        )));
+
   }
 
 }
