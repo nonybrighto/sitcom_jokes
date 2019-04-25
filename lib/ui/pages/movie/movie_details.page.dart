@@ -2,9 +2,14 @@ import 'dart:ui';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
+import 'package:sitcom_joke/blocs/movie_control_bloc.dart';
 import 'package:sitcom_joke/blocs/movie_details_bloc.dart';
 import 'package:sitcom_joke/models/movie/tmdb_movie_cast.dart';
+import 'package:sitcom_joke/navigation/router.dart';
+import 'package:sitcom_joke/services/movie_service.dart';
+import 'package:sitcom_joke/ui/pages/auth_page.dart';
 import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
 import 'package:sitcom_joke/utils/date_formater.dart';
 import 'package:sliver_fab/sliver_fab.dart';
@@ -21,13 +26,18 @@ class MovieDetailsPage extends StatefulWidget {
 }
 
 class _MovieDetailsPageState extends State<MovieDetailsPage> {
-  MovieDetialsBloc movieDetialsBloc;
-  BuildContext _context;
+  MovieDetailsBloc movieDetailsBloc;
+  MovieControlBloc movieControlBloc;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    movieDetialsBloc = BlocProvider.of<MovieDetialsBloc>(context);
+    movieDetailsBloc = BlocProvider.of<MovieDetailsBloc>(context);
+    movieControlBloc = MovieControlBloc(
+        movieControlled: widget.movie,
+        movieDetailsBloc: movieDetailsBloc,
+        movieListBloc: movieDetailsBloc.movieListBloc,
+        movieService: MovieService());
   }
 
   @override
@@ -35,14 +45,13 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Scaffold(
       body: StreamBuilder<LoadState>(
         initialData: Loading(),
-        stream: movieDetialsBloc.loadState,
+        stream: movieDetailsBloc.loadState,
         builder:
             (BuildContext context, AsyncSnapshot<LoadState> loadStateSnapshot) {
           LoadState loadState = loadStateSnapshot.data;
-          _context = context;
           return StreamBuilder<Movie>(
             initialData: widget.movie,
-            stream: movieDetialsBloc.movie,
+            stream: movieDetailsBloc.movie,
             builder:
                 (BuildContext context, AsyncSnapshot<Movie> movieSnapshot) {
               Movie movie = movieSnapshot.data;
@@ -87,18 +96,17 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Container(color: Colors.white30,),
+        Container(
+          color: Colors.white30,
+        ),
         Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(posterUrl))),
+                  fit: BoxFit.cover, image: NetworkImage(posterUrl))),
         ),
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: Container(
-             color: Colors.black.withOpacity(0.5)
-          ),
+          child: Container(color: Colors.black.withOpacity(0.5)),
         )
       ],
     );
@@ -114,7 +122,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 errorMessage: (loadState as LoadError).message,
                 buttonText: 'RETRY',
                 onErrorButtonTap: () {
-                  movieDetialsBloc.getMovieDetails();
+                  movieDetailsBloc.getMovieDetails();
                 },
               ),
       ),
@@ -146,36 +154,41 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Text((movie.hasFullDetails() ? movie.tmdbDetails.overview : ''),
-                  ),
+              child: Text(
+                (movie.hasFullDetails() ? movie.tmdbDetails.overview : ''),
+              ),
             ),
-            _buildPointDetail('Release Date', DateFormatter.dateToString(
-                      movie.releaseDate, DateFormatPattern.wordDate)),
-            
-            _buildPointDetail('Vote average', (movie.hasFullDetails())?movie.tmdbDetails.voteAverage.toString():'N/A'),
-            _buildPointDetail('Genres', (movie.hasFullDetails())?movie.tmdbDetails.getGenreCsv():'N/A'),
-            
+            _buildPointDetail(
+                'Release Date',
+                DateFormatter.dateToString(
+                    movie.releaseDate, DateFormatPattern.wordDate)),
+            _buildPointDetail(
+                'Vote average',
+                (movie.hasFullDetails())
+                    ? movie.tmdbDetails.voteAverage.toString()
+                    : 'N/A'),
+            _buildPointDetail(
+                'Genres',
+                (movie.hasFullDetails())
+                    ? movie.tmdbDetails.getGenreCsv()
+                    : 'N/A'),
           ],
         ),
       ),
     );
   }
 
-  _buildPointDetail(String title, String detail){
-
+  _buildPointDetail(String title, String detail) {
     return Row(
       children: <Widget>[
-          Text(title, style:TextStyle(
-            color:  Colors.grey[300],
-            fontWeight: FontWeight.bold
-          )),
-          Padding(
-            padding: const EdgeInsets.only(left: 2, right: 2),
-            child: Text('-'),
-          ),
-          Text(detail,style:TextStyle(
-            color:  Colors.grey[300]
-          )),
+        Text(title,
+            style: TextStyle(
+                color: Colors.grey[300], fontWeight: FontWeight.bold)),
+        Padding(
+          padding: const EdgeInsets.only(left: 2, right: 2),
+          child: Text('-'),
+        ),
+        Text(detail, style: TextStyle(color: Colors.grey[300])),
       ],
     );
   }
@@ -277,34 +290,37 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   }
 
   _movieFollowButton(bool movieFollowed, LoadState loadState) {
-    return RoundedButton(
-      child: (loadState is Loaded)
-          ? Row(
-              children: <Widget>[
-                Icon((movieFollowed) ? Icons.favorite : Icons.file_upload),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  (movieFollowed) ? 'FOLLOWING' : 'FOLLOW',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-              ],
-            )
-          : CircularProgressIndicator(),
-      onPressed: () {
-        if (loadState is Loaded) {
-          movieDetialsBloc.changeMovieFollow((errorMessage) {
-            _onMovieFollowError(errorMessage);
-          });
-        }
-      },
-    );
-  }
-
-  _onMovieFollowError(String errorMessage) {
-    Scaffold.of(_context).showSnackBar(SnackBar(
-      content: Text(errorMessage),
-    ));
+    return StreamBuilder<bool>(
+        initialData: false,
+        stream: BlocProvider.of<ApplicationBloc>(context).isAuthenticated,
+        builder: (BuildContext context,
+            AsyncSnapshot<bool> isAuthenticatedSnapshot) {
+          return RoundedButton(
+            child: (loadState is Loaded)
+                ? Row(
+                    children: <Widget>[
+                      Icon(
+                          (movieFollowed) ? Icons.favorite : Icons.file_upload),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        (movieFollowed) ? 'FOLLOWING' : 'FOLLOW',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )
+                : CircularProgressIndicator(),
+            onPressed: (loadState is Loaded)
+                ? () {
+                    if (isAuthenticatedSnapshot.data) {
+                      movieControlBloc.toggleMovieFollow();
+                    } else {
+                      Router.gotoAuthPage(context, AuthType.login);
+                    }
+                  }
+                : null,
+          );
+        });
   }
 }

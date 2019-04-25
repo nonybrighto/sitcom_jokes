@@ -47,8 +47,8 @@ class Router{
         )));
   }
   static gotoMovieDetialsPage(BuildContext context, {Movie movie, MovieListBloc movieListBloc}){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<MovieDetialsBloc>(
-          bloc: MovieDetialsBloc(currentMovie: movie, movieService:  MovieService(), movieListBloc: movieListBloc),
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<MovieDetailsBloc>(
+          bloc: MovieDetailsBloc(viewedMovie: movie, movieService:  MovieService(), movieListBloc: movieListBloc),
           child: MovieDetailsPage(movie: movie),
         )));
   }

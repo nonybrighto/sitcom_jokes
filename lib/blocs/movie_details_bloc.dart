@@ -7,18 +7,15 @@ import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/services/movie_service.dart';
 
-class MovieDetialsBloc extends BlocBase{
+class MovieDetailsBloc extends BlocBase{
  
-  Movie currentMovie;
+  Movie viewedMovie;
   final MovieService movieService;
-  Function(String) _followErrorCallBack;
-
   MovieListBloc movieListBloc;
 
   final _movieController = BehaviorSubject<Movie>();
   final _loadStateController = BehaviorSubject<LoadState>();
   final _getMovieDetailsController = StreamController<Null>();
-  final _changeMovieFollowController = StreamController<Null>();
 
   //stream
   Stream<LoadState> get loadState => _loadStateController.stream;
@@ -26,12 +23,11 @@ class MovieDetialsBloc extends BlocBase{
 
   //sink
   void Function() get getMovieDetails => () => _getMovieDetailsController.sink.add(null);
-  void changeMovieFollow(Function(String) errorCallBack){  _followErrorCallBack = errorCallBack; _changeMovieFollowController.sink.add(null); }
-
-  MovieDetialsBloc({this.currentMovie, this.movieListBloc, this.movieService}){
+  
+  MovieDetailsBloc({this.viewedMovie, this.movieListBloc, this.movieService}){
       
-        _movieController.sink.add(currentMovie);
-        if(!currentMovie.hasFullDetails()){
+        _movieController.sink.add(viewedMovie);
+        if(!viewedMovie.hasFullDetails()){
            getMovieDetails();
         }else{
            _loadStateController.sink.add(Loaded());
@@ -41,37 +37,13 @@ class MovieDetialsBloc extends BlocBase{
             _getMovieFromSource();
       });
 
-      _changeMovieFollowController.stream.listen((_){
-        _changeMovieFollow();
-         
-      });
-  }
-
-
-  _changeMovieFollow() async{
-     bool shouldFollow = currentMovie.followed;
-         
-         try{
-          _swapFollowState();
-          await movieService.changeMovieFollow(movie: currentMovie, follow: shouldFollow);
-         }catch(err){
-          _swapFollowState();
-          _followErrorCallBack('Error while following movie '+currentMovie.title);
-         }
-
-  }
-
-  _swapFollowState(){
-
-     currentMovie = currentMovie.rebuild((b) => b.followed =  !currentMovie.followed);
-    _movieController.sink.add(currentMovie);
   }
 
   _getMovieFromSource() async{
     _loadStateController.sink.add(Loading());
         try{
-            Movie movieGotten = await movieService.getMovie(currentMovie);
-             currentMovie  = movieGotten;
+            Movie movieGotten = await movieService.getMovie(viewedMovie);
+             viewedMovie  = movieGotten;
             _movieController.sink.add(movieGotten);
             _updateMovieInList(movieGotten);
             _loadStateController.sink.add(Loaded());
@@ -85,13 +57,17 @@ class MovieDetialsBloc extends BlocBase{
       movieListBloc.updateItem(movieGotten);
     }
   }
+
+   updateMovie(Movie updatedMovie){
+        viewedMovie  = updatedMovie;
+        _movieController.sink.add(updatedMovie);
+  }
   
   @override
   void dispose() {
     _movieController.close();
     _loadStateController.close();
     _getMovieDetailsController.close();
-    _changeMovieFollowController.close();
   }
 
 
