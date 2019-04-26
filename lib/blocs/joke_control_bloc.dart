@@ -7,6 +7,7 @@ import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/utils/joke_save_util.dart';
+import 'package:sitcom_joke/utils/joke_share_util.dart';
 
 class JokeControlBloc extends BlocBase {
   Joke jokeControlled;
@@ -22,7 +23,8 @@ class JokeControlBloc extends BlocBase {
       () => _toggleJokeLikeController.sink.add(null);
   void Function() get toggleJokeFavorite =>
       () => _toggleJokeFavoriteController.sink.add(null);
-  final _loadStateController = StreamController<LoadState>();
+  final _jokeSaveLoadStateController = StreamController<LoadState>();
+  final _jokeShareLoadStateController = StreamController<LoadState>();
 
   final _saveTextJokeController = StreamController<Map<String, dynamic>>();
   final _saveImageJokeController = StreamController<Map<String, dynamic>>();
@@ -34,19 +36,34 @@ class JokeControlBloc extends BlocBase {
   void Function(Function(String)) get saveImageJoke => (saveCallback) =>
       _saveImageJokeController.sink.add({'saveCallback': saveCallback});
 
+  void Function() get shareJoke =>() => _shareJokeController.sink.add(null);
+
   //stream
-  Stream<LoadState> get loadState => _loadStateController.stream;
+  Stream<LoadState> get jokeSaveLoadState => _jokeSaveLoadStateController.stream;
+  Stream<LoadState> get jokeShareLoadState => _jokeShareLoadStateController.stream;
 
   JokeControlBloc({this.jokeControlled, this.jokeListBloc, this.jokeService}) {
     _toggleJokeLikeController.stream.listen(_handleToggleJokeLike);
     _toggleJokeFavoriteController.stream.listen(_handleToggleJokeFavorite);
-    // _shareJokeController.stream.listen(_handleShareJoke);
+    //_shareJokeController.stream.listen(_handleShareJoke);
     _saveTextJokeController.stream.listen(_handleSaveTextJoke);
     _saveImageJokeController.stream.listen(_handleSaveImageJoke);
+    _shareJokeController.stream.listen(_handleShareJoke);
+  }
+
+  _handleShareJoke(_){
+        _jokeShareLoadStateController.sink.add(Loading());
+        JokeShareUtil jokeShareUtil = JokeShareUtil();
+        if(jokeControlled.hasImage()){
+          jokeShareUtil.shareImageJoke(jokeControlled);
+        }else{
+          jokeShareUtil.shareTextJoke(jokeControlled);
+        }
+        _jokeShareLoadStateController.sink.add(Loaded());
   }
 
   _handleSaveImageJoke(details) async {
-    _loadStateController.sink.add(Loading());
+    _jokeSaveLoadStateController.sink.add(Loading());
 
     Function(String) saveCallback = details['saveCallback'];
     try {
@@ -57,11 +74,11 @@ class JokeControlBloc extends BlocBase {
       saveCallback('Failed to save joke!!');
     }
 
-    _loadStateController.sink.add(Loaded());
+    _jokeSaveLoadStateController.sink.add(Loaded());
   }
 
   _handleSaveTextJoke(details) async {
-    _loadStateController.sink.add(Loading());
+    _jokeSaveLoadStateController.sink.add(Loading());
     ui.Image jokeImage = details['jokeImage'];
 
     Function(String) saveCallback = details['saveCallback'];
@@ -72,7 +89,7 @@ class JokeControlBloc extends BlocBase {
       saveCallback('Failed to save joke!!');
     }
 
-    _loadStateController.sink.add(Loaded());
+    _jokeSaveLoadStateController.sink.add(Loaded());
   }
 
   // _handleShareJoke(_){
@@ -132,8 +149,9 @@ class JokeControlBloc extends BlocBase {
     _toggleJokeFavoriteController.close();
     _saveJokeController.close();
     _shareJokeController.close();
-    _loadStateController.close();
+    _jokeSaveLoadStateController.close();
     _saveTextJokeController.close();
     _saveImageJokeController.close();
+    _jokeShareLoadStateController.close();
   }
 }

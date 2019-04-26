@@ -12,160 +12,200 @@ import 'package:sitcom_joke/utils/date_formater.dart';
 import 'package:sitcom_joke/utils/joke_save_util.dart';
 
 class JokeCard extends StatelessWidget {
-
-    final Joke joke; 
-    final int index;
-    final textJokeBoundaryKey = GlobalKey();
-    JokeCard(this.index, {this.joke});
+  final Joke joke;
+  final int index;
+  final textJokeBoundaryKey = GlobalKey();
+  JokeCard(this.index, {this.joke});
   @override
   Widget build(BuildContext context) {
-    JokeListBloc  jokeListBloc = BlocProvider.of<JokeListBloc>(context);
-    JokeControlBloc jokeControlBloc = JokeControlBloc(jokeControlled: joke, jokeListBloc: jokeListBloc, jokeService: JokeService());
+    JokeListBloc jokeListBloc = BlocProvider.of<JokeListBloc>(context);
+    JokeControlBloc jokeControlBloc = JokeControlBloc(
+        jokeControlled: joke,
+        jokeListBloc: jokeListBloc,
+        jokeService: JokeService());
     return Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildJokeHeader(context),
-              _buildJokeContent(context: context, joke: joke, jokeListBloc: jokeListBloc),
-             _buildJokeFooter(context,jokeControlBloc, joke)
-
-               
-            ],
-          ),
-   );
-  }
-
-
-
-  _buildJokeHeader(context){
-    return ListTile(
-                leading: UserProfileIcon(user: joke.owner,),
-                title: Wrap(
-                    children: <Widget>[
-                    Text(joke.owner.username, style: TextStyle(fontWeight: FontWeight.bold),),
-                    (joke.title != null)?Wrap(
-                      children: <Widget>[
-                      Icon(Icons.play_arrow, size: 20, ),
-                      Text(joke.title, style: TextStyle(fontWeight: FontWeight.bold),)
-                    ],):Container(),
-                  ],
-                ),
-                subtitle: Text(DateFormatter.dateToString(joke.dateAdded, DateFormatPattern.timeAgo)),
-                trailing: _buildJokeMenuButton(context),
-              );
-  }
-
-  _buildJokeMenuButton(BuildContext context){
-
-    return PopupMenuButton<String>(
-        icon: Icon(Icons.more_vert),
-        itemBuilder: (context) => [
-
-              PopupMenuItem(
-                  child: Text('View Likes'),
-                  value: 'viewLikes',
-              ),
-              PopupMenuItem(
-                  child: Text('Report Content'),
-                  value: 'reportContent',
-              )
-
-        ],
-
-        onSelected: (value){
-
-          switch(value){
-
-            case 'viewLikes':
-                 Router.gotoJokeLikersPage(context, joke: joke);
-                break;
-            case 'reportContent':
-
-              break;
-          }
-        },
-    );
-  }
-
-  _buildJokeContent({BuildContext context, Joke joke, JokeListBloc jokeListBloc}){
-
-    return GestureDetector(
-        onTap: (){
-          jokeListBloc.changeCurrentJoke(joke);
-         Router.gotoJokeDisplayPage(context, initialPage: index, jokeListBloc: jokeListBloc, joke: joke);
-        },
-          child: Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-                          (joke.text != null)?_buildTextDisplay(joke.text): Container(),
-                          (joke.hasImage())?_buildImageDisplay(joke.imageUrl): Container(),
+          _buildJokeHeader(context),
+          _buildJokeContent(
+              context: context, joke: joke, jokeListBloc: jokeListBloc),
+          _buildJokeFooter(context, jokeControlBloc, joke)
         ],
       ),
     );
   }
-  _buildJokeFooter(BuildContext context, JokeControlBloc jokeControlBloc, Joke joke){
 
-       return  Container(
-         color: Colors.grey[900],
-         child:  BlocProvider<JokeControlBloc>(
-            bloc: jokeControlBloc,
-            child: StreamBuilder<LoadState>(
-              initialData: Loaded(),
-              stream: jokeControlBloc.loadState,
-              builder: (context, snapshot) {
-                String loadText = (snapshot.data is Loading)?'...':'';
-                return Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                       children: <Widget>[
-                        JokeActionButton(title:'like (${joke.likeCount})', icon: Icons.thumb_up,selected: joke.liked,  size:12,  onTap:() {
-                         jokeControlBloc.toggleJokeLike();
-                        }),
-                        JokeActionButton(title:'Save'+loadText,icon: Icons.arrow_downward,  selected: false, size:12, onTap:() async {
-                          
-                          if(joke.hasImage()){
-                              // jokeControlBloc.saveJoke();
-                              jokeControlBloc.saveImageJoke((message){
-                                  Scaffold.of(context).showSnackBar(SnackBar(content: Text(message),));
-                              });
-                               }else{
-                               jokeControlBloc.saveTextJoke(await JokeSaveUtil().textToImage(textJokeBoundaryKey), (message){
-                                  Scaffold.of(context).showSnackBar(SnackBar(content: Text(message),));
-                              });
-                             
-                          }
-                        }),
-                        JokeActionButton(title:'Favorite', icon: Icons.favorite, selected: joke.favorited, size:12, onTap:() {
-                         jokeControlBloc.toggleJokeFavorite();
-                        }),
-                        JokeActionButton(title:'Share',icon: Icons.share,  selected: false, size:12, onTap:() {
-                         // jokeControlBloc.shareJoke();
-                        }),
-          ],);
-              }
+  _buildJokeHeader(context) {
+    return ListTile(
+      leading: UserProfileIcon(
+        user: joke.owner,
+      ),
+      title: Wrap(
+        children: <Widget>[
+          Text(
+            joke.owner.username,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          (joke.title != null)
+              ? Wrap(
+                  children: <Widget>[
+                    Icon(
+                      Icons.play_arrow,
+                      size: 20,
+                    ),
+                    Text(
+                      joke.title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                )
+              : Container(),
+        ],
+      ),
+      subtitle: Text(DateFormatter.dateToString(
+          joke.dateAdded, DateFormatPattern.timeAgo)),
+      trailing: _buildJokeMenuButton(context),
+    );
+  }
+
+  _buildJokeMenuButton(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.more_vert),
+      itemBuilder: (context) => [
+            PopupMenuItem(
+              child: Text('View Likes'),
+              value: 'viewLikes',
+            ),
+            PopupMenuItem(
+              child: Text('Report Content'),
+              value: 'reportContent',
             )
-         )
-       );
+          ],
+      onSelected: (value) {
+        switch (value) {
+          case 'viewLikes':
+            Router.gotoJokeLikersPage(context, joke: joke);
+            break;
+          case 'reportContent':
+            break;
+        }
+      },
+    );
   }
 
-  _buildImageDisplay(String imageUrl){
+  _buildJokeContent(
+      {BuildContext context, Joke joke, JokeListBloc jokeListBloc}) {
+    return GestureDetector(
+      onTap: () {
+        jokeListBloc.changeCurrentJoke(joke);
+        Router.gotoJokeDisplayPage(context,
+            initialPage: index, jokeListBloc: jokeListBloc, joke: joke);
+      },
+      child: Column(
+        children: <Widget>[
+          (joke.text != null) ? _buildTextDisplay(joke.text) : Container(),
+          (joke.hasImage()) ? _buildImageDisplay(joke.imageUrl) : Container(),
+        ],
+      ),
+    );
+  }
 
+  _buildJokeFooter(
+      BuildContext context, JokeControlBloc jokeControlBloc, Joke joke) {
+    return Container(
+        color: Colors.grey[900],
+        child: BlocProvider<JokeControlBloc>(
+            bloc: jokeControlBloc,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                JokeActionButton(
+                    title: 'like (${joke.likeCount})',
+                    icon: Icons.thumb_up,
+                    selected: joke.liked,
+                    size: 12,
+                    onTap: () {
+                      jokeControlBloc.toggleJokeLike();
+                    }),
+                StreamBuilder<LoadState>(
+                    initialData: Loaded(),
+                    stream: jokeControlBloc.jokeSaveLoadState,
+                    builder: (context, jokeSaveLoadStateSnapshot) {
+                      String extraSaveText =
+                          (jokeSaveLoadStateSnapshot.data is Loading)
+                              ? '...'
+                              : '';
+                      return JokeActionButton(
+                          title: 'Save' + extraSaveText,
+                          icon: Icons.arrow_downward,
+                          selected: false,
+                          size: 12,
+                          onTap: () async {
+                            if (joke.hasImage()) {
+                              jokeControlBloc.saveImageJoke((message) {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(message),
+                                ));
+                              });
+                            } else {
+                              jokeControlBloc.saveTextJoke(
+                                  await JokeSaveUtil()
+                                      .textToImage(textJokeBoundaryKey),
+                                  (message) {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(message),
+                                ));
+                              });
+                            }
+                          });
+                    }),
+                JokeActionButton(
+                    title: 'Favorite',
+                    icon: Icons.favorite,
+                    selected: joke.favorited,
+                    size: 12,
+                    onTap: () {
+                      jokeControlBloc.toggleJokeFavorite();
+                    }),
+                StreamBuilder<LoadState>(
+                    initialData: Loaded(),
+                    stream: jokeControlBloc.jokeShareLoadState,
+                    builder: (context, jokeShareLoadStateSnapshot) {
+                      String extraShareText =
+                          (jokeShareLoadStateSnapshot.data is Loading)
+                              ? '...'
+                              : '';
+                      return JokeActionButton(
+                          title: 'Share' + extraShareText,
+                          icon: Icons.share,
+                          selected: false,
+                          size: 12,
+                          onTap: () {
+                            jokeControlBloc.shareJoke();
+                          });
+                    }),
+              ],
+            )));
+  }
+
+  _buildImageDisplay(String imageUrl) {
     return SizedBox(
-      width: double.infinity,
-      child: FadeInImage.assetNetwork(
-            fit: BoxFit.fill,
-            placeholder: 'assets/images/image_placeholder.png',
-            image: imageUrl,
-      )
-      );
+        width: double.infinity,
+        child: FadeInImage.assetNetwork(
+          fit: BoxFit.fill,
+          placeholder: 'assets/images/image_placeholder.png',
+          image: imageUrl,
+        ));
   }
 
-  _buildTextDisplay(String jokeContent){
-
-     return RepaintBoundary(
-            key: textJokeBoundaryKey,
-            child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                      child: Text(jokeContent),
-                ),
-     );
+  _buildTextDisplay(String jokeContent) {
+    return RepaintBoundary(
+      key: textJokeBoundaryKey,
+      child: Container(
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+        child: Text(jokeContent),
+      ),
+    );
   }
 }
