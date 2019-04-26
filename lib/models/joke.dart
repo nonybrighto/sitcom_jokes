@@ -45,6 +45,10 @@ abstract class Joke implements Built<Joke, JokeBuilder> {
     return imageUrl != null;
   }
 
+  String getImageExtension(){
+    return imageUrl.substring(imageUrl.lastIndexOf('.'));
+  }
+
   factory Joke.fromJson(Map<String, dynamic> json){
 
     Joke joke = standardSerializers.deserializeWith(Joke.serializer, json);
