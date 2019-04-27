@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
-import 'package:sitcom_joke/models/movie/movie.dart';
-import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/ui/widgets/app_drawer.dart';
+import 'package:sitcom_joke/ui/widgets/joke/joke_add_button.dart';
 import 'package:sitcom_joke/ui/widgets/joke/joke_list.dart';
 
 class HomePage extends StatefulWidget {
-  final Movie selectedMovie;
-  HomePage({Key key, this.selectedMovie}) : super(key: key);
+  HomePage({Key key,}) : super(key: key);
 
   @override
   _HomePageState createState() => new _HomePageState();
@@ -18,21 +16,31 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
 
-  JokeListBloc jokeListBloc =JokeListBloc(jokeService: JokeService());
   ApplicationBloc appBloc;
-  TabController _tabController;
+
+  List<Widget> _homeItems;
+  int _selectedIndex = 0;
+  PageController _pageController = PageController();
 
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
-
-    if(widget.selectedMovie != null){
-        jokeListBloc.fetchMovieJokes(widget.selectedMovie);
-    }else{
-      jokeListBloc.fetchAllJokes();
-    }
+    _homeItems = [
+                 BlocProvider<JokeListBloc>(
+                    key: UniqueKey(),
+                    bloc: JokeListBloc(jokeService: JokeService(), fetchType: JokeListFetchType.latestJokes),
+                    child: JokeList(pageStorageKey: PageStorageKey<String>('latest'),),
+              ),
+                 BlocProvider<JokeListBloc>(
+                    key: UniqueKey(),
+                    bloc: JokeListBloc(jokeService: JokeService(), fetchType:  JokeListFetchType.popularJokes),
+                    child: JokeList(pageStorageKey: PageStorageKey<String>('popular'),),
+              ),
+              
+              
+            
+            ];
   }
 
   @override
@@ -47,59 +55,45 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return DefaultTabController(
         length: 3,
         child: Scaffold(
-          drawer: AppDrawer(jokeListBloc: jokeListBloc),
+          drawer: AppDrawer(),
           appBar: AppBar(
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
-              ],
-            ),
-            title: StreamBuilder(
-              initialData: '------',
-              stream: appBloc.appTitle,
-              builder: (context , snapshot){
-               
-                return Text(snapshot.data);
-              },
-            ),
+            title: Text('TvSeries Jokes')
           ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-                 BlocProvider<JokeListBloc>(
-                    bloc: jokeListBloc,
-                    child: JokeList(),
-              ),
-               Center(child: Text('Joke details stuff'),),
+          body: PageView(
+            children: _homeItems,
+            controller: _pageController,
+            onPageChanged: (index){
+                  setState(() {
+                    _selectedIndex = index; 
+                  });
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Latest')),
+                  BottomNavigationBarItem(icon: Icon(Icons.sentiment_satisfied), title: Text('Popular')),
             ],
+            onTap: (index){
+                _pageController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease
+                );
+            },
           ),
-          floatingActionButton: _buildAddJokeFloatingActionButton(),
+          floatingActionButton: JokeAddButton(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         ),
       );
   }
 
-  _buildAddJokeFloatingActionButton(){
-
-    print(_tabController.index);
-
-    
-
-      return Hero(
-              tag: 'joke_add',
-              child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: (){
-              Router.gotoAddJokePage(context, selectedMovie: widget.selectedMovie); 
-          },
-        ),
-      );
-  }
+  
 
   @override
   void dispose() {
     print('homepage disposed');
+    _pageController.dispose();
     super.dispose();
   }
 }

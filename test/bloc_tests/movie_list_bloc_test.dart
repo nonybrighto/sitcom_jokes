@@ -27,6 +27,9 @@ void main(){
       ..tmdbMovieId = 1
       ..followed = true
       ..description = 'desc'
+      ..jokeCount = 10
+      ..releaseDate = DateTime(2000,10,10)
+      ..followerCount = 10
       ..tmdbDetails.id = 1
       ..tmdbDetails.title = 'peter'
       ..tmdbDetails.backdropPath = ''

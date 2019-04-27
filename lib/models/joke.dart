@@ -7,8 +7,6 @@ import 'serializers.dart';
 
 part 'joke.g.dart'; 
 
-enum JokeSortProperty{title, dataAdded, likes}
-
 
 abstract class Joke implements Built<Joke, JokeBuilder> {
   /// Example of how to make a built_value type serializable.

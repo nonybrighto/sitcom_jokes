@@ -16,8 +16,9 @@ class ScrollList<T> extends StatefulWidget {
   final Widget Function(T, int) listItemWidget;
   final ScrollListType scrollListType;
   final int gridCrossAxisCount;
+  final PageStorageKey pageStorageKey;
 
-  ScrollList({Key key, this.loadStateStream, this.listContentStream, this.loadMoreAction, this.listItemWidget, @required this.scrollListType, this.gridCrossAxisCount}) : super(key: key){
+  ScrollList({Key key, this.loadStateStream, this.listContentStream, this.loadMoreAction, this.listItemWidget, @required this.scrollListType, this.gridCrossAxisCount, this.pageStorageKey}) : super(key: key){
 
       if(scrollListType == ScrollListType.grid && gridCrossAxisCount == null ||
         gridCrossAxisCount != null && scrollListType != ScrollListType.grid
@@ -73,11 +74,11 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
               _initialError(loadState , visible: loadState is LoadError, onRetry: (){ 
                 widget.loadMoreAction();
                 }),
+              _showEmpty(loadState, visible: loadState is LoadEmpty),
+              _contentList(loadState, widget.pageStorageKey, visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
               _moreError(loadState, visible: loadState is LoadMoreError,  onRetry: (){ 
                   widget.loadMoreAction(); 
                 }),
-              _showEmpty(loadState, visible: loadState is LoadEmpty),
-              _contentList(loadState, visible: !(loadState is Loading) && !(loadState is LoadEmpty) && !(loadState is LoadError)),
           ],
         );
       },
@@ -139,7 +140,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
      
   }
 
-  _contentList(LoadState loadState, {bool visible}){
+  _contentList(LoadState loadState,PageStorageKey pageStorageKey, {bool visible}){
 
     if(visible){
       return StreamBuilder<UnmodifiableListView<T>>(
@@ -147,7 +148,7 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
             stream: widget.listContentStream,
             builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<T>> listItemSnapshot){
               UnmodifiableListView<T> listItems = listItemSnapshot.data;
-               return (widget.scrollListType == ScrollListType.list)?_buildListView(loadState, listItems)
+               return (widget.scrollListType == ScrollListType.list)?_buildListView(loadState, listItems, pageStorageKey)
                 :_buildGridView(loadState, listItems);
             },
       );
@@ -158,8 +159,9 @@ class _ScrollListState<T> extends State<ScrollList<T>> {
   }
 
 
-  _buildListView(LoadState loadState, UnmodifiableListView<T> listItems){
+  _buildListView(LoadState loadState, UnmodifiableListView<T> listItems,  PageStorageKey pageStorageKey){
     return ListView.builder(
+                    key: pageStorageKey,
                     shrinkWrap: true,
                     physics: ScrollPhysics(),
                     controller: _scrollController,

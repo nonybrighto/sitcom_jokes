@@ -18,6 +18,7 @@ import 'package:sitcom_joke/ui/pages/home_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_add_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_comments_page.dart';
 import 'package:sitcom_joke/ui/pages/joke/joke_display_page.dart';
+import 'package:sitcom_joke/ui/pages/joke/joke_list_page.dart';
 import 'package:sitcom_joke/ui/pages/movie/movie_details.page.dart';
 import 'package:sitcom_joke/ui/pages/movie/movie_list_page.dart';
 import 'package:sitcom_joke/ui/pages/settings_page.dart';
@@ -28,8 +29,8 @@ class Router{
 
 
 
-  static gotoHomePage(BuildContext context, {Movie movie}){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(selectedMovie: movie,)));
+  static gotoHomePage(BuildContext context){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   static gotoUserDetailsPage(BuildContext context, User user, {UserListBloc userListBloc}){
@@ -39,6 +40,7 @@ class Router{
     )));
 
   }
+
 
   static gotoMoviePage(BuildContext context){
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<MovieListBloc>(
@@ -95,6 +97,15 @@ class Router{
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<UserListBloc>(
           bloc: userListBloc,
           child: UserListPage(showFollowDetails: true,),
+        )));
+
+  }
+  static gotoJokeListPage(BuildContext context, {User user, Movie movie, JokeListFetchType fetchType, String pageTitle}){
+
+        JokeListBloc jokeListBloc = JokeListBloc(user: user, movie: movie, fetchType: fetchType, jokeService: JokeService());
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlocProvider<JokeListBloc>(
+          bloc: jokeListBloc,
+          child: JokeListPage(pageTitle: pageTitle, movie: movie,),
         )));
 
   }

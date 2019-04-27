@@ -28,7 +28,7 @@ class UserDetailsPage extends StatefulWidget {
 class _UserDetailsPageState extends State<UserDetailsPage>
     with SingleTickerProviderStateMixin {
   UserDetailsBloc userDetailsBloc;
-  JokeListBloc jokeListBloc = JokeListBloc(jokeService: JokeService());
+  JokeListBloc jokeListBloc;
   UserControlBloc userControlBloc;
   @override
   void initState() {
@@ -44,8 +44,8 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    jokeListBloc = JokeListBloc(jokeService: JokeService(), fetchType: JokeListFetchType.userJokes, user: widget.user );
     userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
-    jokeListBloc.fetchUserJokes(widget.user);
     userControlBloc = UserControlBloc(
         userControlled: widget.user,
         userDetailsBloc: userDetailsBloc,

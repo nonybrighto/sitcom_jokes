@@ -30,10 +30,16 @@ void main() {
         ..liked = false
         ..favorited = false
         ..dateAdded = DateTime(2003)
-        ..movie.id = 'movid $num'
-        ..movie.title = 'movie name $num'
-        ..movie.tmdbMovieId = 1
-        ..movie.description = 'description'
+        ..movie.update((b) => b
+      ..id = 'id1'
+      ..title = 'name ssnum'
+      ..tmdbMovieId = 1
+      ..followed = true
+      ..description = 'desc'
+      ..jokeCount = 10
+      ..releaseDate = DateTime(2000,10,10)
+      ..followerCount = 10
+      )
          ..owner.update((u) => u
           ..id = '1 $num'
           ..username = 'John $num'
@@ -45,37 +51,32 @@ void main() {
           ..followingCount = 22)),
 
     ]);
-    when(jokeService.fetchAllJokes(
+    when(jokeService.fetchLatestJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')))
+       ))
         .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleJokes.toBuilder()));
 
     when(jokeService.fetchMovieJokes(
         movie: anyNamed('movie'),
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
+       
     )) .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleJokes.toBuilder()));
 
     when(jokeService.fetchUserJokes(
         user: anyNamed('user'),
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
+       
     )) .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleJokes.toBuilder()));
 
     when(jokeService.fetchUserFavJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
+        
     )).thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleJokes.toBuilder()));
   });
 
   test('Expected order when joke loading joke for first time', () {
     JokeListBloc imageJokeListBloc =
-        JokeListBloc( jokeService: jokeService);
-        imageJokeListBloc.fetchAllJokes();
+        JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes);
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded]));
     expect(imageJokeListBloc.items, emits(sampleJokes.toList()));
   });
@@ -83,10 +84,8 @@ void main() {
   test('when loading the second time, expect state to be loading more and list should contain two items',() async{
 
     JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-
-    imageJokeListBloc.fetchAllJokes();
-    imageJokeListBloc.fetchAllJokes();
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes);
+    imageJokeListBloc.getItems();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loaded]));
      var jokeBuilder = sampleJokes.toBuilder()..addAll(sampleJokes.toList());
@@ -95,15 +94,13 @@ void main() {
 
   test('When no item to load and first trial, send load empty', (){
     JokeService jokeService = MockJokeService();
-    when(jokeService.fetchAllJokes(
+    when(jokeService.fetchLatestJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')))
+        ))
         .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results = BuiltList<Joke>([]).toBuilder()));
 
     JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-    imageJokeListBloc.fetchAllJokes();
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes);
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loadEmpty]));
 
@@ -112,15 +109,13 @@ void main() {
   test('Expect to load error when issue from server', (){
 
     JokeService jokeService = MockJokeService();
-    when(jokeService.fetchAllJokes(
+    when(jokeService.fetchLatestJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')))
+        ))
         .thenAnswer((_) async => Future.error(Error()));
 
     JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-    imageJokeListBloc.fetchAllJokes();
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes);
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loadError]));
   });
@@ -128,88 +123,76 @@ void main() {
   test('when response current page is same as total page, send load end', (){
 
     JokeService jokeService = MockJokeService();
-    when(jokeService.fetchAllJokes(
+    when(jokeService.fetchLatestJokes(
         page: 1,
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')))
+       ))
         .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 1 ..perPage = 10 ..results =  sampleJokes.toBuilder()));
 
-    when(jokeService.fetchAllJokes(
+    when(jokeService.fetchLatestJokes(
         page: 2,
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')))
+       ))
         .thenAnswer((_) async => JokeListResponse((b) => b..totalPages = 2..currentPage = 2 ..perPage = 10 ..results = sampleJokes.toBuilder()));
 
 
 
     JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-
-    imageJokeListBloc.fetchAllJokes();
-    imageJokeListBloc.fetchAllJokes();
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes);
+    imageJokeListBloc.getItems();
 
     expect(imageJokeListBloc.loadState, emitsInOrder([loading, loaded, loadingMore, loadEnd]));
   });
 
   test('expect to fetch user favorite jokes', ()async{
 
-        JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
+      
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.userFavJokes);
 
-    imageJokeListBloc.fetchUserFavoriteJokes();
 
      await Future.delayed(Duration(seconds: 2));
 
     verify(jokeService.fetchUserFavJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
     ));
   });
 
   test('expect to fetch movie jokes', ()async{
 
-        JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-
-    imageJokeListBloc.fetchMovieJokes( Movie((b) => b
-      ..id = 'id $num'
-      ..title = 'name $num'
+       
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.movieJokes, movie: Movie((b) => b
+      ..id = 'id1'
+      ..title = 'name ssnum'
       ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'));
+      ..followed = true
+      ..description = 'desc'
+      ..jokeCount = 10
+      ..releaseDate = DateTime(2000,10,10)
+      ..followerCount = 10
+      ));
+
 
      await Future.delayed(Duration(seconds: 2));
 
     verify(jokeService.fetchMovieJokes(
         movie: anyNamed('movie'),
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
     ));
   });
 
   test('expect to fetch all jokes', ()async{
 
-    JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.latestJokes,);
 
-    imageJokeListBloc.fetchAllJokes();
 
      await Future.delayed(Duration(seconds: 2));
 
-    verify(jokeService.fetchAllJokes(
+    verify(jokeService.fetchLatestJokes(
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
     ));
   });
   test('expect to fetch user jokes', ()async{
 
-    JokeListBloc imageJokeListBloc =
-    JokeListBloc( jokeService: jokeService);
-
-    imageJokeListBloc.fetchUserJokes(User((b) => b
+    
+    JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.userJokes, user: User((b) => b
       ..id='id'
       ..username='peter'
       ..photoUrl='url'
@@ -220,13 +203,12 @@ void main() {
           ..followingCount = 22
     ));
 
+
      await Future.delayed(Duration(seconds: 2));
 
     verify(jokeService.fetchUserJokes(
         user: anyNamed('user'),
         page: anyNamed('page'),
-        sortOrder: anyNamed('sortOrder'),
-        jokeSortProperty: anyNamed('jokeSortProperty')
     ));
   });
 }

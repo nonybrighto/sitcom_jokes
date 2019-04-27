@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/models/comment_list_response.dart';
-import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/joke_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
@@ -17,10 +16,8 @@ class JokeService {
   final String moviesUrl = kAppApiUrl + '/movies/';
   Dio dio = new Dio();
 
-  Future<JokeListResponse> fetchAllJokes(
+  Future<JokeListResponse> fetchLatestJokes(
       {
-      SortOrder sortOrder,
-      JokeSortProperty jokeSortProperty,
       int page,}) async {
     try {
       Options authHeaderOption = await getAuthHeaderOption();
@@ -32,11 +29,23 @@ class JokeService {
           : 'Error Connectiing to server');
     }
   }
+  Future<JokeListResponse> fetchPopularJokes(
+      {
+      int page,}) async {
+    try {
+      Options authHeaderOption = await getAuthHeaderOption();
+      //TODO: Change the link to /popular
+      Response response = await dio.get(jokesUrl + 'popular?page=$page', options: authHeaderOption);
+      return JokeListResponse.fromJson(response.data);
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+  }
 
   Future<JokeListResponse> fetchUserFavJokes(
       {
-      SortOrder sortOrder,
-      JokeSortProperty jokeSortProperty,
       int page}) async {
 
 
@@ -53,8 +62,6 @@ class JokeService {
 
   Future<JokeListResponse> fetchMovieJokes(
       {
-      SortOrder sortOrder,
-      JokeSortProperty jokeSortProperty,
       Movie movie,
       int page}) async {
 
@@ -72,8 +79,6 @@ class JokeService {
 
   Future<JokeListResponse> fetchUserJokes(
       {
-      SortOrder sortOrder,
-      JokeSortProperty jokeSortProperty,
       User user,
       int page}) async {
   

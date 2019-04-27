@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
+import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/blocs/movie_list_bloc.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/navigation/router.dart';
@@ -104,7 +105,7 @@ class _MovieListPageState extends State<MovieListPage> {
                   FlatButton(
                     child: Text('View Jokes'),
                     onPressed: () {
-                      Router.gotoHomePage(context, movie: movie);
+                      Router.gotoJokeListPage(context, pageTitle: movie.title, fetchType: JokeListFetchType.movieJokes, movie: movie);
                     },
                   )
                 ],

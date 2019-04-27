@@ -8,7 +8,8 @@ import 'package:sitcom_joke/ui/widgets/joke/joke_card.dart';
 
 
 class JokeList extends StatefulWidget {
-  JokeList({Key key}) : super(key: key);
+  final PageStorageKey pageStorageKey;
+  JokeList({Key key, this.pageStorageKey}) : super(key: key);
 
   @override
   _JokeListState createState() => new _JokeListState();
@@ -31,6 +32,7 @@ class _JokeListState extends State<JokeList> {
       scrollListType: ScrollListType.list,
       listContentStream: jokeListBloc.items,
       loadStateStream: jokeListBloc.loadState,
+      pageStorageKey: widget.pageStorageKey,
       loadMoreAction: (){
         jokeListBloc.getItems();
       },

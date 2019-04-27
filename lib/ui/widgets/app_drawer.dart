@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
-import 'package:sitcom_joke/models/general.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/ui/pages/auth_page.dart';
 
 class AppDrawer extends StatelessWidget {
 
-  final JokeListBloc jokeListBloc;
 
-  AppDrawer({this.jokeListBloc});
+  AppDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +23,9 @@ class AppDrawer extends StatelessWidget {
                 color: Theme.of(context).accentColor,
             ),
             _drawerHeader(applicationBloc),
-            _drawerItem(context, Icons.cloud, 'Latest Posts' , countDetails: CountDetails(5, Colors.red), onTap: _handleLatestPostTap),
+            _drawerItem(context, Icons.cloud, 'Home' , onTap: _handleHomeTap(context)),
             _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
-            _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap),
+            _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap(context)),
             _drawerItem(context, Icons.favorite, 'Add Joke', onTap: _handleAddJokeTap(context)),
             Divider(),
             _drawerItem(context, Icons.favorite, 'Settings', onTap: _handleSettingsTap(context)),
@@ -134,35 +132,38 @@ class AppDrawer extends StatelessWidget {
     });
   }
 
-  _handleLatestPostTap(){
-    jokeListBloc.changeSortOrder(SortOrder.desc);
-    jokeListBloc.fetchAllJokes();
-
+  _handleHomeTap(BuildContext context){
+    return (){
+      //Router.gotoJokeListPage(context, pageTitle: 'Latest Jokes', fetchType: JokeListFetchType.latestJokes);
+      Router.gotoHomePage(context);
+    };
   }
 
-  _handleAllSitcomsTap(context){
+  _handleAllSitcomsTap(BuildContext context){
     return (){
       Router.gotoMoviePage(context);
     };
   }
 
-  _handleFavoritesTap(){
-    jokeListBloc.fetchUserFavoriteJokes();
+  _handleFavoritesTap(BuildContext context){
+    return (){
+       Router.gotoJokeListPage(context, pageTitle: 'Favorite Jokes', fetchType: JokeListFetchType.userFavJokes);
+    };
   }
 
-  _handleAddJokeTap(context){
+  _handleAddJokeTap(BuildContext context){
     return (){
       Router.gotoAddJokePage(context);
     };
   }
 
-  _handleSettingsTap(context){
+  _handleSettingsTap(BuildContext context){
         return (){
       Router.gotoSettingsPage(context);
     };
   }
 
-  _handleAboutTap(context){
+  _handleAboutTap(BuildContext context){
         return (){
       Router.gotoAboutPage(context);
     };
