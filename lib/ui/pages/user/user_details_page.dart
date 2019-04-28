@@ -153,7 +153,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
         ),
         _buildUserDetail(
             title: 'Followers',
-            count: user.jokeCount,
+            count: user.followerCount,
             onPressed: () {
               Router.gotoUserFollowPage(context,
                   user: user, followType: UserFollowType.followers);
@@ -163,7 +163,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
         ),
         _buildUserDetail(
             title: 'Following',
-            count: user.jokeCount,
+            count: user.followingCount,
             onPressed: () {
               Router.gotoUserFollowPage(context,
                   user: user, followType: UserFollowType.following);
