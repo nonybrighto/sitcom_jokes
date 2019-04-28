@@ -10,6 +10,7 @@ import 'package:sitcom_joke/ui/widgets/joke/controls/joke_like_action_button.dar
 import 'package:sitcom_joke/ui/widgets/joke/controls/joke_save_action_buttons.dart';
 import 'package:sitcom_joke/ui/widgets/joke/controls/joke_share_action_button.dart';
 import 'package:sitcom_joke/ui/widgets/user/user_profile_icon.dart';
+import 'package:sitcom_joke/ui/widgets/user/username_text.dart';
 import 'package:sitcom_joke/utils/date_formater.dart';
 
 class JokeCard extends StatelessWidget {
@@ -44,10 +45,7 @@ class JokeCard extends StatelessWidget {
       ),
       title: Wrap(
         children: <Widget>[
-          Text(
-            joke.owner.username,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          UsernameText(user: joke.owner, style: TextStyle(fontWeight: FontWeight.bold),),
           (joke.title != null)
               ? Wrap(
                   children: <Widget>[
