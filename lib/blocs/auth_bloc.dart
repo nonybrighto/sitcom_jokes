@@ -48,6 +48,7 @@ class AuthBloc extends BlocBase {
       });
 
       _logoutController.stream.listen((_) async{
+            _currentUserController.sink.add(null);
             await authService.deleteUserPreference();
       });
   }
