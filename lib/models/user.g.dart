@@ -23,21 +23,6 @@ class _$UserSerializer implements StructuredSerializer<User> {
       'username',
       serializers.serialize(object.username,
           specifiedType: const FullType(String)),
-      'jokeCount',
-      serializers.serialize(object.jokeCount,
-          specifiedType: const FullType(int)),
-      'following',
-      serializers.serialize(object.following,
-          specifiedType: const FullType(bool)),
-      'followed',
-      serializers.serialize(object.followed,
-          specifiedType: const FullType(bool)),
-      'followerCount',
-      serializers.serialize(object.followerCount,
-          specifiedType: const FullType(int)),
-      'followingCount',
-      serializers.serialize(object.followingCount,
-          specifiedType: const FullType(int)),
     ];
     if (object.photoUrl != null) {
       result
@@ -50,6 +35,36 @@ class _$UserSerializer implements StructuredSerializer<User> {
         ..add('email')
         ..add(serializers.serialize(object.email,
             specifiedType: const FullType(String)));
+    }
+    if (object.jokeCount != null) {
+      result
+        ..add('jokeCount')
+        ..add(serializers.serialize(object.jokeCount,
+            specifiedType: const FullType(int)));
+    }
+    if (object.following != null) {
+      result
+        ..add('following')
+        ..add(serializers.serialize(object.following,
+            specifiedType: const FullType(bool)));
+    }
+    if (object.followed != null) {
+      result
+        ..add('followed')
+        ..add(serializers.serialize(object.followed,
+            specifiedType: const FullType(bool)));
+    }
+    if (object.followerCount != null) {
+      result
+        ..add('followerCount')
+        ..add(serializers.serialize(object.followerCount,
+            specifiedType: const FullType(int)));
+    }
+    if (object.followingCount != null) {
+      result
+        ..add('followingCount')
+        ..add(serializers.serialize(object.followingCount,
+            specifiedType: const FullType(int)));
     }
 
     return result;
@@ -148,21 +163,6 @@ class _$User extends User {
     }
     if (username == null) {
       throw new BuiltValueNullFieldError('User', 'username');
-    }
-    if (jokeCount == null) {
-      throw new BuiltValueNullFieldError('User', 'jokeCount');
-    }
-    if (following == null) {
-      throw new BuiltValueNullFieldError('User', 'following');
-    }
-    if (followed == null) {
-      throw new BuiltValueNullFieldError('User', 'followed');
-    }
-    if (followerCount == null) {
-      throw new BuiltValueNullFieldError('User', 'followerCount');
-    }
-    if (followingCount == null) {
-      throw new BuiltValueNullFieldError('User', 'followingCount');
     }
   }
 

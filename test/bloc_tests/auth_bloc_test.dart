@@ -1,5 +1,4 @@
 import 'package:sitcom_joke/blocs/auth_bloc.dart';
-import 'package:sitcom_joke/models/bloc_delegate.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sitcom_joke/services/auth_service.dart';
@@ -10,26 +9,23 @@ import '../type_matchers.dart';
 
 
 
-User successUser;
+bool didLogin = false;
 String errorMessage;
-class DelegateMock extends BlocDelegate<User>{
-  @override
-  error(String message) {
-    errorMessage = message;
-  }
 
-  @override
-  success(User user) {
-    successUser = user;
-  }
- 
 
-}
+_authCallBack(bool didLogin, String message){
+
+        if(didLogin){
+           didLogin = true;
+        }else{
+            errorMessage = message;
+        }
+  }
 
 void main(){
 
   AuthService authService = MockAuthService();
-  test('call success delegate and set currentUser when login success', () async{
+  test('set currentUser when login success', () async{
 
     User user = User((b) => b
       ..id='123a'
@@ -39,14 +35,13 @@ void main(){
 
     when(authService.signInWithEmailAndPassword('john@email.com', 'password123')).thenAnswer((_) async =>  user);
 
-    DelegateMock delegateMock = new DelegateMock();
-    AuthBloc authBloc = AuthBloc(authService: authService, delegate: delegateMock);
-    authBloc.login('john@email.com', 'password123');
+    AuthBloc authBloc = AuthBloc(authService: authService);
+    authBloc.login('john@email.com', 'password123', _authCallBack);
     
     expect(authBloc.loadState, emitsInOrder([loaded, loading, loaded]));
 
-    await Future.delayed(Duration(seconds: 3));
-    expect(successUser, user);
+    await Future.delayed(Duration(seconds: 0));
+    expect(authBloc.currentUser, emits(user));
     verify(authService.signInWithEmailAndPassword('john@email.com', 'password123'));
   });
 
@@ -54,14 +49,22 @@ void main(){
 
     when(authService.signInWithEmailAndPassword('john@email.com', 'password123')).thenAnswer((_)  =>  Future.error('error occured'));
 
-    DelegateMock delegateMock = new DelegateMock();
-    AuthBloc authBloc = AuthBloc(authService: authService, delegate: delegateMock);
-    authBloc.login('john@email.com', 'password123');
+    AuthBloc authBloc = AuthBloc(authService: authService);
+    authBloc.login('john@email.com', 'password123', _authCallBack);
     
     expect(authBloc.loadState, emitsInOrder([loaded, loading, loadError]));
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 0));
     expect(errorMessage, 'error occured');
     verify(authService.signInWithEmailAndPassword('john@email.com', 'password123'));
+
+  });
+
+  test('clear preference when logout', () async{
+
+         AuthBloc authBloc = AuthBloc(authService: authService);
+         authBloc.logout();
+         await Future.delayed(Duration(seconds: 0));
+         verify(authService.deleteUserPreference());
 
   });
 }

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sitcom_joke/blocs/application_bloc.dart';
 import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sitcom_joke/models/auth.dart';
-import 'package:sitcom_joke/models/bloc_delegate.dart';
 import 'package:sitcom_joke/models/load_state.dart';
-import 'package:sitcom_joke/models/user.dart';
-import 'package:sitcom_joke/services/auth_service.dart';
 import 'package:sitcom_joke/ui/pages/home_page.dart';
 import 'package:sitcom_joke/ui/widgets/buttons/general_buttons.dart';
 import 'package:sitcom_joke/ui/widgets/clips/login_bottom_clipper.dart';
 import 'package:sitcom_joke/ui/widgets/clips/login_top_clipper.dart';
 import 'package:sitcom_joke/utils/validator.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 enum AuthType { login, signup }
 
@@ -24,7 +21,7 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => new _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
+class _AuthPageState extends State<AuthPage>{
   Validator validator;
   BuildContext _context;
   final _formKey = GlobalKey<FormState>();
@@ -43,11 +40,12 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
     super.initState();
     validator = Validator();
     authType = widget.authType;
+    authBloc = BlocProvider.of<AuthBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    authBloc = AuthBloc(authService: AuthService(), delegate: this);
+   
 
     return Scaffold(
       appBar: AppBar(
@@ -199,10 +197,10 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
                       if (_formKey.currentState.validate()) {
                         if (authType == AuthType.signup) {
                           authBloc.signUp(_usernameController.text,
-                              _emailController.text, _passwordController.text);
+                              _emailController.text, _passwordController.text, _authCallBack);
                         } else {
                           authBloc.login(
-                              _emailController.text, _passwordController.text);
+                              _emailController.text, _passwordController.text, _authCallBack);
                         }
                       }
                     }
@@ -272,14 +270,14 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
                   icon: Icons.ac_unit,
                   clickable: buttonClickable,
                   onTapCall: () {
-                    authBloc.loginWithSocial(SocialLoginType.facebook);
+                    authBloc.loginWithSocial(SocialLoginType.facebook, _authCallBack);
                   }),
               SizedBox(width: 20.0),
               _socialButton(
                   icon: Icons.ac_unit,
                   clickable: buttonClickable,
                   onTapCall: () {
-                    authBloc.loginWithSocial(SocialLoginType.google);
+                    authBloc.loginWithSocial(SocialLoginType.google, _authCallBack);
                   }),
             ],
           );
@@ -296,21 +294,22 @@ class _AuthPageState extends State<AuthPage> implements BlocDelegate<User> {
     );
   }
 
-  @override
-  success(User user) {
-    BlocProvider.of<ApplicationBloc>(context).changeCurrentUser(user);
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
-  }
+  _authCallBack(bool didLogin, String errorMessage){
 
-  @override
-  error(String errorMessage) {
-    Scaffold.of(_context).showSnackBar(SnackBar(
-      content: Text('Error: ' + errorMessage),
-    ));
+        if(didLogin){
+            Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+        }else{
+             Scaffold.of(_context).showSnackBar(SnackBar(
+              content: Text('Error: ' + errorMessage),
+            ));
+        }
   }
-}
 
 _canClickAuthButton(LoadState loadState) {
   return !(loadState is Loading);
 }
+
+}
+
+

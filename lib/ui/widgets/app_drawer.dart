@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sitcom_joke/blocs/application_bloc.dart';
+import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/user.dart';
@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  ApplicationBloc applicationBloc = BlocProvider.of<ApplicationBloc>(context);
+  AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     context = context;
     return Drawer(
       child: ListView(
@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
                 height: 1,
                 color: Theme.of(context).accentColor,
             ),
-            _drawerHeader(applicationBloc),
+            _drawerHeader(authBloc),
             _drawerItem(context, Icons.cloud, 'Home' , onTap: _handleHomeTap(context)),
             _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
             _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap(context)),
@@ -37,7 +37,7 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  _drawerHeader(ApplicationBloc appBloc){
+  _drawerHeader(AuthBloc appBloc){
 
       
           return StreamBuilder<User>(

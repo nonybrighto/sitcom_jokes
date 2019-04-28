@@ -7,6 +7,8 @@ const String kTmdbImageUrl = "http://image.tmdb.org/t/p/";
 
 //preference keys
 const String kUserJwtTokenPrefKey = 'user_jwt_token';
+const String kUserJwtTokenExpiresPrefKey = 'user_jwt_toke_expires';
 const String kUsernamePrefKey = 'username';
 const String kUserIdPrefKey = 'user_id';
 const String kUserEmailPrefKey = 'user_email';
+const String kUserPhotoUrlPrefKey = 'photo_url';

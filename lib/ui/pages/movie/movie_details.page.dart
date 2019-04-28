@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:sitcom_joke/blocs/application_bloc.dart';
+import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/movie_control_bloc.dart';
 import 'package:sitcom_joke/blocs/movie_details_bloc.dart';
@@ -292,7 +292,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   _movieFollowButton(bool movieFollowed, LoadState loadState) {
     return StreamBuilder<bool>(
         initialData: false,
-        stream: BlocProvider.of<ApplicationBloc>(context).isAuthenticated,
+        stream: BlocProvider.of<AuthBloc>(context).isAuthenticated,
         builder: (BuildContext context,
             AsyncSnapshot<bool> isAuthenticatedSnapshot) {
           return RoundedButton(

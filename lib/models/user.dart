@@ -16,10 +16,15 @@ abstract class User implements Built<User, UserBuilder> {
   String get photoUrl;
   @nullable
   String get email;
+  @nullable
   int get jokeCount;
+  @nullable
   bool get following;
+  @nullable
   bool get followed;
+  @nullable
   int get followerCount;
+  @nullable
   int get followingCount;
 
   factory User([updates(UserBuilder b)]) = _$User;

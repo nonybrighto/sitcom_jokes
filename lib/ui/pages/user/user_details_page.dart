@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:sitcom_joke/blocs/application_bloc.dart';
+import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/blocs/user_control_bloc.dart';
@@ -116,7 +116,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
                                         _buildDetailsRow(user),
                                         StreamBuilder<User>(
                                             stream: BlocProvider.of<
-                                                    ApplicationBloc>(context)
+                                                    AuthBloc>(context)
                                                 .currentUser,
                                             builder: (BuildContext context,
                                                 AsyncSnapshot<User>
@@ -205,7 +205,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
             return StreamBuilder<bool>(
                 initialData: false,
                 stream:
-                    BlocProvider.of<ApplicationBloc>(context).isAuthenticated,
+                    BlocProvider.of<AuthBloc>(context).isAuthenticated,
                 builder: (BuildContext context,
                     AsyncSnapshot<bool> isAuthenticatedSnapshot) {
                   return RoundedButton(
