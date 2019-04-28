@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
+import 'package:sitcom_joke/blocs/user_list_bloc.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/ui/pages/auth_page.dart';
+import 'package:sitcom_joke/ui/widgets/user/user_profile_icon.dart';
 
 class AppDrawer extends StatelessWidget {
 
@@ -16,23 +18,32 @@ class AppDrawer extends StatelessWidget {
   AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     context = context;
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-            Divider(
-                height: 1,
-                color: Theme.of(context).accentColor,
-            ),
-            _drawerHeader(authBloc),
-            _drawerItem(context, Icons.cloud, 'Home' , onTap: _handleHomeTap(context)),
-            _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
-            _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap(context)),
-            _drawerItem(context, Icons.favorite, 'Add Joke', onTap: _handleAddJokeTap(context)),
-            Divider(),
-            _drawerItem(context, Icons.favorite, 'Settings', onTap: _handleSettingsTap(context)),
-            _drawerItem(context, Icons.favorite, 'Share', onTap: _handleShareTap()),
-            _drawerItem(context, Icons.favorite, 'About' , onTap: _handleAboutTap(context)),
+      child: StreamBuilder<User>(
+        stream: authBloc.currentUser,
+        builder: (context, currentUserSnapshot) {
+          User currentUser = currentUserSnapshot.data;
+          bool isAuthenticated = currentUser != null; // used this instead of creating a seperate stream builder.
+          return ListView(
+            children: <Widget>[
+                Divider(
+                    height: 1,
+                    color: Theme.of(context).accentColor,
+                ),
+                _drawerHeader(authBloc),
+                _drawerItem(context, Icons.cloud, 'Home' , onTap: _handleHomeTap(context)),
+                _drawerItem(context, Icons.list, 'All Sitcoms' , onTap: _handleAllSitcomsTap(context)),
+                _drawerItem(context, Icons.favorite, 'Favorites', onTap: _handleFavoritesTap(context, isAuthenticated)),
+                (isAuthenticated)?_drawerItem(context, Icons.favorite, 'My Jokes', onTap: _handleCurrentUserJokesTap(context, currentUser)):Container(),
+                _drawerItem(context, Icons.favorite, 'Add Joke', onTap: _handleAddJokeTap(context)),
+                Divider(),
+                _drawerItem(context, Icons.favorite, 'Settings', onTap: _handleSettingsTap(context)),
+                _drawerItem(context, Icons.favorite, 'Share', onTap: _handleShareTap()),
+                _drawerItem(context, Icons.favorite, 'About' , onTap: _handleAboutTap(context)),
+                (isAuthenticated)?_drawerItem(context, Icons.favorite, 'Logout' , onTap: _handleLogoutTap(authBloc)): Container(),
 
-        ],
+            ],
+          );
+        }
       ),
     );
   }
@@ -72,11 +83,13 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           Row(
                 children: <Widget>[
-                   _buildProfileDetail(context, title:'Followers', count:10, onPressed: (){
-                     print('pressed');
+                   _buildProfileDetail(context, title:'Followers', count:user.followerCount, onPressed: (){
+                      Router.gotoUserFollowPage(context,
+                  user: user, followType: UserFollowType.followers);
                    }),
-                   _buildProfileDetail(context, title:'Following', count:50, onPressed: (){
-                     print('pressed');
+                   _buildProfileDetail(context, title:'Following', count:user.followingCount, onPressed: (){
+                      Router.gotoUserFollowPage(context,
+                             user: user, followType: UserFollowType.following);
                    }),
                 ],
               ),
@@ -92,10 +105,7 @@ class AppDrawer extends StatelessWidget {
                     alignment: Alignment.topRight,
                     padding: EdgeInsets.all(5.0),
                     color: Theme.of(context).accentColor,
-                    child: CircleAvatar(
-                        radius: 20,
-                        child: Text('N'),
-                    ),
+                    child: UserProfileIcon(user: user,),
                   ),
                 ),
               )
@@ -116,7 +126,7 @@ class AppDrawer extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 12, top:10, bottom: 4),
                   child: Text(title, style: TextStyle(color: Theme.of(context).accentColor),),
                 ),
-                Text(count.toString(), style: TextStyle(color: Colors.grey[500],)),
+                Text((count != null)?count.toString(): '', style: TextStyle(color: Colors.grey[500],)),
                 //Text(count.toString()),
               ],
           ),
@@ -134,7 +144,6 @@ class AppDrawer extends StatelessWidget {
 
   _handleHomeTap(BuildContext context){
     return (){
-      //Router.gotoJokeListPage(context, pageTitle: 'Latest Jokes', fetchType: JokeListFetchType.latestJokes);
       Router.gotoHomePage(context);
     };
   }
@@ -145,9 +154,18 @@ class AppDrawer extends StatelessWidget {
     };
   }
 
-  _handleFavoritesTap(BuildContext context){
+  _handleFavoritesTap(BuildContext context, bool isAuthenticated){
     return (){
-       Router.gotoJokeListPage(context, pageTitle: 'Favorite Jokes', fetchType: JokeListFetchType.userFavJokes);
+      if(isAuthenticated){
+        Router.gotoJokeListPage(context, pageTitle: 'Favorite Jokes', fetchType: JokeListFetchType.userFavJokes);
+      }else{
+          Router.gotoAuthPage(context, AuthType.login);
+      }
+    };
+  }
+  _handleCurrentUserJokesTap(BuildContext context, User currentUser){
+    return (){
+       Router.gotoJokeListPage(context, pageTitle: 'My Jokes', fetchType: JokeListFetchType.userJokes, user: currentUser);
     };
   }
 
@@ -166,6 +184,11 @@ class AppDrawer extends StatelessWidget {
   _handleAboutTap(BuildContext context){
         return (){
       Router.gotoAboutPage(context);
+    };
+  }
+  _handleLogoutTap(AuthBloc authBloc){
+        return (){
+        authBloc.logout();
     };
   }
 
