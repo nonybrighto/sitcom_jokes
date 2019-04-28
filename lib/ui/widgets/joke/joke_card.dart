@@ -3,13 +3,14 @@ import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_control_bloc.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
-import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
-import 'package:sitcom_joke/ui/widgets/joke/joke_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_favorite_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_like_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_save_action_buttons.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_share_action_button.dart';
 import 'package:sitcom_joke/ui/widgets/user/user_profile_icon.dart';
 import 'package:sitcom_joke/utils/date_formater.dart';
-import 'package:sitcom_joke/utils/joke_save_util.dart';
 
 class JokeCard extends StatelessWidget {
   final Joke joke;
@@ -120,71 +121,10 @@ class JokeCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                JokeActionButton(
-                    title: 'like (${joke.likeCount})',
-                    icon: Icons.thumb_up,
-                    selected: joke.liked,
-                    size: 12,
-                    onTap: () {
-                      jokeControlBloc.toggleJokeLike();
-                    }),
-                StreamBuilder<LoadState>(
-                    initialData: Loaded(),
-                    stream: jokeControlBloc.jokeSaveLoadState,
-                    builder: (context, jokeSaveLoadStateSnapshot) {
-                      String extraSaveText =
-                          (jokeSaveLoadStateSnapshot.data is Loading)
-                              ? '...'
-                              : '';
-                      return JokeActionButton(
-                          title: 'Save' + extraSaveText,
-                          icon: Icons.arrow_downward,
-                          selected: false,
-                          size: 12,
-                          onTap: () async {
-                            if (joke.hasImage()) {
-                              jokeControlBloc.saveImageJoke((message) {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(message),
-                                ));
-                              });
-                            } else {
-                              jokeControlBloc.saveTextJoke(
-                                  await JokeSaveUtil()
-                                      .textToImage(textJokeBoundaryKey),
-                                  (message) {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(message),
-                                ));
-                              });
-                            }
-                          });
-                    }),
-                JokeActionButton(
-                    title: 'Favorite',
-                    icon: Icons.favorite,
-                    selected: joke.favorited,
-                    size: 12,
-                    onTap: () {
-                      jokeControlBloc.toggleJokeFavorite();
-                    }),
-                StreamBuilder<LoadState>(
-                    initialData: Loaded(),
-                    stream: jokeControlBloc.jokeShareLoadState,
-                    builder: (context, jokeShareLoadStateSnapshot) {
-                      String extraShareText =
-                          (jokeShareLoadStateSnapshot.data is Loading)
-                              ? '...'
-                              : '';
-                      return JokeActionButton(
-                          title: 'Share' + extraShareText,
-                          icon: Icons.share,
-                          selected: false,
-                          size: 12,
-                          onTap: () {
-                            jokeControlBloc.shareJoke();
-                          });
-                    }),
+                JokeLikeActionButton(joke: joke,size: 12, showLikeCount: true,),
+                JokeSaveActionButton(joke: joke, textJokeBoundaryKey: textJokeBoundaryKey, size: 12,),
+                JokeFavoriteActionButton(joke: joke,size: 12,),
+                JokeShareActionButton(joke: joke,size: 12,),
               ],
             )));
   }

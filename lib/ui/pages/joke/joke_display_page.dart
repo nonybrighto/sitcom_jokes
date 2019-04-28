@@ -7,7 +7,10 @@ import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
-import 'package:sitcom_joke/ui/widgets/joke/joke_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_favorite_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_like_action_button.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_save_action_buttons.dart';
+import 'package:sitcom_joke/ui/widgets/joke/controls/joke_share_action_button.dart';
 import 'package:zoomable_image/zoomable_image.dart';
 
 class JokeDisplayPage extends StatefulWidget {
@@ -26,7 +29,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   PageController _pageController;
 
   bool canLoadMore = true;
-
+  final textJokeBoundaryKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -76,6 +79,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
   _displayTextJoke(Joke joke) {
     return ListView(
+      key: textJokeBoundaryKey,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(
@@ -206,34 +210,11 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            JokeActionButton(
-                title: 'Likes',
-                icon: Icons.thumb_up,
-                iconColor: iconColor,
-                selected: joke.liked,
-                onTap: () {
-                  jokeControlBloc.toggleJokeLike();
-                }),
-            JokeActionButton(
-                title: 'Save',
-                icon: Icons.arrow_downward,
-                iconColor: iconColor,
-                selected: false,
-                onTap: () {}),
-            JokeActionButton(
-                title: 'Favorite',
-                icon: Icons.favorite,
-                iconColor: iconColor,
-                selected: joke.favorited,
-                onTap: () {
-                  jokeControlBloc.toggleJokeFavorite();
-                }),
-            JokeActionButton(
-                title: 'Share',
-                icon: Icons.share,
-                iconColor: iconColor,
-                selected: false,
-                onTap: () {}),
+              
+              JokeLikeActionButton(joke: joke, iconColor: iconColor,),
+              JokeSaveActionButton(joke: joke, textJokeBoundaryKey: textJokeBoundaryKey, ),
+              JokeFavoriteActionButton(joke: joke,iconColor: iconColor,),
+              JokeShareActionButton(joke: joke, iconColor: iconColor,),
           ],
         ),
         ),
