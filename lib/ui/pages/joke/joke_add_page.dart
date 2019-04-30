@@ -27,20 +27,21 @@ class _JokeAddPageState extends State<JokeAddPage>
   TextEditingController _textController = TextEditingController();
   TextEditingController _movieController = TextEditingController();
   File _imageToUpload;
-  Movie _selectedMovie;
   BuildContext _context;
+  int _selectedTmdbMovieId; // This is the Id used to save the movie
+
 
   MovieService movieService = MovieService();
   JokeAddBloc jokeAddBloc;
 
+
   @override
   void initState() {
     super.initState();
-    _selectedMovie = widget.selectedMovie;
     jokeAddBloc = JokeAddBloc(jokeService: JokeService(), delegate: this);
-
+    _selectedTmdbMovieId = widget.selectedMovie?.tmdbMovieId;
     _movieController.text =
-        (_selectedMovie != null) ? _selectedMovie.title : '';
+        (widget.selectedMovie != null) ? widget.selectedMovie.name : '';
   }
 
   @override
@@ -118,19 +119,17 @@ class _JokeAddPageState extends State<JokeAddPage>
 
   _submitJoke() {
     if (_formKey.currentState.validate()) {
-      if (_selectedMovie != null) {
+      if (_selectedTmdbMovieId != null) {
           if(_textController.text.isNotEmpty || _imageToUpload != null ){
-            Joke jokeToAdd = Joke((b) => b
-            ..id = 'id'
-            ..title = _titleController.text
-            ..text = _textController.text
-            ..commentCount = 0
-            ..likeCount = 0
-            ..dateAdded = DateTime.now()
-            ..liked = false
-            ..favorited = false
-            ..movie = _selectedMovie.toBuilder());
-          jokeAddBloc.addJoke(jokeToAdd, _imageToUpload);
+
+          Map<String, dynamic> jokeUploadDetails = {
+              'imageToUpload': _imageToUpload,
+              'tmdbMovieId': _selectedTmdbMovieId,
+              'title': _titleController.text,
+              'text': _textController.text,
+          };
+
+          jokeAddBloc.addJoke(jokeUploadDetails);
           }else{
              Scaffold.of(_context).showSnackBar(SnackBar(
                 content: Text('Please add an image or a text'),
@@ -146,6 +145,7 @@ class _JokeAddPageState extends State<JokeAddPage>
 
   _buildMovieSelectionField() {
     return TypeAheadFormField(
+      debounceDuration: Duration(milliseconds: 500),
       textFieldConfiguration: TextFieldConfiguration(
         onChanged: (value) {
           print(value);
@@ -153,23 +153,27 @@ class _JokeAddPageState extends State<JokeAddPage>
         decoration: InputDecoration(
           hintText: 'Movie',
           labelText: 'Movie',
+          errorText: 'Search and select movie from the search field',
         ),
         controller: this._movieController,
       ),
       suggestionsCallback: (String pattern) async {
-        return await movieService.searchMovies(pattern);
+        if(pattern.isEmpty){
+          // show cached names
+        }
+        return await movieService.searchTmdbMovieAsList(searchString:pattern);
       },
-      itemBuilder: (context, movieSuggestion) {
+      itemBuilder: (context, tmdbMovieSuggestion) {
         return ListTile(
-          title: Text(movieSuggestion.title),
+          title: Text(tmdbMovieSuggestion.name),
         );
       },
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (movieSuggestion) {
-        this._movieController.text = movieSuggestion.title;
-        _selectedMovie = movieSuggestion;
+      onSuggestionSelected: (tmdbMovieSuggestion) {
+        this._movieController.text = tmdbMovieSuggestion.name;
+        _selectedTmdbMovieId= tmdbMovieSuggestion.id;
       },
       validator: (value) {
         if (value.isEmpty) {

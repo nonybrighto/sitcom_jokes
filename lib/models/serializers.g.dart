@@ -13,10 +13,11 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(JokeListResponse.serializer)
       ..add(Movie.serializer)
       ..add(MovieListResponse.serializer)
+      ..add(TmdbMovie.serializer)
       ..add(TmdbMovieCast.serializer)
       ..add(TmdbMovieCredit.serializer)
-      ..add(TmdbMovieDetails.serializer)
       ..add(TmdbMovieGenre.serializer)
+      ..add(TmdbMovieListResponse.serializer)
       ..add(User.serializer)
       ..add(UserListResponse.serializer)
       ..addBuilderFactory(
@@ -28,6 +29,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Movie)]),
           () => new ListBuilder<Movie>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(TmdbMovie)]),
+          () => new ListBuilder<TmdbMovie>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TmdbMovieCast)]),
           () => new ListBuilder<TmdbMovieCast>())

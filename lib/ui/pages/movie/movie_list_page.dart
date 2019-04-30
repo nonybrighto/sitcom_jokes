@@ -54,7 +54,7 @@ class _MovieListPageState extends State<MovieListPage> {
             right: 0,
             child: _buildMovieDetails(movie),
           ),
-          _buildMovieImage(movie.posterUrl),
+          _buildMovieImage(movie.posterPath),
         ],
       ),
     );
@@ -80,7 +80,7 @@ class _MovieListPageState extends State<MovieListPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    movie.title,
+                    movie.name,
                     style: TextStyle(fontSize: 20),
                   ),
                   Icon(Icons.favorite, color: (movie.followed)? Theme.of(context).accentColor: Theme.of(context).textTheme.body1.color,)
@@ -92,7 +92,7 @@ class _MovieListPageState extends State<MovieListPage> {
               ),
               Text(
                 DateFormatter.dateToString(
-                        movie.releaseDate, DateFormatPattern.wordDate),
+                        movie.firstAirDate, DateFormatPattern.wordDate),
                 style: TextStyle(color: const Color(0XFFc0c0c0)),
               ),
               Text(
@@ -105,7 +105,7 @@ class _MovieListPageState extends State<MovieListPage> {
                   FlatButton(
                     child: Text('View Jokes'),
                     onPressed: () {
-                      Router.gotoJokeListPage(context, pageTitle: movie.title, fetchType: JokeListFetchType.movieJokes, movie: movie);
+                      Router.gotoJokeListPage(context, pageTitle: movie.name, fetchType: JokeListFetchType.movieJokes, movie: movie);
                     },
                   )
                 ],

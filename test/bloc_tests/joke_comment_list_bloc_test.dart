@@ -31,9 +31,9 @@ void main() {
         ..favorited = false
         ..dateAdded = DateTime(2003)
         ..movie.id = 'movid $num'
-        ..movie.title = 'movie name $num'
+        ..movie.name = 'movie name $num'
         ..movie.tmdbMovieId = 1
-        ..movie.description = 'description'
+        ..movie.overview = 'description'
          ..owner.update((u) => u
           ..id = '1 $num'
           ..username = 'John $num'

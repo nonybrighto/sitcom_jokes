@@ -13,8 +13,7 @@ abstract class TmdbMovieCast implements Built<TmdbMovieCast, TmdbMovieCastBuilde
 
 
   int get id;
-  @BuiltValueField(wireName: 'cast_id')
-  int get castId;
+  @nullable
   String get character;
   String get name;
   @nullable

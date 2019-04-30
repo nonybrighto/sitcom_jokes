@@ -20,17 +20,16 @@ class _$MovieSerializer implements StructuredSerializer<Movie> {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
-      'title',
-      serializers.serialize(object.title,
-          specifiedType: const FullType(String)),
+      'name',
+      serializers.serialize(object.name, specifiedType: const FullType(String)),
       'tmdbMovieId',
       serializers.serialize(object.tmdbMovieId,
           specifiedType: const FullType(int)),
       'jokeCount',
       serializers.serialize(object.jokeCount,
           specifiedType: const FullType(int)),
-      'releaseDate',
-      serializers.serialize(object.releaseDate,
+      'firstAirDate',
+      serializers.serialize(object.firstAirDate,
           specifiedType: const FullType(DateTime)),
       'followerCount',
       serializers.serialize(object.followerCount,
@@ -42,23 +41,23 @@ class _$MovieSerializer implements StructuredSerializer<Movie> {
         ..add(serializers.serialize(object.followed,
             specifiedType: const FullType(bool)));
     }
-    if (object.description != null) {
+    if (object.overview != null) {
       result
-        ..add('description')
-        ..add(serializers.serialize(object.description,
+        ..add('overview')
+        ..add(serializers.serialize(object.overview,
             specifiedType: const FullType(String)));
     }
-    if (object.posterUrl != null) {
+    if (object.posterPath != null) {
       result
-        ..add('posterUrl')
-        ..add(serializers.serialize(object.posterUrl,
+        ..add('posterPath')
+        ..add(serializers.serialize(object.posterPath,
             specifiedType: const FullType(String)));
     }
     if (object.tmdbDetails != null) {
       result
         ..add('tmdbDetails')
         ..add(serializers.serialize(object.tmdbDetails,
-            specifiedType: const FullType(TmdbMovieDetails)));
+            specifiedType: const FullType(TmdbMovie)));
     }
 
     return result;
@@ -79,8 +78,8 @@ class _$MovieSerializer implements StructuredSerializer<Movie> {
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'title':
-          result.title = serializers.deserialize(value,
+        case 'name':
+          result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'tmdbMovieId':
@@ -91,20 +90,20 @@ class _$MovieSerializer implements StructuredSerializer<Movie> {
           result.followed = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
-        case 'description':
-          result.description = serializers.deserialize(value,
+        case 'overview':
+          result.overview = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'posterUrl':
-          result.posterUrl = serializers.deserialize(value,
+        case 'posterPath':
+          result.posterPath = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'jokeCount':
           result.jokeCount = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'releaseDate':
-          result.releaseDate = serializers.deserialize(value,
+        case 'firstAirDate':
+          result.firstAirDate = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'followerCount':
@@ -113,8 +112,7 @@ class _$MovieSerializer implements StructuredSerializer<Movie> {
           break;
         case 'tmdbDetails':
           result.tmdbDetails.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(TmdbMovieDetails))
-              as TmdbMovieDetails);
+              specifiedType: const FullType(TmdbMovie)) as TmdbMovie);
           break;
       }
     }
@@ -127,44 +125,44 @@ class _$Movie extends Movie {
   @override
   final String id;
   @override
-  final String title;
+  final String name;
   @override
   final int tmdbMovieId;
   @override
   final bool followed;
   @override
-  final String description;
+  final String overview;
   @override
-  final String posterUrl;
+  final String posterPath;
   @override
   final int jokeCount;
   @override
-  final DateTime releaseDate;
+  final DateTime firstAirDate;
   @override
   final int followerCount;
   @override
-  final TmdbMovieDetails tmdbDetails;
+  final TmdbMovie tmdbDetails;
 
   factory _$Movie([void updates(MovieBuilder b)]) =>
       (new MovieBuilder()..update(updates)).build();
 
   _$Movie._(
       {this.id,
-      this.title,
+      this.name,
       this.tmdbMovieId,
       this.followed,
-      this.description,
-      this.posterUrl,
+      this.overview,
+      this.posterPath,
       this.jokeCount,
-      this.releaseDate,
+      this.firstAirDate,
       this.followerCount,
       this.tmdbDetails})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Movie', 'id');
     }
-    if (title == null) {
-      throw new BuiltValueNullFieldError('Movie', 'title');
+    if (name == null) {
+      throw new BuiltValueNullFieldError('Movie', 'name');
     }
     if (tmdbMovieId == null) {
       throw new BuiltValueNullFieldError('Movie', 'tmdbMovieId');
@@ -172,8 +170,8 @@ class _$Movie extends Movie {
     if (jokeCount == null) {
       throw new BuiltValueNullFieldError('Movie', 'jokeCount');
     }
-    if (releaseDate == null) {
-      throw new BuiltValueNullFieldError('Movie', 'releaseDate');
+    if (firstAirDate == null) {
+      throw new BuiltValueNullFieldError('Movie', 'firstAirDate');
     }
     if (followerCount == null) {
       throw new BuiltValueNullFieldError('Movie', 'followerCount');
@@ -192,13 +190,13 @@ class _$Movie extends Movie {
     if (identical(other, this)) return true;
     return other is Movie &&
         id == other.id &&
-        title == other.title &&
+        name == other.name &&
         tmdbMovieId == other.tmdbMovieId &&
         followed == other.followed &&
-        description == other.description &&
-        posterUrl == other.posterUrl &&
+        overview == other.overview &&
+        posterPath == other.posterPath &&
         jokeCount == other.jokeCount &&
-        releaseDate == other.releaseDate &&
+        firstAirDate == other.firstAirDate &&
         followerCount == other.followerCount &&
         tmdbDetails == other.tmdbDetails;
   }
@@ -212,13 +210,13 @@ class _$Movie extends Movie {
                     $jc(
                         $jc(
                             $jc(
-                                $jc($jc($jc(0, id.hashCode), title.hashCode),
+                                $jc($jc($jc(0, id.hashCode), name.hashCode),
                                     tmdbMovieId.hashCode),
                                 followed.hashCode),
-                            description.hashCode),
-                        posterUrl.hashCode),
+                            overview.hashCode),
+                        posterPath.hashCode),
                     jokeCount.hashCode),
-                releaseDate.hashCode),
+                firstAirDate.hashCode),
             followerCount.hashCode),
         tmdbDetails.hashCode));
   }
@@ -227,13 +225,13 @@ class _$Movie extends Movie {
   String toString() {
     return (newBuiltValueToStringHelper('Movie')
           ..add('id', id)
-          ..add('title', title)
+          ..add('name', name)
           ..add('tmdbMovieId', tmdbMovieId)
           ..add('followed', followed)
-          ..add('description', description)
-          ..add('posterUrl', posterUrl)
+          ..add('overview', overview)
+          ..add('posterPath', posterPath)
           ..add('jokeCount', jokeCount)
-          ..add('releaseDate', releaseDate)
+          ..add('firstAirDate', firstAirDate)
           ..add('followerCount', followerCount)
           ..add('tmdbDetails', tmdbDetails))
         .toString();
@@ -247,9 +245,9 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
   String get id => _$this._id;
   set id(String id) => _$this._id = id;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String _name;
+  String get name => _$this._name;
+  set name(String name) => _$this._name = name;
 
   int _tmdbMovieId;
   int get tmdbMovieId => _$this._tmdbMovieId;
@@ -259,30 +257,31 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
   bool get followed => _$this._followed;
   set followed(bool followed) => _$this._followed = followed;
 
-  String _description;
-  String get description => _$this._description;
-  set description(String description) => _$this._description = description;
+  String _overview;
+  String get overview => _$this._overview;
+  set overview(String overview) => _$this._overview = overview;
 
-  String _posterUrl;
-  String get posterUrl => _$this._posterUrl;
-  set posterUrl(String posterUrl) => _$this._posterUrl = posterUrl;
+  String _posterPath;
+  String get posterPath => _$this._posterPath;
+  set posterPath(String posterPath) => _$this._posterPath = posterPath;
 
   int _jokeCount;
   int get jokeCount => _$this._jokeCount;
   set jokeCount(int jokeCount) => _$this._jokeCount = jokeCount;
 
-  DateTime _releaseDate;
-  DateTime get releaseDate => _$this._releaseDate;
-  set releaseDate(DateTime releaseDate) => _$this._releaseDate = releaseDate;
+  DateTime _firstAirDate;
+  DateTime get firstAirDate => _$this._firstAirDate;
+  set firstAirDate(DateTime firstAirDate) =>
+      _$this._firstAirDate = firstAirDate;
 
   int _followerCount;
   int get followerCount => _$this._followerCount;
   set followerCount(int followerCount) => _$this._followerCount = followerCount;
 
-  TmdbMovieDetailsBuilder _tmdbDetails;
-  TmdbMovieDetailsBuilder get tmdbDetails =>
-      _$this._tmdbDetails ??= new TmdbMovieDetailsBuilder();
-  set tmdbDetails(TmdbMovieDetailsBuilder tmdbDetails) =>
+  TmdbMovieBuilder _tmdbDetails;
+  TmdbMovieBuilder get tmdbDetails =>
+      _$this._tmdbDetails ??= new TmdbMovieBuilder();
+  set tmdbDetails(TmdbMovieBuilder tmdbDetails) =>
       _$this._tmdbDetails = tmdbDetails;
 
   MovieBuilder();
@@ -290,13 +289,13 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
   MovieBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
-      _title = _$v.title;
+      _name = _$v.name;
       _tmdbMovieId = _$v.tmdbMovieId;
       _followed = _$v.followed;
-      _description = _$v.description;
-      _posterUrl = _$v.posterUrl;
+      _overview = _$v.overview;
+      _posterPath = _$v.posterPath;
       _jokeCount = _$v.jokeCount;
-      _releaseDate = _$v.releaseDate;
+      _firstAirDate = _$v.firstAirDate;
       _followerCount = _$v.followerCount;
       _tmdbDetails = _$v.tmdbDetails?.toBuilder();
       _$v = null;
@@ -324,13 +323,13 @@ class MovieBuilder implements Builder<Movie, MovieBuilder> {
       _$result = _$v ??
           new _$Movie._(
               id: id,
-              title: title,
+              name: name,
               tmdbMovieId: tmdbMovieId,
               followed: followed,
-              description: description,
-              posterUrl: posterUrl,
+              overview: overview,
+              posterPath: posterPath,
               jokeCount: jokeCount,
-              releaseDate: releaseDate,
+              firstAirDate: firstAirDate,
               followerCount: followerCount,
               tmdbDetails: _tmdbDetails?.build());
     } catch (_) {

@@ -21,14 +21,15 @@ class _$TmdbMovieCastSerializer implements StructuredSerializer<TmdbMovieCast> {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
-      'cast_id',
-      serializers.serialize(object.castId, specifiedType: const FullType(int)),
-      'character',
-      serializers.serialize(object.character,
-          specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
+    if (object.character != null) {
+      result
+        ..add('character')
+        ..add(serializers.serialize(object.character,
+            specifiedType: const FullType(String)));
+    }
     if (object.profilePath != null) {
       result
         ..add('profile_path')
@@ -54,10 +55,6 @@ class _$TmdbMovieCastSerializer implements StructuredSerializer<TmdbMovieCast> {
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'cast_id':
-          result.castId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
         case 'character':
           result.character = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -81,8 +78,6 @@ class _$TmdbMovieCast extends TmdbMovieCast {
   @override
   final int id;
   @override
-  final int castId;
-  @override
   final String character;
   @override
   final String name;
@@ -92,17 +87,10 @@ class _$TmdbMovieCast extends TmdbMovieCast {
   factory _$TmdbMovieCast([void updates(TmdbMovieCastBuilder b)]) =>
       (new TmdbMovieCastBuilder()..update(updates)).build();
 
-  _$TmdbMovieCast._(
-      {this.id, this.castId, this.character, this.name, this.profilePath})
+  _$TmdbMovieCast._({this.id, this.character, this.name, this.profilePath})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('TmdbMovieCast', 'id');
-    }
-    if (castId == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieCast', 'castId');
-    }
-    if (character == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieCast', 'character');
     }
     if (name == null) {
       throw new BuiltValueNullFieldError('TmdbMovieCast', 'name');
@@ -121,7 +109,6 @@ class _$TmdbMovieCast extends TmdbMovieCast {
     if (identical(other, this)) return true;
     return other is TmdbMovieCast &&
         id == other.id &&
-        castId == other.castId &&
         character == other.character &&
         name == other.name &&
         profilePath == other.profilePath;
@@ -130,8 +117,7 @@ class _$TmdbMovieCast extends TmdbMovieCast {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), castId.hashCode), character.hashCode),
-            name.hashCode),
+        $jc($jc($jc(0, id.hashCode), character.hashCode), name.hashCode),
         profilePath.hashCode));
   }
 
@@ -139,7 +125,6 @@ class _$TmdbMovieCast extends TmdbMovieCast {
   String toString() {
     return (newBuiltValueToStringHelper('TmdbMovieCast')
           ..add('id', id)
-          ..add('castId', castId)
           ..add('character', character)
           ..add('name', name)
           ..add('profilePath', profilePath))
@@ -154,10 +139,6 @@ class TmdbMovieCastBuilder
   int _id;
   int get id => _$this._id;
   set id(int id) => _$this._id = id;
-
-  int _castId;
-  int get castId => _$this._castId;
-  set castId(int castId) => _$this._castId = castId;
 
   String _character;
   String get character => _$this._character;
@@ -176,7 +157,6 @@ class TmdbMovieCastBuilder
   TmdbMovieCastBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
-      _castId = _$v.castId;
       _character = _$v.character;
       _name = _$v.name;
       _profilePath = _$v.profilePath;
@@ -202,11 +182,7 @@ class TmdbMovieCastBuilder
   _$TmdbMovieCast build() {
     final _$result = _$v ??
         new _$TmdbMovieCast._(
-            id: id,
-            castId: castId,
-            character: character,
-            name: name,
-            profilePath: profilePath);
+            id: id, character: character, name: name, profilePath: profilePath);
     replace(_$result);
     return _$result;
   }

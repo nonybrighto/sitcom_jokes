@@ -27,38 +27,19 @@ class DelegateMock extends BlocDelegate<Joke>{
 void main(){
 
    JokeService jokeService;
-  List<Joke> sampleJokes;
+  Map<String, dynamic> sampleJokeDetails;
   setUp(() {
 
     jokeService = MockJokeService();
-    sampleJokes = [
-      Joke((b) => b
-        ..id = 'id$num'
-        ..title = 'user joke $num'
-        ..text = 'user Joke'
-        ..commentCount = 21
-        ..likeCount = 1
-        ..liked = false
-        ..favorited = false
-        ..dateAdded = DateTime(2003)
-        ..movie.id = 'movid $num'
-        ..movie.title = 'movie name $num'
-        ..movie.tmdbMovieId = 1
-        ..movie.description = 'description'
-         ..owner.update((u) => u
-          ..id = '1 $num'
-          ..username = 'John $num'
-          ..photoUrl = 'the_url'
-          ..jokeCount = 10
-          ..followed =false
-          ..following =true
-          ..followerCount = 25
-          ..followingCount = 22)),
+    sampleJokeDetails = {
+              'imageToUpload': '_imageToUpload',
+              'tmdbMovieId': 1,
+              'title': '_titleController.text',
+              'text': '_textController.text',
+          };
 
-    ];
-
-    when(jokeService.addJoke(joke:anyNamed('joke'), imageToUpload: anyNamed('imageToUpload')))
-        .thenAnswer((_) async => sampleJokes[0]);
+    // when(jokeService.addJoke(jokeUploadDetails:anyNamed('jokeUploadDetails')))
+    //     .thenAnswer((_) async => sampleJokeDetails);
   });
 
 
@@ -68,24 +49,24 @@ void main(){
     DelegateMock delegateMock = new DelegateMock();
     JokeAddBloc jokeAddBloc = JokeAddBloc(jokeService: jokeService, delegate: delegateMock);
 
-    jokeAddBloc.addJoke(sampleJokes[0], null);
+    jokeAddBloc.addJoke(sampleJokeDetails);
     expect(jokeAddBloc.loadState, emitsInOrder([loaded, loading, loaded]));
     await Future.delayed(Duration(seconds: 3));
-    verify(jokeService.addJoke(joke:anyNamed('joke'), imageToUpload: anyNamed('imageToUpload')));
+    verify(jokeService.addJoke(jokeUploadDetails:anyNamed('jokeUploadDetails')));
   });
 
   test('expect to return error when joke add fails', ()async{
 
-    when(jokeService.addJoke(joke:anyNamed('joke'), imageToUpload: anyNamed('imageToUpload')))
+    when(jokeService.addJoke(jokeUploadDetails:anyNamed('jokeUploadDetails')))
         .thenAnswer((_) async =>  Future.error('error occured'));
 
     DelegateMock delegateMock = new DelegateMock();
     JokeAddBloc jokeAddBloc = JokeAddBloc(jokeService: jokeService, delegate: delegateMock);
 
-    jokeAddBloc.addJoke(sampleJokes[0], null);
+    jokeAddBloc.addJoke(sampleJokeDetails);
     expect(jokeAddBloc.loadState, emitsInOrder([loaded, loading, loadError]));
     await Future.delayed(Duration(seconds: 3));
     expect(errorMessage, 'error occured');
-    verify(jokeService.addJoke(joke:anyNamed('joke'), imageToUpload: anyNamed('imageToUpload')));
+    verify(jokeService.addJoke(jokeUploadDetails:anyNamed('jokeUploadDetails')));
   });
 }

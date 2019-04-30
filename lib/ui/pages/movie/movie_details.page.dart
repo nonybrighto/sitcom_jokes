@@ -65,14 +65,14 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     expandedHeight: 256.0,
                     pinned: true,
                     flexibleSpace: new FlexibleSpaceBar(
-                      title: Text(movie.title),
+                      title: Text(movie.name),
                       centerTitle: true,
                       background: (movie.hasFullDetails())
                           ? Image.network(
                               movie.tmdbDetails.getBackdropUrl(),
                               fit: BoxFit.cover,
                             )
-                          : _buildBackDropPlaceHolder(movie.posterUrl),
+                          : _buildBackDropPlaceHolder(movie.posterPath),
                     ),
                   ),
                   SliverList(
@@ -161,7 +161,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             _buildPointDetail(
                 'Release Date',
                 DateFormatter.dateToString(
-                    movie.releaseDate, DateFormatPattern.wordDate)),
+                    movie.firstAirDate, DateFormatPattern.wordDate)),
             _buildPointDetail(
                 'Vote average',
                 (movie.hasFullDetails())

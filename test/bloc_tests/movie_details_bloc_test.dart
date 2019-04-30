@@ -18,22 +18,30 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
           ..id = 'id1'
-          ..title = 'name ssnum'
+          ..name = 'name ssnum'
           ..tmdbMovieId = 1
           ..followed = true
-          ..description = 'desc'
+          ..followerCount= 5
+          ..overview = 'desc'
+          ..jokeCount = 5
+          ..firstAirDate = DateTime(2000,5,5)
         );
     Movie fullMovieDetails = Movie((b) => b
       ..id = 'id1'
-      ..title = 'name ssnum'
+      ..name = 'name ssnum'
       ..tmdbMovieId = 1
       ..followed = true
-      ..description = 'desc'
+      ..followerCount= 5
+      ..overview = 'desc'
+      ..jokeCount = 5
+      ..firstAirDate = DateTime(2000,5,5)
       ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.name = 'peter'
       ..tmdbDetails.backdropPath = ''
       ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.firstAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.lastAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.numberOfSeasons = 5
       ..tmdbDetails.voteAverage = 8.9
       );
 
@@ -52,15 +60,21 @@ void main() {
 
     Movie movieToGet = Movie((b) => b
       ..id = 'id1'
-      ..title = 'name ssnum'
+      ..name = 'name ssnum'
       ..tmdbMovieId = 1
       ..followed = true
-      ..description = 'desc'
+      ..followerCount= 5
+      ..overview = 'desc'
+      ..jokeCount = 5
+      ..firstAirDate = DateTime(2000,5,5)
       ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.name = 'peter'
       ..tmdbDetails.backdropPath = ''
       ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.firstAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.lastAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.numberOfSeasons = 5
+      ..tmdbDetails.numberOfSeasons = 5
       ..tmdbDetails.voteAverage = 8.9
       );
 
@@ -74,133 +88,4 @@ void main() {
     verifyNever(movieService.getMovie(movieToGet));
   });
 
-  test('swap moviefollow state when follow changed', () async {
-    MovieService movieService = MockMovieService();
-
-    Movie movieToGet = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = true
-      ..description = 'desc');
-    Movie fullMovieDetails = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = true
-      ..description = 'desc'
-      ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
-      ..tmdbDetails.backdropPath = ''
-      ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
-      ..tmdbDetails.voteAverage = 8.9
-      );
-    Movie fullMovieDetailsSwappedFav = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'
-      ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
-      ..tmdbDetails.backdropPath = ''
-      ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
-      ..tmdbDetails.voteAverage = 8.9
-      
-      );
-
-    when(movieService.getMovie(movieToGet))
-        .thenAnswer((_) async => fullMovieDetails);
-    when(movieService.changeMovieFollow(
-            movie: anyNamed('movie'),
-            follow: anyNamed('follow')))
-        .thenAnswer((_) async => null);
-
-    MovieDetailsBloc movieDetialsBloc =
-        MovieDetailsBloc(movieService: movieService, viewedMovie: movieToGet);
-
-    await Future.delayed(Duration(seconds: 2));
-
-    expect(
-        movieDetialsBloc.movie,
-        emitsInOrder(
-            [
-             // movieToGet,  // Don't know why, but each Future.delay prevent one item from being emmited in BehaviorSubject. works with streamController
-              fullMovieDetails, 
-              fullMovieDetailsSwappedFav]));
-    await Future.delayed(Duration(seconds: 2));
-    verify(movieService.changeMovieFollow(
-        movie: anyNamed('movie'),
-        follow: anyNamed('follow')));
-  });
-
-  test('revert swap if error in service and call error callback', () async {
-    MovieService movieService = MockMovieService();
-
-    Movie movieToGet = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = true
-      ..description = 'desc');
-    Movie fullMovieDetails = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = true
-      ..description = 'desc'
-      ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
-      ..tmdbDetails.backdropPath = ''
-      ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
-      ..tmdbDetails.voteAverage = 8.9
-      );
-    Movie fullMovieDetailsSwappedFav = Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name ssnum'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'
-      ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
-      ..tmdbDetails.backdropPath = ''
-      ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
-      ..tmdbDetails.voteAverage = 8.9
-      );
-
-    when(movieService.getMovie(movieToGet))
-        .thenAnswer((_) async => fullMovieDetails);
-    when(movieService.changeMovieFollow(
-            movie: anyNamed('movie'),
-            follow: anyNamed('follow')))
-        .thenAnswer((_) => Future.error(Error()));
-
-    MovieDetailsBloc movieDetialsBloc =
-        MovieDetailsBloc(movieService: movieService, viewedMovie: movieToGet);
-
-    await Future.delayed(Duration(seconds: 2));
-
-    bool errorCallbackCalled = false;
-    
-
-    expect(
-        movieDetialsBloc.movie,
-        emitsInOrder([
-          //movieToGet,
-          fullMovieDetails,
-          fullMovieDetailsSwappedFav,
-          fullMovieDetails
-        ]));
-   
-    await Future.delayed(Duration(seconds: 2));
-    verify(movieService.changeMovieFollow(
-        movie: anyNamed('movie'),
-        follow: anyNamed('follow')));
-
-    expect(errorCallbackCalled, true);
-  });
 }

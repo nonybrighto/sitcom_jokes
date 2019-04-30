@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/models/bloc_delegate.dart';
@@ -19,16 +17,16 @@ class JokeAddBloc extends BlocBase{
 
   Stream<LoadState> get loadState => _loadStateController.stream;
 
-  void Function(Joke, File) get addJoke => (joke, imageToUpload) => _addJokeController.sink.add({'joke': joke, 'imageToUpload':imageToUpload});
+  void Function(Map<String, dynamic>) get addJoke => (jokeUploadDetails) => _addJokeController.sink.add(jokeUploadDetails);
  
   JokeAddBloc({this.jokeService, this.delegate}){
 
     _loadStateController.sink.add(Loaded());
 
-        _addJokeController.stream.listen((uploadDetails) async{
+        _addJokeController.stream.listen((jokeUploadDetails) async{
             try{
                 _loadStateController.sink.add(Loading());
-                await  jokeService.addJoke(joke:uploadDetails['joke'], imageToUpload:uploadDetails['imageToUpload']);
+                await  jokeService.addJoke(jokeUploadDetails: jokeUploadDetails);
                 _loadStateController.sink.add(Loaded());
                 delegate.success(null);
             }catch(err){

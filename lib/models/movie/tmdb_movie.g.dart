@@ -1,43 +1,55 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tmdb_movie_details.dart';
+part of 'tmdb_movie.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<TmdbMovieDetails> _$tmdbMovieDetailsSerializer =
-    new _$TmdbMovieDetailsSerializer();
+Serializer<TmdbMovie> _$tmdbMovieSerializer = new _$TmdbMovieSerializer();
 
-class _$TmdbMovieDetailsSerializer
-    implements StructuredSerializer<TmdbMovieDetails> {
+class _$TmdbMovieSerializer implements StructuredSerializer<TmdbMovie> {
   @override
-  final Iterable<Type> types = const [TmdbMovieDetails, _$TmdbMovieDetails];
+  final Iterable<Type> types = const [TmdbMovie, _$TmdbMovie];
   @override
-  final String wireName = 'TmdbMovieDetails';
+  final String wireName = 'TmdbMovie';
 
   @override
-  Iterable serialize(Serializers serializers, TmdbMovieDetails object,
+  Iterable serialize(Serializers serializers, TmdbMovie object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
-      'title',
-      serializers.serialize(object.title,
-          specifiedType: const FullType(String)),
-      'backdrop_path',
-      serializers.serialize(object.backdropPath,
-          specifiedType: const FullType(String)),
+      'name',
+      serializers.serialize(object.name, specifiedType: const FullType(String)),
       'overview',
       serializers.serialize(object.overview,
           specifiedType: const FullType(String)),
-      'release_date',
-      serializers.serialize(object.releaseDate,
+      'first_air_date',
+      serializers.serialize(object.firstAirDate,
           specifiedType: const FullType(DateTime)),
       'vote_average',
       serializers.serialize(object.voteAverage,
           specifiedType: const FullType(double)),
     ];
+    if (object.backdropPath != null) {
+      result
+        ..add('backdrop_path')
+        ..add(serializers.serialize(object.backdropPath,
+            specifiedType: const FullType(String)));
+    }
+    if (object.lastAirDate != null) {
+      result
+        ..add('last_air_date')
+        ..add(serializers.serialize(object.lastAirDate,
+            specifiedType: const FullType(DateTime)));
+    }
+    if (object.numberOfSeasons != null) {
+      result
+        ..add('number_of_seasons')
+        ..add(serializers.serialize(object.numberOfSeasons,
+            specifiedType: const FullType(int)));
+    }
     if (object.genres != null) {
       result
         ..add('genres')
@@ -56,9 +68,9 @@ class _$TmdbMovieDetailsSerializer
   }
 
   @override
-  TmdbMovieDetails deserialize(Serializers serializers, Iterable serialized,
+  TmdbMovie deserialize(Serializers serializers, Iterable serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new TmdbMovieDetailsBuilder();
+    final result = new TmdbMovieBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -70,8 +82,8 @@ class _$TmdbMovieDetailsSerializer
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'title':
-          result.title = serializers.deserialize(value,
+        case 'name':
+          result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'backdrop_path':
@@ -82,13 +94,21 @@ class _$TmdbMovieDetailsSerializer
           result.overview = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'release_date':
-          result.releaseDate = serializers.deserialize(value,
+        case 'first_air_date':
+          result.firstAirDate = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
+          break;
+        case 'last_air_date':
+          result.lastAirDate = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'vote_average':
           result.voteAverage = serializers.deserialize(value,
               specifiedType: const FullType(double)) as double;
+          break;
+        case 'number_of_seasons':
+          result.numberOfSeasons = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
           break;
         case 'genres':
           result.genres.replace(serializers.deserialize(value,
@@ -108,75 +128,79 @@ class _$TmdbMovieDetailsSerializer
   }
 }
 
-class _$TmdbMovieDetails extends TmdbMovieDetails {
+class _$TmdbMovie extends TmdbMovie {
   @override
   final int id;
   @override
-  final String title;
+  final String name;
   @override
   final String backdropPath;
   @override
   final String overview;
   @override
-  final DateTime releaseDate;
+  final DateTime firstAirDate;
+  @override
+  final DateTime lastAirDate;
   @override
   final double voteAverage;
+  @override
+  final int numberOfSeasons;
   @override
   final BuiltList<TmdbMovieGenre> genres;
   @override
   final TmdbMovieCredit credits;
 
-  factory _$TmdbMovieDetails([void updates(TmdbMovieDetailsBuilder b)]) =>
-      (new TmdbMovieDetailsBuilder()..update(updates)).build();
+  factory _$TmdbMovie([void updates(TmdbMovieBuilder b)]) =>
+      (new TmdbMovieBuilder()..update(updates)).build();
 
-  _$TmdbMovieDetails._(
+  _$TmdbMovie._(
       {this.id,
-      this.title,
+      this.name,
       this.backdropPath,
       this.overview,
-      this.releaseDate,
+      this.firstAirDate,
+      this.lastAirDate,
       this.voteAverage,
+      this.numberOfSeasons,
       this.genres,
       this.credits})
       : super._() {
     if (id == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'id');
+      throw new BuiltValueNullFieldError('TmdbMovie', 'id');
     }
-    if (title == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'title');
-    }
-    if (backdropPath == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'backdropPath');
+    if (name == null) {
+      throw new BuiltValueNullFieldError('TmdbMovie', 'name');
     }
     if (overview == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'overview');
+      throw new BuiltValueNullFieldError('TmdbMovie', 'overview');
     }
-    if (releaseDate == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'releaseDate');
+    if (firstAirDate == null) {
+      throw new BuiltValueNullFieldError('TmdbMovie', 'firstAirDate');
     }
     if (voteAverage == null) {
-      throw new BuiltValueNullFieldError('TmdbMovieDetails', 'voteAverage');
+      throw new BuiltValueNullFieldError('TmdbMovie', 'voteAverage');
     }
   }
 
   @override
-  TmdbMovieDetails rebuild(void updates(TmdbMovieDetailsBuilder b)) =>
+  TmdbMovie rebuild(void updates(TmdbMovieBuilder b)) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TmdbMovieDetailsBuilder toBuilder() =>
-      new TmdbMovieDetailsBuilder()..replace(this);
+  TmdbMovieBuilder toBuilder() => new TmdbMovieBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is TmdbMovieDetails &&
+    return other is TmdbMovie &&
         id == other.id &&
-        title == other.title &&
+        name == other.name &&
         backdropPath == other.backdropPath &&
         overview == other.overview &&
-        releaseDate == other.releaseDate &&
+        firstAirDate == other.firstAirDate &&
+        lastAirDate == other.lastAirDate &&
         voteAverage == other.voteAverage &&
+        numberOfSeasons == other.numberOfSeasons &&
         genres == other.genres &&
         credits == other.credits;
   }
@@ -188,41 +212,46 @@ class _$TmdbMovieDetails extends TmdbMovieDetails {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, id.hashCode), title.hashCode),
-                            backdropPath.hashCode),
-                        overview.hashCode),
-                    releaseDate.hashCode),
-                voteAverage.hashCode),
+                        $jc(
+                            $jc(
+                                $jc($jc($jc(0, id.hashCode), name.hashCode),
+                                    backdropPath.hashCode),
+                                overview.hashCode),
+                            firstAirDate.hashCode),
+                        lastAirDate.hashCode),
+                    voteAverage.hashCode),
+                numberOfSeasons.hashCode),
             genres.hashCode),
         credits.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('TmdbMovieDetails')
+    return (newBuiltValueToStringHelper('TmdbMovie')
           ..add('id', id)
-          ..add('title', title)
+          ..add('name', name)
           ..add('backdropPath', backdropPath)
           ..add('overview', overview)
-          ..add('releaseDate', releaseDate)
+          ..add('firstAirDate', firstAirDate)
+          ..add('lastAirDate', lastAirDate)
           ..add('voteAverage', voteAverage)
+          ..add('numberOfSeasons', numberOfSeasons)
           ..add('genres', genres)
           ..add('credits', credits))
         .toString();
   }
 }
 
-class TmdbMovieDetailsBuilder
-    implements Builder<TmdbMovieDetails, TmdbMovieDetailsBuilder> {
-  _$TmdbMovieDetails _$v;
+class TmdbMovieBuilder implements Builder<TmdbMovie, TmdbMovieBuilder> {
+  _$TmdbMovie _$v;
 
   int _id;
   int get id => _$this._id;
   set id(int id) => _$this._id = id;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String _name;
+  String get name => _$this._name;
+  set name(String name) => _$this._name = name;
 
   String _backdropPath;
   String get backdropPath => _$this._backdropPath;
@@ -232,13 +261,23 @@ class TmdbMovieDetailsBuilder
   String get overview => _$this._overview;
   set overview(String overview) => _$this._overview = overview;
 
-  DateTime _releaseDate;
-  DateTime get releaseDate => _$this._releaseDate;
-  set releaseDate(DateTime releaseDate) => _$this._releaseDate = releaseDate;
+  DateTime _firstAirDate;
+  DateTime get firstAirDate => _$this._firstAirDate;
+  set firstAirDate(DateTime firstAirDate) =>
+      _$this._firstAirDate = firstAirDate;
+
+  DateTime _lastAirDate;
+  DateTime get lastAirDate => _$this._lastAirDate;
+  set lastAirDate(DateTime lastAirDate) => _$this._lastAirDate = lastAirDate;
 
   double _voteAverage;
   double get voteAverage => _$this._voteAverage;
   set voteAverage(double voteAverage) => _$this._voteAverage = voteAverage;
+
+  int _numberOfSeasons;
+  int get numberOfSeasons => _$this._numberOfSeasons;
+  set numberOfSeasons(int numberOfSeasons) =>
+      _$this._numberOfSeasons = numberOfSeasons;
 
   ListBuilder<TmdbMovieGenre> _genres;
   ListBuilder<TmdbMovieGenre> get genres =>
@@ -250,16 +289,18 @@ class TmdbMovieDetailsBuilder
       _$this._credits ??= new TmdbMovieCreditBuilder();
   set credits(TmdbMovieCreditBuilder credits) => _$this._credits = credits;
 
-  TmdbMovieDetailsBuilder();
+  TmdbMovieBuilder();
 
-  TmdbMovieDetailsBuilder get _$this {
+  TmdbMovieBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
-      _title = _$v.title;
+      _name = _$v.name;
       _backdropPath = _$v.backdropPath;
       _overview = _$v.overview;
-      _releaseDate = _$v.releaseDate;
+      _firstAirDate = _$v.firstAirDate;
+      _lastAirDate = _$v.lastAirDate;
       _voteAverage = _$v.voteAverage;
+      _numberOfSeasons = _$v.numberOfSeasons;
       _genres = _$v.genres?.toBuilder();
       _credits = _$v.credits?.toBuilder();
       _$v = null;
@@ -268,30 +309,32 @@ class TmdbMovieDetailsBuilder
   }
 
   @override
-  void replace(TmdbMovieDetails other) {
+  void replace(TmdbMovie other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$TmdbMovieDetails;
+    _$v = other as _$TmdbMovie;
   }
 
   @override
-  void update(void updates(TmdbMovieDetailsBuilder b)) {
+  void update(void updates(TmdbMovieBuilder b)) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$TmdbMovieDetails build() {
-    _$TmdbMovieDetails _$result;
+  _$TmdbMovie build() {
+    _$TmdbMovie _$result;
     try {
       _$result = _$v ??
-          new _$TmdbMovieDetails._(
+          new _$TmdbMovie._(
               id: id,
-              title: title,
+              name: name,
               backdropPath: backdropPath,
               overview: overview,
-              releaseDate: releaseDate,
+              firstAirDate: firstAirDate,
+              lastAirDate: lastAirDate,
               voteAverage: voteAverage,
+              numberOfSeasons: numberOfSeasons,
               genres: _genres?.build(),
               credits: _credits?.build());
     } catch (_) {
@@ -303,7 +346,7 @@ class TmdbMovieDetailsBuilder
         _credits?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'TmdbMovieDetails', _$failedField, e.toString());
+            'TmdbMovie', _$failedField, e.toString());
       }
       rethrow;
     }

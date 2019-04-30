@@ -32,12 +32,12 @@ void main() {
         ..dateAdded = DateTime(2003)
         ..movie.update((b) => b
       ..id = 'id1'
-      ..title = 'name ssnum'
+      ..name = 'name ssnum'
       ..tmdbMovieId = 1
       ..followed = true
-      ..description = 'desc'
+      ..overview = 'desc'
       ..jokeCount = 10
-      ..releaseDate = DateTime(2000,10,10)
+      ..firstAirDate = DateTime(2000,10,10)
       ..followerCount = 10
       )
          ..owner.update((u) => u
@@ -160,12 +160,12 @@ void main() {
        
     JokeListBloc( jokeService: jokeService, fetchType: JokeListFetchType.movieJokes, movie: Movie((b) => b
       ..id = 'id1'
-      ..title = 'name ssnum'
+      ..name = 'name ssnum'
       ..tmdbMovieId = 1
       ..followed = true
-      ..description = 'desc'
+      ..overview = 'desc'
       ..jokeCount = 10
-      ..releaseDate = DateTime(2000,10,10)
+      ..firstAirDate = DateTime(2000,10,10)
       ..followerCount = 10
       ));
 

@@ -23,18 +23,20 @@ void main(){
       sampleMovies = BuiltList([
         Movie((b) => b
       ..id = 'id1'
-      ..title = 'name ssnum'
+      ..name = 'name ssnum'
       ..tmdbMovieId = 1
       ..followed = true
-      ..description = 'desc'
+      ..overview = 'desc'
       ..jokeCount = 10
-      ..releaseDate = DateTime(2000,10,10)
+      ..firstAirDate = DateTime(2000,10,10)
       ..followerCount = 10
       ..tmdbDetails.id = 1
-      ..tmdbDetails.title = 'peter'
+      ..tmdbDetails.name = 'peter'
       ..tmdbDetails.backdropPath = ''
       ..tmdbDetails.overview = 'ddd'
-      ..tmdbDetails.releaseDate = DateTime(2000,10,10)
+      ..tmdbDetails.firstAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.lastAirDate = DateTime(2000,10,10)
+      ..tmdbDetails.numberOfSeasons = 5
       ..tmdbDetails.voteAverage = 8.9
       )
       ]);
@@ -69,15 +71,9 @@ void main(){
       MovieListBloc movieListBloc =MovieListBloc(movieService: movieService);
 
       await Future.delayed(Duration(seconds: 5));
-     
-       Movie movieUpdate =  Movie((b) => b
-      ..id = 'id1'
-      ..title = 'name  new'
-      ..tmdbMovieId = 1
-      ..description = 'desc new');
 
-      movieListBloc.updateItem(movieUpdate);
-      expect(movieListBloc.items, emits([movieUpdate]));
+      movieListBloc.updateItem(sampleMovies[0]);
+      expect(movieListBloc.items, emits([sampleMovies[0]]));
     
   });
 }

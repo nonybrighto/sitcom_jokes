@@ -5,7 +5,8 @@ import 'package:sitcom_joke/constants/constants.dart';
 import 'package:sitcom_joke/constants/secrets.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/movie/movie_list_response.dart';
-import 'package:sitcom_joke/models/movie/tmdb_movie_details.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie.dart';
+import 'package:sitcom_joke/models/movie/tmdb_movie_list_response.dart';
 import 'package:sitcom_joke/services/auth_header.dart';
 
 class MovieService{
@@ -14,7 +15,8 @@ class MovieService{
   Dio dio = Dio();
 
   final String moviesUrl = kAppApiUrl + '/movies/';
-  final String tmdbmovieUrl =kTmdbApiUrl + '/movie/';
+  final String tmdbmovieUrl =kTmdbApiUrl + '/tv/';
+  final String tmdbSearchMovieUrl =kTmdbApiUrl + '/search/tv/';
 
   Future<MovieListResponse> getMovies({int page}) async{
 
@@ -38,7 +40,7 @@ class MovieService{
 
       Options authHeaderOption = await getAuthHeaderOption();
       List<Response> response = await Future.wait([dio.get(tmdbMovieUrl), dio.get(moviesUrl+'${movie.id}', options: authHeaderOption)]);
-      TmdbMovieDetails tmdbMovieDetails = TmdbMovieDetails.fromJson(response[0].data);
+      TmdbMovie tmdbMovieDetails = TmdbMovie.fromJson(response[0].data);
       Movie gottenMovie =  Movie.fromJson(response[1].data);
       return gottenMovie.rebuild((b) => b.tmdbDetails = tmdbMovieDetails.toBuilder());
 
@@ -66,45 +68,30 @@ class MovieService{
               : 'Error Connectiing to server');
         }
   }
+  
+  Future<TmdbMovieListResponse> searchTmdbMovie({String searchString, int page = 1}) async{
 
-  Future<List<Movie>> searchMovies(String searchText) async{
+    try {
+      Options authHeaderOption = await getAuthHeaderOption();
+      Response response = await dio.get(tmdbSearchMovieUrl + '?api_key=$kTmdbApiKey&query=$searchString&page=$page', options: authHeaderOption);
+        return TmdbMovieListResponse.fromJson(response.data);
 
-      List<Movie> movies = [
-        Movie((b) => b
-      ..id = 'abcde'
-      ..title = 'name $num'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'),
-      Movie((b) => b
-      ..id = 'abcde'
-      ..title = 'namew $num'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'),
-      Movie((b) => b
-      ..id = 'abcde'
-      ..title = 'namew $num'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'),
-      Movie((b) => b
-      ..id = 'abcde'
-      ..title = 'a $num'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'),
-      Movie((b) => b
-      ..id = 'abcde'
-      ..title = 'b $num'
-      ..tmdbMovieId = 1
-      ..followed = false
-      ..description = 'desc'),
-      ];
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+  }
 
+  Future<List<TmdbMovie>> searchTmdbMovieAsList({String searchString, int page = 1}) async{
 
-      List<Movie> gotten = movies.where((movie) => movie.title.startsWith(searchText)).toList();
+    try{
+        TmdbMovieListResponse searchedMovie = await searchTmdbMovie(searchString:searchString, page:page);
+        return searchedMovie.results.toList();
 
-        return gotten;
+    }catch(error){
+     throw Exception('Error while getting movie');
+    }
+
   }
 }

@@ -8,6 +8,7 @@ import 'package:sitcom_joke/models/joke_list_response.dart';
 import 'package:sitcom_joke/models/movie/movie.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/services/auth_header.dart';
+import 'package:path/path.dart';
 
 class JokeService {
   final String jokesUrl = kAppApiUrl + '/jokes/';
@@ -34,7 +35,6 @@ class JokeService {
       int page,}) async {
     try {
       Options authHeaderOption = await getAuthHeaderOption();
-      //TODO: Change the link to /popular
       Response response = await dio.get(jokesUrl + 'popular?page=$page', options: authHeaderOption);
       return JokeListResponse.fromJson(response.data);
     } on DioError catch (error) {
@@ -108,15 +108,17 @@ class JokeService {
     }
   }
 
-  Future<Joke> addJoke({Joke joke, File imageToUpload}) async {
+  Future<Joke> addJoke({Map<String, dynamic> jokeUploadDetails}) async {
     try {
       Options authHeaderOption = await getAuthHeaderOption();
 
+      File imageToUpload = jokeUploadDetails['imageToUpload'];
+      String fileName = (imageToUpload != null)? basename(imageToUpload.path):'';
       Map<String, dynamic> gottenData = {
-        'title': joke.title,
-        'movie': joke.movie.id,
-      }..addAll((imageToUpload != null)? {'image': UploadFileInfo(imageToUpload, "joke_image")}:{})
-      ..addAll((joke.text.isNotEmpty)? {'text': joke.text}:{});
+        'title': jokeUploadDetails['title'],
+        'tmdbMovieId': jokeUploadDetails['tmdbMovieId'],
+      }..addAll((imageToUpload != null)? {'image': UploadFileInfo(imageToUpload, fileName)}:{})
+      ..addAll(((jokeUploadDetails['text'] as String).isNotEmpty)? {'text': jokeUploadDetails['text']}:{});
 
       Map<String, dynamic> responseData = (imageToUpload == null)
           ? gottenData
