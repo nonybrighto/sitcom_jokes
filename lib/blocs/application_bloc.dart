@@ -1,46 +1,45 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
-import 'package:sitcom_joke/constants/constants.dart';
+import 'package:sitcom_joke/services/application_service.dart';
 
 
 class ApplicationBloc extends BlocBase{
 
+  ApplicationService applicationService;
 
-  final _appTitleController = StreamController<String>();
+  final _appThemeController = BehaviorSubject<AppThemeType>();
 
   //streams
-  Stream<String> get appTitle => _appTitleController.stream;
+  Stream<AppThemeType> get appTheme => _appThemeController.stream;
 
   //sinks
-  Function(String)  get changeAppTitle => (title) => _appTitleController.sink.add(title);
+  Function(AppThemeType)  get changeAppTheme => (appThemeType) => _appThemeController.sink.add(appThemeType);
   
 
-  ApplicationBloc(){
-    _appTitleController.sink.add(kAppName);
-
+  ApplicationBloc({this.applicationService}){
+    
+    _setStartupTheme();
+    
+    _appThemeController.stream.listen((AppThemeType appThemeType){
+          applicationService.setDefaultThemeType(appThemeType);
+    });
 
   }
+
+_setStartupTheme() async{
+  AppThemeType defaultThemeType = await  applicationService.getDefaultThemeType();
+  _appThemeController.sink.add(defaultThemeType);
+}
+
   @override
   void dispose() {
     print('dispose application bloc');
-    _appTitleController.close();
+    _appThemeController.close();
   }
 
 }
 
-//class ApplicationBloc extends BlocBase{
-//
-//  final _appTitle = StreamController<String>();
-//  Function(String)  get changeTitle => (title) => _appTitle.sink.add(title);
-//  Stream<String> get apptitle => _appTitle.stream;
-//
-//  ApplicationBloc(){
-//   _appTitle.sink.add('title');
-//  }
-//  @override
-//  void dispose() {
-//    _appTitle.close();
-//  }
-//
-//}
+
+enum AppThemeType{light, dark}
