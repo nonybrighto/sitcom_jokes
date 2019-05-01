@@ -12,6 +12,7 @@ abstract class ListBloc<T> extends BlocBase {
   final _loadStateController = BehaviorSubject<LoadState>();
   final _getItemsController = StreamController<Null>();
   final _updateItemController = StreamController<T>();
+  final _deleteItemController = StreamController<T>();
 
   //streams
   Stream<UnmodifiableListView<T>> get items => _itemsController.stream;
@@ -21,25 +22,33 @@ abstract class ListBloc<T> extends BlocBase {
   void Function() get getItems => () => _getItemsController.sink.add(null);
   void Function(T) get updateItem =>
       (item) => _updateItemController.sink.add(item);
+  void Function(T) get deleteItem =>
+      (item) => _deleteItemController.sink.add(item);
 
   ListBloc() {
-    _getItemsController.stream.listen((_) {
-      _fetchItemsFromSource();
-    });
-
-    _updateItemController.stream.listen((T item) {
-      _updateItem(item);
-    });
+    _getItemsController.stream.listen(_handleFetchItemsFromSource);
+    _updateItemController.stream.listen(_handleUpdateItem);
+    _deleteItemController.stream.listen(_handleDeleteItem);
   }
 
-  _updateItem(T updatedItem) {
+
+  _handleDeleteItem(T itemToDelete){
+
+      int indexToDelete = itemsCache.indexWhere(
+        (currentItem) => itemIdentificationCondition(currentItem, itemToDelete));
+        itemsCache.removeAt(indexToDelete);
+        _itemsController.sink.add(UnmodifiableListView<T>(itemsCache));
+
+  }
+
+  _handleUpdateItem(T updatedItem) {
     int indexToUpdate = itemsCache.indexWhere(
-        (currentItem) => itemUpdateCondition(currentItem, updatedItem));
+        (currentItem) => itemIdentificationCondition(currentItem, updatedItem));
     itemsCache[indexToUpdate] = updatedItem;
     _itemsController.sink.add(UnmodifiableListView<T>(itemsCache));
   }
 
-  _fetchItemsFromSource() async {
+  _handleFetchItemsFromSource(_) async {
     _loadStateController.sink
         .add((currentPage == 1) ? Loading() : LoadingMore());
 
@@ -87,16 +96,16 @@ abstract class ListBloc<T> extends BlocBase {
 
   Future<ListResponse> fetchFromServer();
 
-  bool itemUpdateCondition(T currentItem, T updatedItem);
+  bool itemIdentificationCondition(T currentItem, T newItem);
   String getEmptyResultMessage();
 
-  close() {
-    _loadStateController.close();
-    _itemsController.close();
-    _getItemsController.close();
-    _updateItemController.close();
-  }
-
   @override
-  void dispose() {}
+  void dispose() {
+        //TODO: remember to dispose super in subclasses later.
+       _loadStateController.close();
+      _itemsController.close();
+      _getItemsController.close();
+      _updateItemController.close();
+      _deleteItemController.close();
+  }
 }

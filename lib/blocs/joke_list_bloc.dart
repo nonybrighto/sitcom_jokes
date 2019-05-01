@@ -70,7 +70,7 @@ class JokeListBloc extends ListBloc<Joke>{
   }
 
   @override
-  bool itemUpdateCondition(Joke currentJoke, Joke updatedJoke) {
+  bool itemIdentificationCondition(Joke currentJoke, Joke updatedJoke) {
     return currentJoke.id == updatedJoke.id;
   }
 

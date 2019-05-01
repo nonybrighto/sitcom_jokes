@@ -16,8 +16,8 @@ class JokeControlBloc extends BlocBase {
 
   final _toggleJokeLikeController = StreamController<Null>();
   final _toggleJokeFavoriteController = StreamController<Null>();
-  final _saveJokeController = StreamController<Null>();
   final _shareJokeController = StreamController<Null>();
+  final _deleteJokeController = StreamController<Map<String, dynamic>>();
 
   void Function() get toggleJokeLike =>
       () => _toggleJokeLikeController.sink.add(null);
@@ -36,6 +36,8 @@ class JokeControlBloc extends BlocBase {
   void Function(Function(String)) get saveImageJoke => (saveCallback) =>
       _saveImageJokeController.sink.add({'saveCallback': saveCallback});
 
+  void Function(Function(String)) get deleteJoke => (deleteCallback) => _deleteJokeController.sink.add({'deleteCallback': deleteCallback});
+
   void Function() get shareJoke =>() => _shareJokeController.sink.add(null);
 
   //stream
@@ -45,10 +47,24 @@ class JokeControlBloc extends BlocBase {
   JokeControlBloc({this.jokeControlled, this.jokeListBloc, this.jokeService}) {
     _toggleJokeLikeController.stream.listen(_handleToggleJokeLike);
     _toggleJokeFavoriteController.stream.listen(_handleToggleJokeFavorite);
-    //_shareJokeController.stream.listen(_handleShareJoke);
     _saveTextJokeController.stream.listen(_handleSaveTextJoke);
     _saveImageJokeController.stream.listen(_handleSaveImageJoke);
     _shareJokeController.stream.listen(_handleShareJoke);
+    _deleteJokeController.stream.listen(_handleDeleteJoke);
+  }
+
+  _handleDeleteJoke(Map<String, dynamic> details) async{
+
+        Function(String) deleteCallback = details['deleteCallback']; 
+
+        try{
+            await jokeService.deleteJoke(joke: jokeControlled);
+            jokeListBloc.deleteItem(jokeControlled);
+            deleteCallback('Joke has been deleted!');
+        }catch(error){
+            deleteCallback('Error: Failed to delete joke!!!');
+        }
+    
   }
 
   _handleShareJoke(_){
@@ -147,11 +163,11 @@ class JokeControlBloc extends BlocBase {
     print('Joke control disposed for ${jokeControlled.title}');
     _toggleJokeLikeController.close();
     _toggleJokeFavoriteController.close();
-    _saveJokeController.close();
     _shareJokeController.close();
     _jokeSaveLoadStateController.close();
     _saveTextJokeController.close();
     _saveImageJokeController.close();
     _jokeShareLoadStateController.close();
+    _deleteJokeController.close();
   }
 }

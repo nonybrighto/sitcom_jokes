@@ -77,7 +77,7 @@ class UserListBloc extends ListBloc<User>{
   }
 
   @override
-  bool itemUpdateCondition(User currentUser, User updatedUser) {
+  bool itemIdentificationCondition(User currentUser, User updatedUser) {
     return currentUser.id == updatedUser.id;
   }
 

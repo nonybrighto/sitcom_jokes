@@ -34,7 +34,7 @@ class JokeCommentListBloc extends ListBloc<Comment>{
   }
 
   @override
-  bool itemUpdateCondition(Comment currentComment , Comment updatedComment) {
+  bool itemIdentificationCondition(Comment currentComment , Comment updatedComment) {
     return currentComment.id ==updatedComment.id;
   }
 

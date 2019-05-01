@@ -164,4 +164,16 @@ class JokeService {
           : 'Error Connectiing to server');
     }
   }
+
+  Future<bool> deleteJoke({Joke joke}) async {
+     try {
+      Options authHeaderOption = await getAuthHeaderOption();
+      await dio.delete(jokesUrl + '${joke.id}', options: authHeaderOption);
+      return true;
+    } on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }
+  }
 }

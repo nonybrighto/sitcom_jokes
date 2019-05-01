@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_control_bloc.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
+import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/navigation/router.dart';
 import 'package:sitcom_joke/services/joke_service.dart';
 import 'package:sitcom_joke/ui/widgets/joke/controls/joke_favorite_action_button.dart';
@@ -29,7 +31,7 @@ class JokeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _buildJokeHeader(context),
+          _buildJokeHeader(context, jokeControlBloc),
           _buildJokeContent(
               context: context, joke: joke, jokeListBloc: jokeListBloc),
           _buildJokeFooter(context, jokeControlBloc, joke)
@@ -38,7 +40,7 @@ class JokeCard extends StatelessWidget {
     );
   }
 
-  _buildJokeHeader(context) {
+  _buildJokeHeader(context, JokeControlBloc jokeControlBloc) {
     return ListTile(
       leading: UserProfileIcon(
         user: joke.owner,
@@ -64,33 +66,70 @@ class JokeCard extends StatelessWidget {
       ),
       subtitle: Text(DateFormatter.dateToString(
           joke.dateAdded, DateFormatPattern.timeAgo)),
-      trailing: _buildJokeMenuButton(context),
+      trailing: _buildJokeMenuButton(context, jokeControlBloc),
     );
   }
 
-  _buildJokeMenuButton(BuildContext context) {
-    return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert),
-      itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text('View Likes'),
-              value: 'viewLikes',
-            ),
-            PopupMenuItem(
-              child: Text('Report Content'),
-              value: 'reportContent',
-            )
-          ],
-      onSelected: (value) {
-        switch (value) {
-          case 'viewLikes':
-            Router.gotoJokeLikersPage(context, joke: joke);
-            break;
-          case 'reportContent':
-            break;
+  _buildJokeMenuButton(BuildContext context, JokeControlBloc jokeControlBloc) {
+
+    
+    return StreamBuilder<User>(
+      stream: BlocProvider.of<AuthBloc>(context).currentUser,
+      builder: (context, currentUserSnapshot) {
+        User currentUser = currentUserSnapshot.data;
+        List<String> menuChoices = ['View Likes', 'Delete', 'Report Content'];
+        if(currentUser!=null && currentUser.id != joke.owner.id){
+              menuChoices.removeAt(1);
         }
-      },
+        return PopupMenuButton<String>(
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (context) => menuChoices.map((choice) => PopupMenuItem(
+                  child: Text(choice),
+                  value: choice,
+                )).toList(),
+          onSelected: (value) {
+            switch (value) {
+              case 'View Likes':
+                Router.gotoJokeLikersPage(context, joke: joke);
+                break;
+              case 'Delete':
+               _showDeleteDialog(context, jokeControlBloc);
+                break;
+              case 'Report Content':
+                break;
+            }
+          },
+        );
+      }
     );
+  }
+
+  _showDeleteDialog(BuildContext context, JokeControlBloc jokeControlBloc){
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Delete Joke'),
+              content: Text('Are you sure you want to delete the joke (${joke.title})'), // get from server
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('DELETE'),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    jokeControlBloc.deleteJoke((message){
+                Scaffold.of(context).showSnackBar(SnackBar(content: Text(message),));
+                  });
+                  },
+                ),
+                FlatButton(
+                  child: Text('CANCEL'),
+                  onPressed: () async {
+                    
+                  },
+                ),
+              ],
+            ),
+      );
   }
 
   _buildJokeContent(

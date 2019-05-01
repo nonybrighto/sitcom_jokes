@@ -33,7 +33,7 @@ class MovieListBloc extends ListBloc<Movie>{
   }
 
   @override
-  bool itemUpdateCondition(Movie currentMovie, Movie updatedMovie) {
+  bool itemIdentificationCondition(Movie currentMovie, Movie updatedMovie) {
     return currentMovie.id == updatedMovie.id;
   }
 
