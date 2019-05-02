@@ -26,7 +26,8 @@ class AuthBloc extends BlocBase {
           .add({'username': username, 'email': email, 'password': password, 'authCallBack':authCallBack});
   Function(String, String, Function(bool, String)) get login => (email, password, authCallBack) =>
       _loginController.sink.add({'email': email, 'password': password, 'authCallBack':authCallBack});
-  
+
+  Function(User) get changeCurrentUser => (user) => _currentUserController.sink.add(user);
   Function() get logout => () => _logoutController.sink.add(null);
 
   Stream<User> get currentUser => _currentUserController.stream;

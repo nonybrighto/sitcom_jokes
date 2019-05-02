@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sitcom_joke/blocs/auth_bloc.dart';
 import 'package:sitcom_joke/blocs/bloc_provider.dart';
 import 'package:sitcom_joke/blocs/joke_list_bloc.dart';
 import 'package:sitcom_joke/blocs/user_control_bloc.dart';
 import 'package:sitcom_joke/blocs/user_details_bloc.dart';
 import 'package:sitcom_joke/blocs/user_list_bloc.dart';
+import 'package:sitcom_joke/blocs/user_settings_bloc.dart';
 import 'package:sitcom_joke/models/load_state.dart';
 import 'package:sitcom_joke/models/user.dart';
 import 'package:sitcom_joke/navigation/router.dart';
@@ -30,9 +32,11 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   UserDetailsBloc userDetailsBloc;
   JokeListBloc jokeListBloc;
   UserControlBloc userControlBloc;
+  UserSettingsBloc userSettingsBloc;
   @override
   void initState() {
     super.initState();
+    
   }
 
   @override
@@ -44,13 +48,18 @@ class _UserDetailsPageState extends State<UserDetailsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    jokeListBloc = JokeListBloc(jokeService: JokeService(), fetchType: JokeListFetchType.userJokes, user: widget.user );
+    UserService userService = UserService();
+    jokeListBloc = JokeListBloc(
+        jokeService: JokeService(),
+        fetchType: JokeListFetchType.userJokes,
+        user: widget.user);
     userDetailsBloc = BlocProvider.of<UserDetailsBloc>(context);
     userControlBloc = UserControlBloc(
         userControlled: widget.user,
         userDetailsBloc: userDetailsBloc,
         userListBloc: widget.userListBloc,
-        userService: UserService());
+        userService: userService);
+    userSettingsBloc = UserSettingsBloc(userService: userService, userDetailsBloc: userDetailsBloc, authBloc: BlocProvider.of<AuthBloc>(context));
   }
 
   @override
@@ -64,17 +73,22 @@ class _UserDetailsPageState extends State<UserDetailsPage>
               ? CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
+                        title: Text(user.username),
                         expandedHeight: 250.0,
                         floating: false,
                         pinned: true,
                         flexibleSpace: FlexibleSpaceBar(
-                          title: Text(user.username),
                           background: Stack(
                             fit: StackFit.expand,
                             children: <Widget>[
                               Container(
                                 color: Colors.pink,
-                                child: (user.photoUrl != null)? Image.network(user.photoUrl, fit: BoxFit.cover,):null,
+                                child: (user.photoUrl != null)
+                                    ? Image.network(
+                                        user.photoUrl,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
                               ),
                               BackdropFilter(
                                 filter: ImageFilter.blur(
@@ -101,44 +115,73 @@ class _UserDetailsPageState extends State<UserDetailsPage>
     );
   }
 
+  _buildProfileHeader(User user) {
 
-  _buildProfileHeader(User user){
-
-    return Center(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        _buildProfileIcon(user),
-                                        _buildDetailsRow(user),
-                                        StreamBuilder<User>(
-                                            stream: BlocProvider.of<
-                                                    AuthBloc>(context)
-                                                .currentUser,
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<User>
-                                                    currentUserSnapshot) {
-                                              User currentUser =
-                                                  currentUserSnapshot.data;
-                                              if (currentUser != null &&
-                                                  currentUser.id == user.id) {
-                                                return Container();
-                                              }
-                                              return _buildFollowButton(user);
-                                            })
-                                      ],
-                                    ),
-                                  );
+    return StreamBuilder<User>(
+      stream: BlocProvider.of<AuthBloc>(context).currentUser,
+      builder: (context, currentUserSnapshot) {
+        User currentUser = currentUserSnapshot.data;
+        return Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _buildProfileIcon(user, currentUser),
+              _buildDetailsRow(user),
+              (currentUser != null && currentUser.id == user.id)? Container():_buildFollowButton(user),
+            ],
+          ),
+        );
+      }
+    );
   }
 
-  _buildProfileIcon(User user) {
-    return CircleAvatar(
-      radius: 60,
-      backgroundImage: (user.photoUrl != null)?NetworkImage(user.photoUrl): null,
-      child:  (user.photoUrl == null)?Text(user.username.substring(0,1), style: TextStyle(fontSize: 33),): null,
+  _buildProfileIcon(User user, User currentUser) {
+    return Stack(
+      
+      children: <Widget>[
+        
+        CircleAvatar(
+          radius: 60,
+          backgroundImage:
+              (user.photoUrl != null) ? NetworkImage(user.photoUrl) : null,
+          child: (user.photoUrl == null)
+              ? Text(
+                  user.username.substring(0, 1),
+                  style: TextStyle(fontSize: 33),
+                )
+              : null,
+        ),
+        (currentUser != null && currentUser.id == user.id)?_buildEditIcon():Container(width: 0),
+      ],
+    );
+  }
+
+  _buildEditIcon(){
+    return BlocProvider<UserSettingsBloc>(
+      bloc: userSettingsBloc,
+      child: StreamBuilder<LoadState>(
+        stream: userSettingsBloc.loadState,
+        builder: (context, loadStateSnapshot) {
+          LoadState editLoadState = loadStateSnapshot.data;
+          Widget editIcon = Icon(Icons.edit);
+          if(editLoadState is Loading){
+            editIcon = CircularProgressIndicator();
+          }else if(editLoadState is LoadEnd){
+            editIcon = Icon(Icons.done);
+          }
+          return CircleAvatar(
+                      child: IconButton(
+              icon: editIcon,
+              onPressed: ()async{
+                     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                     userSettingsBloc.changeUserPhoto(image);
+              },
+            ),
+          );
+        }
+      ),
     );
   }
 
@@ -204,8 +247,7 @@ class _UserDetailsPageState extends State<UserDetailsPage>
               (BuildContext context, AsyncSnapshot<LoadState> loadSnapshot) {
             return StreamBuilder<bool>(
                 initialData: false,
-                stream:
-                    BlocProvider.of<AuthBloc>(context).isAuthenticated,
+                stream: BlocProvider.of<AuthBloc>(context).isAuthenticated,
                 builder: (BuildContext context,
                     AsyncSnapshot<bool> isAuthenticatedSnapshot) {
                   return RoundedButton(

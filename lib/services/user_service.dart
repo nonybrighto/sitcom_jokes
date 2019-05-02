@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sitcom_joke/blocs/user_list_bloc.dart';
 import 'package:sitcom_joke/models/joke.dart';
 import 'package:sitcom_joke/models/user.dart';
@@ -80,4 +83,30 @@ Future<UserListResponse> fetchUserFollow({User user, int page, UserFollowType us
     }
   
 }
+
+Future<User> changeUserPhoto({File photo}) async{
+
+  
+    try{
+          String fileName = basename(photo.path);
+    Map<String, dynamic> responseData = FormData.from({'image': UploadFileInfo(photo, fileName)});
+     Options authHeaderOption = await getAuthHeaderOption();
+    Response response = await dio.put(userUrl+'photo',
+          data: responseData, options: authHeaderOption);
+          updateUserPhotoPreference(response.data['photoUrl']);
+          return User.fromJson(response.data);
+    }on DioError catch (error) {
+      throw Exception((error.response != null)
+          ? error.response.data['message']
+          : 'Error Connectiing to server');
+    }catch(err){
+      print(err);
+    }
+}
+
+updateUserPhotoPreference(String photoUrl) async{
+     SharedPreferences pref = await SharedPreferences.getInstance();
+     pref.setString(kUserPhotoUrlPrefKey, photoUrl);
+}
+
 }

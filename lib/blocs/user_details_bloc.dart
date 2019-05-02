@@ -23,7 +23,6 @@ class  UserDetailsBloc extends BlocBase {
   //sink
   void Function() get getUserDetails => () => _getUserDetailsController.sink.add(null);
 
-
  UserDetailsBloc({this.viewedUser, this.userService}){
 
     _userController.sink.add(viewedUser);
