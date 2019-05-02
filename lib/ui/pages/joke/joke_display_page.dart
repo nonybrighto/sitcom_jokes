@@ -79,7 +79,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
 
   _displayTextJoke(Joke joke) {
     return ListView(
-      key: textJokeBoundaryKey,
+      
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(
@@ -110,6 +110,7 @@ class _JokeDisplayPageState extends State<JokeDisplayPage> {
   _jokeSlide(UnmodifiableListView<Joke> jokes) {
     return (jokes != null && jokes.isNotEmpty)
         ? PageView.builder(
+            key: textJokeBoundaryKey,
             itemCount: jokes.length,
             controller: _pageController,
             onPageChanged: (index) {
