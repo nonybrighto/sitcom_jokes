@@ -153,7 +153,7 @@ class _JokeAddPageState extends State<JokeAddPage>
         decoration: InputDecoration(
           hintText: 'Movie',
           labelText: 'Movie',
-          errorText: 'Search and select movie from the search field',
+          helperText: 'Search and select movie from the options'
         ),
         controller: this._movieController,
       ),
@@ -190,41 +190,45 @@ class _JokeAddPageState extends State<JokeAddPage>
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
           hintText: 'Joke Text\n\n\n',
-          labelText: 'Joke Text'),
+          labelText: 'Joke Text',
+          ),
           validator: (value){
             if(value.trim().isNotEmpty &&  value.trim().length < 30){
-              return 'Joke Should be more than 30 characters';
+              return 'Joke Should be more than 20 characters';
             }
           },
     );
   }
 
   _buildImageJokeSpecificLayout() {
-    return Row(
-      children: <Widget>[
-         FlatButton(
-           textColor: Theme.of(context).accentColor ,
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.image),
-              Text('SELECT IMAGE',)
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: <Widget>[
+           FlatButton(
+             textColor: Theme.of(context).accentColor ,
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.image),
+                Text('SELECT IMAGE',)
+              ],
+            ),
+            onPressed: () {
+              _getImageFromGallery();
+            },
           ),
-          onPressed: () {
-            _getImageFromGallery();
-          },
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        (_imageToUpload != null)?Container(
-          height: 180.0,
-          width: 180.0,
-          decoration: BoxDecoration(
-              image: DecorationImage(image: FileImage(_imageToUpload))),
-        ): Container(),
-       
-      ],
+          SizedBox(
+            width: 10,
+          ),
+          (_imageToUpload != null)?Container(
+            height: 180.0,
+            width: 180.0,
+            decoration: BoxDecoration(
+                image: DecorationImage(image: FileImage(_imageToUpload))),
+          ): Container(),
+         
+        ],
+      ),
     );
   }
 
