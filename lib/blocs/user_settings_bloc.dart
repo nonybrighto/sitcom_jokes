@@ -27,11 +27,15 @@ class UserSettingsBloc extends BlocBase{
 
       _changeUserPhotoController.stream.listen((photo) async{
 
-        _loadStateController.sink.add(Loading());
-         User updatedUser = await userService.changeUserPhoto(photo: photo);
-         authBloc.changeCurrentUser(updatedUser);
-         userDetailsBloc?.updateUser(updatedUser);
-        _loadStateController.sink.add(LoadEnd());
+            try{
+              _loadStateController.sink.add(Loading());
+              User updatedUser = await userService.changeUserPhoto(photo: photo);
+              authBloc.changeCurrentUser(updatedUser);
+              userDetailsBloc?.updateUser(updatedUser);
+              _loadStateController.sink.add(LoadEnd());
+            }catch(error){
+              _loadStateController.sink.add(LoadError('Error'));
+            }
       });
   }
  

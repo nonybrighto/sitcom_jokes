@@ -170,6 +170,8 @@ class _UserDetailsPageState extends State<UserDetailsPage>
             editIcon = CircularProgressIndicator();
           }else if(editLoadState is LoadEnd){
             editIcon = Icon(Icons.done);
+          }else if(editLoadState is LoadError){
+            editIcon = Icon(Icons.cancel);
           }
           return CircleAvatar(
                       child: IconButton(

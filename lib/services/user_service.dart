@@ -99,8 +99,6 @@ Future<User> changeUserPhoto({File photo}) async{
       throw Exception((error.response != null)
           ? error.response.data['message']
           : 'Error Connectiing to server');
-    }catch(err){
-      print(err);
     }
 }
 
