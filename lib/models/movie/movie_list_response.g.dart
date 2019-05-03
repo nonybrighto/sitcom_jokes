@@ -107,7 +107,8 @@ class _$MovieListResponse extends MovieListResponse {
   @override
   final BuiltList<Movie> results;
 
-  factory _$MovieListResponse([void updates(MovieListResponseBuilder b)]) =>
+  factory _$MovieListResponse(
+          [void Function(MovieListResponseBuilder) updates]) =>
       (new MovieListResponseBuilder()..update(updates)).build();
 
   _$MovieListResponse._(
@@ -133,7 +134,7 @@ class _$MovieListResponse extends MovieListResponse {
   }
 
   @override
-  MovieListResponse rebuild(void updates(MovieListResponseBuilder b)) =>
+  MovieListResponse rebuild(void Function(MovieListResponseBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
@@ -230,7 +231,7 @@ class MovieListResponseBuilder
   }
 
   @override
-  void update(void updates(MovieListResponseBuilder b)) {
+  void update(void Function(MovieListResponseBuilder) updates) {
     if (updates != null) updates(this);
   }
 
@@ -262,4 +263,4 @@ class MovieListResponseBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

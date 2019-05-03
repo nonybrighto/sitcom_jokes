@@ -23,12 +23,16 @@ class _$CommentSerializer implements StructuredSerializer<Comment> {
       'content',
       serializers.serialize(object.content,
           specifiedType: const FullType(String)),
-      'owner',
-      serializers.serialize(object.owner, specifiedType: const FullType(User)),
       'dateAdded',
       serializers.serialize(object.dateAdded,
           specifiedType: const FullType(DateTime)),
     ];
+    if (object.owner != null) {
+      result
+        ..add('owner')
+        ..add(serializers.serialize(object.owner,
+            specifiedType: const FullType(User)));
+    }
 
     return result;
   }
@@ -77,7 +81,7 @@ class _$Comment extends Comment {
   @override
   final DateTime dateAdded;
 
-  factory _$Comment([void updates(CommentBuilder b)]) =>
+  factory _$Comment([void Function(CommentBuilder) updates]) =>
       (new CommentBuilder()..update(updates)).build();
 
   _$Comment._({this.id, this.content, this.owner, this.dateAdded}) : super._() {
@@ -87,16 +91,13 @@ class _$Comment extends Comment {
     if (content == null) {
       throw new BuiltValueNullFieldError('Comment', 'content');
     }
-    if (owner == null) {
-      throw new BuiltValueNullFieldError('Comment', 'owner');
-    }
     if (dateAdded == null) {
       throw new BuiltValueNullFieldError('Comment', 'dateAdded');
     }
   }
 
   @override
-  Comment rebuild(void updates(CommentBuilder b)) =>
+  Comment rebuild(void Function(CommentBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
@@ -171,7 +172,7 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
   }
 
   @override
-  void update(void updates(CommentBuilder b)) {
+  void update(void Function(CommentBuilder) updates) {
     if (updates != null) updates(this);
   }
 
@@ -183,13 +184,13 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
           new _$Comment._(
               id: id,
               content: content,
-              owner: owner.build(),
+              owner: _owner?.build(),
               dateAdded: dateAdded);
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'owner';
-        owner.build();
+        _owner?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Comment', _$failedField, e.toString());
@@ -201,4 +202,4 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

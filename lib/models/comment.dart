@@ -15,6 +15,7 @@ abstract class Comment implements Built<Comment, CommentBuilder> {
 
   String get id;
   String get content;
+  @nullable
   User get owner;
   DateTime get dateAdded;
 
