@@ -11,9 +11,7 @@ class JokeAddButton extends StatelessWidget {
   JokeAddButton({this.selectedMovie});
   @override
   Widget build(BuildContext context) {
-    return Hero(
-              tag: 'joke_add',
-              child: StreamBuilder<bool>(
+    return StreamBuilder<bool>(
                 stream: BlocProvider.of<AuthBloc>(context).isAuthenticated,
                 builder: (context, isAuthenticatedSnapshot) {
                   return FloatingActionButton(
@@ -28,8 +26,28 @@ class JokeAddButton extends StatelessWidget {
           },
         );
                 }
-              ),
       );
+
+      //Hero not working when floating actionButton is used in flutter version 1.5.4
+    // return Hero(
+    //           tag: 'joke_add',
+    //           child: StreamBuilder<bool>(
+    //             stream: BlocProvider.of<AuthBloc>(context).isAuthenticated,
+    //             builder: (context, isAuthenticatedSnapshot) {
+    //               return FloatingActionButton(
+    //       child: Icon(Icons.add),
+    //       onPressed: (){
+    //               //The movie is used to initialize movie on the add page if the movie jokes is being viewed instead of having to search for it
+    //              if(isAuthenticatedSnapshot.data){
+    //               Router.gotoAddJokePage(context, selectedMovie: selectedMovie); 
+    //              }else{
+    //                Router.gotoAuthPage(context, AuthType.login);
+    //              }
+    //       },
+    //     );
+    //             }
+    //           ),
+    //   );
   }
 }
 
